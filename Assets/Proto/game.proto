@@ -1,7 +1,0 @@
-syntax = "proto3";
-
-message InitGame
-{
-    int32   id  =   1;
-    
-}
