@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CardCostType
+public enum ResourceType
 {
     BRICK,
     GEM,
@@ -11,7 +11,7 @@ public enum CardCostType
 
 public class GameCard : MonoBehaviour
 {
-    public CardCostType costType;
+    public ResourceType costType;
     public int cost;
     
     // Start is called before the first frame update

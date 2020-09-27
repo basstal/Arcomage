@@ -1,11 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using XLua;
 
 public class GamePlayer : MonoBehaviour
 {
+    [CSharpCallLua]
+    public delegate void DelegateAction();
+    [CSharpCallLua]
+    public delegate LuaTable DelegateGetLuaTable();
     public int brick;
     public int gem;
     public int recruit;
@@ -25,6 +31,8 @@ public class GamePlayer : MonoBehaviour
     public Image towerBody;
     public RectTransform wallRoof;
     public Image wallBody;
+    public DelegateGetLuaTable genCardDatum;
+    public GameObject cardBoard;
     
     private void RepositionRoof(RectTransform roof, Image body)
     {
@@ -34,7 +42,7 @@ public class GamePlayer : MonoBehaviour
         roof.localPosition = position;
     }
 
-    public void Init(string playerName)
+    public void Init(string playerName, LuaEnv luaEnv)
     {
         brickTMP.text = $"{brick} <size=80%>bricks";
         gemTMP.text = $"{gem} <size=80%>gems";
@@ -59,7 +67,52 @@ public class GamePlayer : MonoBehaviour
         {
             RepositionRoof(wallRoof, wallBody);
         }
+        luaEnv.Global.Get("GenCardDatum", out genCardDatum);
+    }
+    public Sprite GetSprite(string assetPath, string spriteName)
+    {
+#if UNITY_EDITOR
+        Sprite findTarget = null;
+        var assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
+        if (assets.Length == 0)
+        {
+            Debug.LogWarning($"not found assets at path : {assetPath}");
+        }
+        else
+        {
+            foreach (var asset in assets)
+            {
+                if (asset.name == spriteName)
+                {
+                    findTarget = asset as Sprite;
+                    break;
+                }
+            }
+        }
+        return findTarget;
+#else
+        // todo
+        // var ab = AssetBundle.LoadFromFile("sprites/others");
+        // var defaultCardImage = ab.LoadAsset<Sprite>("others_8");
+#endif
+    }
+    public void DrawCard(int count)
+    {
+        // Sprite defaultCardImage = GetSprite("Assets/Sprites/others.png", "others_8");
+        for (int i = 0; i < count; ++i)
+        {
+            // ** may cause gc alloc
+            LuaTable card = genCardDatum();
+            card.Get("note", out string note);
+            card.Get("id", out int id);
+            id -= 7000;
+            id %= 34;
+            var cardPrefab = cardBoard.transform.GetChild(0).transform.GetChild(i);
+            var cardPrefabImage = cardPrefab.GetComponent<Image>();
+            var targetImage = GetSprite("Assets/Sprites/bricks.png", $"bricks_{id}");
+            cardPrefabImage.sprite = targetImage;
 
+        }
     }
     // Start is called before the first frame update
     void Start()

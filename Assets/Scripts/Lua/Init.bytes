@@ -1,0 +1,7 @@
+-- do some initialization work here
+
+CARD_DATA = require("Arcomage")
+local count = #CARD_DATA
+GenCardDatum = function()
+    return CARD_DATA[math.random(1, count)]
+end
