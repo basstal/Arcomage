@@ -4,14 +4,9 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using XLua;
 
 public class GamePlayer : MonoBehaviour
 {
-    [CSharpCallLua]
-    public delegate void DelegateAction();
-    [CSharpCallLua]
-    public delegate LuaTable DelegateGetLuaTable();
     public int brick;
     public int gem;
     public int recruit;
@@ -31,7 +26,6 @@ public class GamePlayer : MonoBehaviour
     public Image towerBody;
     public RectTransform wallRoof;
     public Image wallBody;
-    public DelegateGetLuaTable genCardDatum;
     public GameObject cardBoard;
     
     private void RepositionRoof(RectTransform roof, Image body)
@@ -42,7 +36,7 @@ public class GamePlayer : MonoBehaviour
         roof.localPosition = position;
     }
 
-    public void Init(string playerName, LuaEnv luaEnv)
+    public void Init(string playerName)
     {
         brickTMP.text = $"{brick} <size=80%>bricks";
         gemTMP.text = $"{gem} <size=80%>gems";
@@ -67,7 +61,6 @@ public class GamePlayer : MonoBehaviour
         {
             RepositionRoof(wallRoof, wallBody);
         }
-        luaEnv.Global.Get("GenCardDatum", out genCardDatum);
     }
     public Sprite GetSprite(string assetPath, string spriteName)
     {
@@ -102,15 +95,15 @@ public class GamePlayer : MonoBehaviour
         for (int i = 0; i < count; ++i)
         {
             // ** may cause gc alloc
-            LuaTable card = genCardDatum();
-            card.Get("note", out string note);
-            card.Get("id", out int id);
-            id -= 7000;
-            id %= 34;
-            var cardPrefab = cardBoard.transform.GetChild(0).transform.GetChild(i);
-            var cardPrefabImage = cardPrefab.GetComponent<Image>();
-            var targetImage = GetSprite("Assets/Sprites/bricks.png", $"bricks_{id}");
-            cardPrefabImage.sprite = targetImage;
+            // LuaTable card = genCardDatum();
+            // card.Get("note", out string note);
+            // card.Get("id", out int id);
+            // id -= 7000;
+            // id %= 34;
+            // var cardPrefab = cardBoard.transform.GetChild(0).transform.GetChild(i);
+            // var cardPrefabImage = cardPrefab.GetComponent<Image>();
+            // var targetImage = GetSprite("Assets/Sprites/bricks.png", $"bricks_{id}");
+            // cardPrefabImage.sprite = targetImage;
 
         }
     }

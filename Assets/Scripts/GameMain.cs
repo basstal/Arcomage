@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using XLua;
 
 
 public enum GameStatus
@@ -29,13 +28,6 @@ public class GameMain : MonoBehaviour
 
     public GamePlayer player1;
     public GamePlayer player2;
-    public LuaEnv luaEnv 
-    { 
-        get => t_luaEnv; 
-        set => t_luaEnv = value;
-    }
-    private LuaEnv t_luaEnv;
-    private string m_luaPath;
     // ** make sure FSM don't change twice in one frame
     private int m_frameCountGameStatusChanged = -1;
     private Action m_currentStatusBehaviour;
@@ -63,34 +55,12 @@ public class GameMain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_luaPath = Application.dataPath + "/Scripts/Lua/";
-        luaEnv = new LuaEnv();
-        luaEnv.AddLoader((ref string filePath) => {
-            var path = $"{m_luaPath}{filePath}.bytes";
-            if(File.Exists(path))
-            {
-                return File.ReadAllBytes(path);
-            }
-            else
-            {
-                Debug.LogWarning($"LuaEnv loader {path} file not found!");
-                return null;
-            }
-        });
-        luaEnv.DoString("require(\"Init\")");
         m_statusBehaviours = new Dictionary<GameStatus, Action>(){
             {GameStatus.Start, GameStatusStart},
             {GameStatus.RoundBegin, GameStatusRoundBegin},
             {GameStatus.DrawCard, GameStatusDrawCard},
         };
         m_nextGameStatus = GameStatus.Start;
-    }
-
-    private void OnDestroy() {
-        player1.genCardDatum = null;
-        player2.genCardDatum = null;
-        luaEnv.Dispose();
-        luaEnv = null;
     }
 
     // Update is called once per frame
@@ -101,8 +71,8 @@ public class GameMain : MonoBehaviour
     }
     void GameStatusStart()
     {
-        player1.Init("player1", luaEnv);
-        player2.Init("player2", luaEnv);
+        player1.Init("player1");
+        player2.Init("player2");
         var r = UnityEngine.Random.Range(0, 1.0f);
         m_currentPlayer = r < 0.5f ? player1 : player2;
         Debug.Log($"GameStatus.Start.\nCurrentPlayer : {m_currentPlayer}");
