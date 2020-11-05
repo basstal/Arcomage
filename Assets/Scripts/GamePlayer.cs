@@ -46,7 +46,7 @@ public class GamePlayer : MonoBehaviour
         playerNameTMP.text = playerName;
 
         var hasTower = tower > 0;
-        towerBody.fillAmount = hasTower ? Mathf.Max(tower / GameMain.TOWER_MAX_FILLAMOUNT_SCORE, GameMain.TOWER_MIN_FILLAMOUNT) : 0;
+        towerBody.fillAmount = hasTower ? Mathf.Max(tower / SceneGamePlay.TOWER_MAX_FILLAMOUNT_SCORE, SceneGamePlay.TOWER_MIN_FILLAMOUNT) : 0;
         towerRoof.gameObject.SetActive(hasTower);
         if (hasTower)
         {
@@ -55,39 +55,12 @@ public class GamePlayer : MonoBehaviour
         
 
         var hasWall = wall > 0;
-        wallBody.fillAmount = hasWall ? Mathf.Max(wall / GameMain.WALL_MAX_FILLAMOUNT_SCORE, GameMain.WALL_MIN_FILLAMOUNT) : 0;
+        wallBody.fillAmount = hasWall ? Mathf.Max(wall / SceneGamePlay.WALL_MAX_FILLAMOUNT_SCORE, SceneGamePlay.WALL_MIN_FILLAMOUNT) : 0;
         wallRoof.gameObject.SetActive(hasWall);
         if (hasWall)
         {
             RepositionRoof(wallRoof, wallBody);
         }
-    }
-    public Sprite GetSprite(string assetPath, string spriteName)
-    {
-#if UNITY_EDITOR
-        Sprite findTarget = null;
-        var assets = AssetDatabase.LoadAllAssetsAtPath(assetPath);
-        if (assets.Length == 0)
-        {
-            Debug.LogWarning($"not found assets at path : {assetPath}");
-        }
-        else
-        {
-            foreach (var asset in assets)
-            {
-                if (asset.name == spriteName)
-                {
-                    findTarget = asset as Sprite;
-                    break;
-                }
-            }
-        }
-        return findTarget;
-#else
-        // todo
-        // var ab = AssetBundle.LoadFromFile("sprites/others");
-        // var defaultCardImage = ab.LoadAsset<Sprite>("others_8");
-#endif
     }
     public void DrawCard(int count)
     {

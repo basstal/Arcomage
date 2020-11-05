@@ -1,0 +1,27 @@
+-- [[ 完成Lua初始化工作 ]]
+-- table string math 扩展方法
+require("Internal/Extension")
+-- print info warning error assert
+require("Internal/Log")
+-- strict 严格全局变量检查
+require("Internal/Strict")
+-- makeRef
+require("Internal/RefInject")
+-- DataBinding as DB
+require("Internal/DataBinding")
+
+local luaManager = CS.TOW.GameGlobal.instance.lua
+-- lua 垃圾回收
+local GC = require("Internal/GC")
+luaManager.CollectGarbage = GC.collect
+GC.restart()
+
+-- lua 沙盒
+local Sandbox = require("Internal/Sandbox")
+luaManager.CreateSandbox = Sandbox.CreateSandbox
+luaManager.DestroySandbox = Sandbox.DestroySandbox
+luaManager.DoChunk = Sandbox.DoChunk
+
+strict(_G)
+
+print('InitLua', 'success')

@@ -1,0 +1,546 @@
+--[[ 数学库扩展 ]]
+function math.clamp(value, min, max)
+    return math.min(math.max(value, min), max)
+end
+
+--[[** 四舍五入 并避免以下的情况：
+ x = 2^52 + 1
+ print(string.format("%d %d", x, math.floor(x + 0.5)))
+ --> 4503599627370497 4503599627370498
+]]
+function math.round(value)
+    local f = math.floor(value)
+    if value == f then
+        return f
+    else
+        return math.floor(value + 0.5)
+    end
+end
+
+--[[ 字符串扩展 ]]
+function string:starts(pattern)
+    return string.sub(self, 1, string.len(pattern)) == pattern
+end
+
+function string:ends(pattern)
+    return string.sub(self, -string.len(pattern)) == pattern
+end
+
+function string:split(splitter)
+    local result = {}
+
+    for match in string.gmatch(self, string.format("([^%s]+)", splitter)) do
+        table.insert(result, match)
+    end
+
+    return result
+end
+
+function string:replace(pattern, replacement)
+    local from, to = self:find(pattern, 0, true)
+    if from ~= nil and to ~= nil then
+        return self:sub(0, from - 1) .. replacement .. self:sub(to + 1)
+    else
+        return self
+    end
+end
+
+function string:toarray()
+    local result = {}
+    for i = 1, self:len() do
+        table.insert(result, self:sub(i, i))
+    end
+    return result
+end
+
+function string:trim()
+    return (string.gsub(self, "^%s*(.-)%s*$", "%1"))
+end
+
+function string:isnilorempty()
+    return self == nil or (type(self) == "string" and string.trim(self) == "")
+end
+
+function string:concat(suffix, separator)
+    if self ~= "" and separator then
+        return self..separator..suffix
+    else
+        return self..suffix
+    end
+end
+
+--[[ Table扩展 ]]
+local __sort = table.sort
+local __insert = table.insert
+
+function table:sort(...)
+    __sort(self, ...)
+    return self
+end
+
+function table:insert(...)
+    __insert(self, ...)
+    return self
+end
+
+--[[
+    a = {x = 1 , y = 2,w = 4}
+    b = {x = 9 ,y = 10, z = 3}
+    table.left_or(a,b) -->a = a or b
+    print(a.x,a.y,a.z,a.w)--> {x = 1,y = 2,z = 3,w = 4}
+]]
+function table:left_or(another,_type)
+    if _type ~= nil then 
+        for key, value in pairs(another) do
+            local valueType = type(value)
+            if self[key] == nil then
+                if valueType == _type then
+                    self[key] = value
+                end
+            end
+        end
+    else
+        for key, value in pairs(another) do
+            local valueType = type(value)
+            if self[key] == nil then
+                if valueType == "table" then
+                    self[key] = value
+                elseif valueType == "function" then
+                    ---- 复制function 请指定_type 为 function
+                else
+                    self[key] = value
+                end
+            end
+        end
+    end
+    return self
+end
+-- 用于table合并，合并带metatable的表会有问题
+function table:deep_right_or(another)
+    for key, value in pairs(another) do
+        if type(value) == "table" and type(self[key]) == "table" then
+            self[key] = table.deep_right_or(self[key],value)
+        else
+            self[key] = value
+        end
+    end
+    return self
+end
+table.patch = table.deep_right_or
+
+function table.linq(_table)
+    local table_type = type(_table)
+
+    if table_type == "userdata" then
+        local csharp_type = _table:GetType()
+        if csharp_type.IsArray then
+            local new_table = {}
+            for i = 0, _table.Length - 1 do
+                table.insert(new_table, _table[i])
+            end
+            _table = new_table
+        end
+    -- TODO: 增加对List，ArrayList等类型的扩展
+    end
+
+    local mt = getmetatable(_table)
+    if mt == nil then
+        mt = {__index = table, __linq = true}
+    else
+        if not mt.__linq then
+            mt.__linq = true
+            if mt.__index == nil then
+                mt.__index = table
+            else
+                if assert(type(mt.__index) == "table", "internal", "table with a non-table-typed __index meta can't be linqlize") then
+                    table.copy(table, mt.__index, false, true)
+                end
+            end
+        end
+    end
+    return setmetatable(_table, mt)
+end
+
+function table:slice(start_index, length)
+    local end_index = #self
+    if length ~= nil then
+        end_index = start_index + length
+    end
+
+    local result = table.linq({})
+
+    for i = start_index, end_index do
+        table.insert(result, self[i])
+    end
+
+    return result
+end
+
+function table:join(splitter)
+    return table.concat(self, splitter)
+end
+
+function table:count()
+    if self == nil then
+        return 0
+    end
+    local result = 0
+    for k, v in pairs(self) do
+        result = result + 1
+    end
+
+    return result
+end
+
+function table:dump()
+    if self ~= nil then
+        local visited = {}
+        local segs = table.linq({})
+        local function print_table_impl(self, indent)
+            segs:insert(indent .. "{")
+            segs:insert("\n")
+            for k, v in pairs(self) do
+                if type(k) == "number" then
+                    segs:insert(string.format("%s  [%s] = ", indent, k))
+                else
+                    segs:insert(string.format("%s  %s = ", indent, k))
+                end
+                if type(v) == "table" then
+                    if not visited[v] then
+                        visited[v] = true
+                        if table.empty(v) then
+                            segs:insert("{}")
+                        else
+                            segs:insert("\n")
+                            print_table_impl(v, indent .. "  ")
+                        end
+                        segs:insert(",\n")
+                    end
+                else
+                    if type(v) == "string" then
+                        segs:insert(string.format('"%s",\n', v))
+                    else
+                        segs:insert(string.format("%s,\n", v))
+                    end
+                end
+            end
+            segs:insert(indent .. "}")
+        end
+
+        print_table_impl(self, "")
+
+        return segs:concat("")
+    end
+end
+
+function table:find(predicate)
+    if self ~= nil then
+        for key, value in pairs(self) do
+            if predicate(key, value) then
+                return key, value
+            end
+        end
+    end
+end
+
+function table:findvalue(predicate)
+    local _, value = self:find(predicate)
+    return value
+end
+
+function table:foreach(func)
+    for k, v in pairs(self) do
+        func(k, v)
+    end
+end
+
+function table:append(targetTable)
+    if targetTable ~= nil then
+        for i = 1, #targetTable do
+            if targetTable[i] ~= nil then
+                table.insert(self, targetTable[i])
+            end
+        end
+    end
+    return self
+end
+
+function table:keys()
+    local keys = table.linq({})
+
+    for key in pairs(self) do
+        table.insert(keys, key)
+    end
+    return keys
+end
+
+function table:values()
+    local values = table.linq({})
+
+    for _, value in pairs(self) do
+        table.insert(values, value)
+    end
+    return values
+end
+
+function table:where(predicate)
+    local result = table.linq({})
+
+    for key, value in pairs(self) do
+        if predicate(key, value) then
+            result[key] = value
+        end
+    end
+
+    return result
+end
+
+function table:wherelist(predicate)
+    local result = table.linq({})
+
+    for key, value in ipairs(self) do
+        if predicate(key, value) then
+            table.insert(result, value)
+        end
+    end
+
+    return result
+end
+
+function table:select(selector)
+    local result = table.linq({})
+    for key, value in pairs(self) do
+        result[key] = selector(value)
+    end
+    return result
+end
+
+function table:empty()
+    for _ in pairs(self) do
+        return false
+    end
+    return true
+end
+
+function table:mergefrom(...)
+    for v, targetTable in pairs({...}) do
+        -- targetTable里可能有PB默认字段
+        for key, value in pairs(self) do
+            local newValue = targetTable[key]
+            if newValue ~= nil then
+                self[key] = newValue
+            end
+        end
+
+        for key, value in pairs(targetTable) do
+            self[key] = value
+        end
+    end
+
+    return self
+end
+
+function table.merge(...)
+    local result = {}
+
+    for v, targetTable in pairs({...}) do
+        for key, value in pairs(targetTable) do
+            result[key] = value
+        end
+    end
+    
+    return result
+end
+
+function table.mergevalue(...)
+    local result = {}
+
+    for _, targetTable in pairs({...}) do
+        for _, value in pairs(targetTable) do
+             table.insert(result, value)
+        end
+    end
+    
+    return result
+end
+
+function table:toarray()
+    local result = table.linq({})
+    for _, value in pairs(self) do
+        table.insert(result, value)
+    end
+    return result
+end
+
+function table:distinct()
+    local result = table.linq({})
+    local mark = {}
+    for _, value in pairs(self) do
+        if mark[value] == nil then
+            table.insert(result, value)
+            mark[value] = true
+        end
+    end
+    return result
+end
+
+function table:first()
+    if #self > 0 then
+        return self[1]
+    end
+end
+
+function table:last()
+    if #self > 0 then
+        return self[#self]
+    end
+end
+
+function table:random(exclude)
+    local count = #self
+    if count > 1 then
+        local result = nil
+        while result == exclude or result == nil do
+            result = self[math.random(1, count)]
+        end
+        return result
+    elseif count == 1 then
+        return self[1]
+    end
+end
+
+function table:copy(_table_to, deep)
+    deep = fif(deep == nil, false, true)
+
+    for key, value in pairs(self) do
+        local valueType = type(value)
+        if valueType == "table" then
+            if deep then
+                _table_to[key] = table.copy(value, {}, deep)
+            else
+                _table_to[key] = value
+            end
+        elseif valueType == "function" then
+            -- invalid
+        else
+            _table_to[key] = value
+        end
+    end
+
+    return _table_to
+end
+
+function table:duplicate(deep)
+    return table.copy(self, table.linq({}), deep)
+end
+
+function table:makeLookup(lookup)
+    local mt = getmetatable(self)
+    local origin_index = mt ~= nil and mt.__index
+
+    local function apply(obj, key, index)
+        if type(index) == "table" then
+            return index[key]
+        elseif type(index) == "function" then
+            return index(obj, key)
+        end
+    end
+    return function(obj, key)
+        local result = rawget(self, key)
+
+        if result == nil and origin_index ~= nil then
+            result = apply(obj, key, origin_index)
+        end
+
+        if result == nil then
+            result = apply(obj, key, lookup)
+        end
+
+        return result
+    end
+end
+
+function table:has(value)
+    local res = false
+    local rk, rv =
+        table.find(
+        self,
+        function(_, v)
+            return value == v
+        end
+    )
+    if rk ~= nil then
+        res = true
+    end
+    return res
+end
+
+function table:compare(_comp_to)
+    if self ~= _comp_to and _comp_to ~= nil then
+        for key, value in pairs(self) do
+            if rawget(_comp_to, key) ~= value then
+                return false
+            end
+        end
+        return true
+    end
+    return false
+end
+
+function table:reduce(func, initVal)
+    local result
+    if initVal ~= nil then
+        result = initVal
+    else
+        initVal = self[1]
+    end
+    local start = 2
+    if initVal ~= nil then
+        start = 1
+    end
+    for i = start, #self do
+        result = func(result, self[i])
+    end
+    return result
+end
+
+function table:reduceOr()
+    local result = false
+    if self ~= nil then
+        for _, v in pairs(self) do
+            result = result or v
+            if result then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+function table:reverse()
+    if self ~= nil then
+        local size = #self
+        for i = 1, #self / 2 do
+            self[i], self[size + 1 - i] = self[size + 1 - i], self[i]
+        end
+    end
+end
+
+function table:filter(key, predicate)
+    local result = table.linq({})
+    local bucket = {}
+    for k, v in pairs(self) do
+        local oldv = bucket[v[key]]
+        if oldv == nil then
+            bucket[v[key]] = {index = k, value = v}
+        else
+            if predicate(v, oldv.value) then
+                bucket[v[key]] = {index = k, value = v}
+            end
+        end
+    end
+    for k, v in pairs(bucket) do
+        result[v.index] = v.value
+    end
+    return result
+end

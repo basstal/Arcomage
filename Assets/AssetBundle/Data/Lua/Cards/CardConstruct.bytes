@@ -1,0 +1,250 @@
+local ResourceType = CS.TOW.ResourceType
+
+local U = require("Utils")
+local Data = 
+{
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 2,
+            }
+        },
+        id = 4001,
+        name = "C1",
+        func = function(player)
+            U.BuildingChange(player, "Wall", 3)
+        end,
+        note = "城墙+3",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 3,
+            }
+        },
+        id = 4002,
+        name = "C2",
+        func = function(player)
+            U.BuildingChange(player, "Wall", 6)
+        end,
+        note = "城墙+6",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 3,
+            }
+        },
+        id = 4003,
+        name = "C3",
+        func = function(player)
+            U.BuildingChange(player, "Tower", 3)
+        end,
+        note = "塔楼+3",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 4,
+            }
+        },
+        id = 4004,
+        name = "C4",
+        func = function(player)
+            U.BuildingChange(player, "Tower", 5)
+        end,
+        note = "塔楼+5",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 3,
+            }
+        },
+        id = 4005,
+        name = "C5",
+        func = function(player)
+            player.playerCS.College.Exist = true
+        end,
+        note = "修建学院",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 2,
+            },
+            {
+                type = ResourceType.Jewelry,
+                count = 1,
+            }
+        },
+        id = 4006,
+        name = "C6",
+        func = function(player)
+            U.BuildingChange(player, "Castle", 5)
+        end,
+        note = "城堡+5",
+    },
+    -- {
+    --     costs = 
+    --     {
+    --         {
+    --             type = ResourceType.Brick,
+    --             count = 3,
+    --         }
+    --     },
+    --     id = 4007,
+    --     name = "C7",
+    --     func = function(player)
+    --         U.BuildingChange(player, "Camp", 4)
+    --     end,
+    --     note = "兵营+4",
+    -- },
+    -- {
+    --     costs = 
+    --     {
+    --         {
+    --             type = ResourceType.Brick,
+    --             count = 25,
+    --         }
+    --     },
+    --     id = 4008,
+    --     name = "C8",
+    --     func = function(player)
+    --         U.BuildingChange(player, "Camp", 9)
+    --     end,
+    --     note = "兵营+9",
+    -- },
+    -- {
+    --     costs = 
+    --     {
+    --         {
+    --             type = ResourceType.Brick,
+    --             count = 10,
+    --         },
+    --         {
+    --             type = ResourceType.Monster,
+    --             count = 2,
+    --         }
+    --     },
+    --     id = 4009,
+    --     name = "C9",
+    --     func = function(player)
+    --         U.BuildingChange(player, "Cave", 2)
+    --     end,
+    --     note = "洞窟+2",
+    -- },
+    -- {
+    --     costs = 
+    --     {
+    --         {
+    --             type = ResourceType.Brick,
+    --             count = 15,
+    --         },
+    --         {
+    --             type = ResourceType.Monster,
+    --             count = 4,
+    --         }
+    --     },
+    --     id = 4010,
+    --     name = "C10",
+    --     func = function(player)
+    --         U.BuildingChange(player, "Cave", 5)
+    --         U.BuildingChange(player, "Camp", 2)
+    --     end,
+    --     note = "洞窟+5，兵营+2",
+    -- },
+    -- {
+    --     costs = 
+    --     {
+    --         {
+    --             type = ResourceType.Brick,
+    --             count = 10,
+    --         }
+    --     },
+    --     id = 4011,
+    --     name = "C11",
+    --     func = function(player)
+    --         U.BuildingChange(player, "Furnace", 2)
+    --     end,
+    --     note = "熔炉+2",
+    -- },
+    -- {
+    --     costs = 
+    --     {
+    --         {
+    --             type = ResourceType.Brick,
+    --             count = 20,
+    --         }
+    --     },
+    --     id = 4012,
+    --     name = "C12",
+    --     func = function(player)
+    --         U.BuildingChange(player, "Furnace", 5)
+    --     end,
+    --     note = "熔炉+5",
+    -- },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 5,
+            }
+        },
+        id = 4013,
+        name = "C13",
+        func = function(player)
+            U.BuildingChange(player, "Wall", 15)
+        end,
+        note = "城墙+15",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 2,
+            },
+            {
+                type = ResourceType.Monster,
+                count = 2,
+            }
+        },
+        id = 4014,
+        name = "C14",
+        func = function(player)
+            U.BuildingChange(player, "Wall", 7)
+        end,
+        note = "城墙+7",
+    },
+    {
+        costs = 
+        {
+            {
+                type = ResourceType.Brick,
+                count = 3,
+            }
+        },
+        id = 4015,
+        name = "C15",
+        func = function(player)
+            U.BuildingChange(player, "Castle", 1)
+        end,
+        note = "城堡+1",
+    }
+}
+
+return Data

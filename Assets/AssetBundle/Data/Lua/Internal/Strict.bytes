@@ -1,0 +1,48 @@
+-- [[ 全局变量严格检查 ]]
+
+__strict_suspend = false
+
+function strict(_table)
+    local mt = getmetatable(_table) or {}
+    local declared = {}
+    local ori_index = mt.__index
+
+    local function what()
+        local d = debug.getinfo(3, "S")
+        return d and d.what or "C"
+    end
+
+    local function ignore(key)
+        return __strict_suspend or key:sub(1, 2) == "__"
+    end
+
+    function mt.__newindex(obj, key, value)
+        local what = what()
+        if not ignore(key) and not declared[key] and what == "Lua" then
+            error("internal", "global variable not declared before assign '" .. key .. "'")
+        else
+            declared[key] = true
+            rawset(obj, key, value)
+        end
+    end
+
+    function mt.__index(obj, key)
+        local result = nil
+        if ori_index ~= nil then
+            if type(ori_index) == "function" then
+                result = ori_index(obj, key)
+            else
+                result = rawget(ori_index, key)
+            end
+        end
+
+        if result == nil and not ignore(key) and not declared[key] and what() ~= "C" then
+            error("internal", "global variable '" .. key .. "' is not declared")
+        end
+
+        return result
+    end
+
+    setmetatable(_table, mt)
+    return _table
+end

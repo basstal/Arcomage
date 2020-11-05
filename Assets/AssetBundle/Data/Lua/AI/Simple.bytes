@@ -1,0 +1,21 @@
+local AI = {}
+local U = require("Utils")
+
+function AI.TryUseCard(player)
+    if player.tryUseCardTimes == nil then
+        player.tryUseCardTimes = 10
+    end
+    player.tryUseCardTimes = player.tryUseCardTimes - 1
+    if player.tryUseCardTimes <= 0 then
+        player.tryUseCardTimes = nil
+        DB.TriggerEvent("SkipRound")
+    else
+        local r = math.random(1, #player.handCards)
+        local card = player.handCards[r]
+        if U.ValidCardCost(player, card) then
+            card.sandbox.UseCard()
+        end
+    end
+end
+
+return AI

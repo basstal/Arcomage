@@ -1,0 +1,347 @@
+-- gasket基类
+local gasket = {
+    isGasket = true,
+    __len = function(this)
+        local trans = this:getTrans()
+        if trans ~= nil then
+            return trans.childCount
+        end
+    end
+}
+
+--[[
+通过gasket.key可能获取到：
+- key为int
+    - 下标为N的子节点的Ref化对象 (1)
+- key为string
+    - key以$开头
+        - 当前gasket所在lua env中的某个全局函数 (3)
+    - key不以$开头
+        - key为当前gasket对象的lua字段 (2)
+        - key为当前gasket对象的对应的transform对象的字段 (2)
+        - key为当前gasket对象上类型同名的组件 (1)
+
+其中：
+    1类数据可以缓存，并需要对其中的对应的Unity的组件进行IsNull的判断
+    2类数据不可以缓存
+    3类数据可以安全缓存
+]]
+gasket.__index = table.makeLookup(gasket, function(this, key)
+    local result = this:getCache(key)
+
+    if result == nil then
+        -- 前缀$表示查询Lua函数
+        local isstring = type(key) == "string"
+        if isstring and key:sub(1, 1) == "$" then                    
+            result = this:queryFunction(key:sub(2))
+            -- 函数为3类数据，可以缓存
+            this:setCache(key, result)
+        -- 其余情况查询transform的原生字段，或类型同名组件
+        else
+            -- 查询原生字段
+            result = this:rawQuery(key)
+            -- 查询当前对象上的组件，通过匹配类型字符串名字
+            if result == nil then
+                result = this:query(key)
+                -- 查询Unity组件为1类数据，可以缓存
+                -- 仅缓存key为字符串类型的数据
+                if isstring then
+                    this:setCache(key, result)
+                end
+            end
+        end
+    end
+    -- print(" result : " .. tostring(result))
+    return result
+end)
+
+function gasket:getEnv()
+    local env = rawget(self, "__env")
+
+    if env == nil then
+        -- 查找绑定的LuaEnv
+        local injector = self:query(typeof(CS.NOAH.Lua.LuaInjector))
+        if injector ~= nil then
+            env = injector.Sandbox
+            rawset(self, "__env", env)
+        end
+    end
+    return env
+end
+
+function gasket:getUserData(key)
+    return self.__userdata[key]
+end
+
+function gasket:setUserData(key, value)
+    self.__userdata[key] = value
+end
+
+function gasket:getTrans()
+    local trans = self.transform
+    -- print(trans)
+    if trans ~= nil and not trans:IsNull() then
+        return trans
+    end
+end
+
+--[[
+通过key在gasket上对于lua script中的全局函数
+
+这个查询的结果可以被缓存
+]]
+function gasket:queryFunction(key)
+    local env = self:getEnv()
+    if assert(env ~= nil, "Calling a non lua binded object.") then
+        __strict_suspend = true
+        local func = env[key]
+        __strict_suspend = false
+        return func
+    end
+end
+
+--[[
+通过key在gasket上面进行查询transform上面的字段
+
+这个查询的结果不可以被缓存
+]]
+function gasket:rawQuery(key)
+    local result = rawget(self, key)
+    if result == nil then
+        -- print("here?")
+        local trans = self:getTrans()
+        if trans ~= nil then
+            result = trans[key]
+            -- print(result)
+        end
+    else
+        warning("RefInject", "Should not be here")
+    end
+
+    return result
+end
+
+--[[
+通过key在gasket上面进行查询，其中：
+    - 如果key是整型，则返回gasket下面第N个节点，并对其进行Ref化
+    - 否则搜索gasket对应的GameObject上面的类型同名的组件。该搜索允许传递一个predict函数作为进比对判断
+    
+这个查询的结果可以被缓存
+]]
+function gasket:doQuery(key, predicate, direction, multi)
+    direction = direction or 1
+    local result = nil
+    local trans = self:getTrans()
+    if trans ~= nil then
+        local keyType = type(key)
+        -- print(keyType)
+        if keyType == "number" then
+            local child = trans:GetChild(key)
+            -- print("child : " .. tostring(child))
+            result = makeRef(child)
+            -- print("inner result : " .. tostring(result))
+        else
+            local keyToSearch = nil
+            if keyType == "userdata" then
+                keyToSearch = key
+            else
+                keyToSearch = typeof(CS.UnityEngine.Component)
+            end
+
+            if direction == 1 then
+                result = table.linq(trans:GetComponents(keyToSearch))
+            else
+                result = table.linq(trans:GetComponentsInParent(keyToSearch))
+            end
+
+            if keyType == "string" then
+                result = result:where(function(_, comp) return comp:GetType().Name == key end):toarray()                            
+            end
+
+            if not multi then
+                local _
+                _, result = result:find(function(_, comp) return predicate == nil or predicate(comp) end)
+            end
+        end
+    end
+    return result
+end
+
+function gasket:query(key, predicate, multi)
+    return self:doQuery(key, predicate, 1, multi)
+end
+
+function gasket:queryParent(key, predicate, multi)
+    return self:doQuery(key, predicate, 0, multi)
+end
+
+-- function gasket:fetchChild(index)
+--     local trans = self:getTrans()
+--     if trans ~= nil then
+--         return trans:GetChild(index)
+--     end
+-- end
+
+function gasket:setCache(key, value)
+    self.__cache[key] = value
+end
+
+function gasket:getCache(key)
+    local result = self.__cache[key]
+
+    if result ~= nil then
+        --[[
+        缓存可能的类型为：
+            - 函数
+            - 某个子节点的Ref对象
+            - 该节点上某个组件
+        ]]
+        if type(result) == "userdata" then
+            -- result必须是Unity的组件
+            if result:IsNull() then 
+                result = nil
+            end
+        elseif type(result) == "table" then
+            -- result必须是Ref化对象
+            if result.root.transform:IsNull() then
+                result = nil
+            end
+        end
+        if result == nil then
+            self.__cache[key] = nil
+            info("RefInject", "Cache hit for key but value is invalid: " .. tostring(key))
+        end
+    end
+    return result
+end
+
+function gasket:resetCache()
+    self.__cache = setmetatable({}, { __mode = "v" })
+end
+
+function gasket:new(trans)
+    local mt = { 
+        __userdata = {},
+        __cache = setmetatable({}, { __mode = "v" }),
+        transform = trans,
+        gameObject = trans.gameObject,
+    }
+    return setmetatable(mt, self)
+end
+
+-- ref基类
+local ref = {
+    __newindex = function(this, key, value)
+        if key:sub(1, 1) == "@" then
+            this.root:setUserData(key, value)
+        end
+    end,    
+    __pool = setmetatable({}, {__mode = "k"}),
+}
+
+ref.__index = table.makeLookup(ref, function(this, key)
+    local prefix = key:sub(1, 1)
+    -- 获取Ref对象上面的自定义属性
+    if prefix == "@" then
+        return this.root:getUserData(key)
+    -- 快速获取Ref对象上面root节点的属性
+    elseif prefix == "$" then
+        local sub_key = key:sub(2)
+        if sub_key:len() > 0 then
+            return this.root[sub_key]
+        else
+            return this.root
+        end
+    -- 获得子节点垫片
+    else
+        if this.nilnodes[key] ~= nil then
+            return nil
+        else
+            local gasketInstance = rawget(this, key)
+            if not gasketInstance then
+                local trans = this:queryTransform(key)
+                if trans ~= nil then
+                    -- 实例化新的Gasket
+                    gasketInstance = this:createGasket(trans, key)
+                else
+                    this.nilnodes[key] = 0
+                end
+            end
+
+            return gasketInstance
+        end
+    end
+end)
+
+function ref:createGasket(trans, key)
+    local gasketInstance = gasket:new(trans)
+    rawset(self, key, gasketInstance)
+    return gasketInstance
+end
+
+function ref:queryTransformImpl(trans, key)
+    local result = nil
+    for i = 0, trans.childCount - 1 do
+        local trans = trans:GetChild(i)
+        if trans.name == key then
+            result = trans
+        else
+            result = ref:queryTransformImpl(trans, key)
+        end
+        if result ~= nil then
+            break
+        end
+    end
+    return result
+end
+
+function ref:queryTransform(key)
+    return ref:queryTransformImpl(self.root.transform, key)
+end
+
+-- ** 暂时不需要injection
+-- function ref:initCache()
+--     if type(self.target) == "userdata" then
+--         local injections = self.target.Injections
+--         if injections ~= nil and injections.Length > 0 then
+--             for i = 0, injections.Length - 1 do
+--                 local injection = injections[i]
+--                 local component = injection.target
+--                 if component ~= nil then
+--                     local gasketName = injection.gasketName
+--                     local gasketInstance = rawget(self, gasketName)
+--                     if gasketInstance == nil then
+--                         gasketInstance = self:createGasket(component.transform, gasketName)
+--                     end
+--                     gasketInstance:setCache(injection.componentName, component)
+--                 end
+--             end
+--         end
+--     end
+-- end
+
+function ref:new(trans, target)
+    local mt = { 
+        root = gasket:new(trans),
+        target = target,
+        userdata = {},
+        nilnodes = {},
+    }
+
+    local instance = setmetatable(mt, self)
+    -- instance:initCache()
+    return instance
+end
+
+function makeRef(target)
+    local instance
+    if target ~= nil and not target:IsNull() then
+        local trans = target.transform
+        local instanceID = trans:GetInstanceID()
+        if ref.__pool[instanceID] == nil then
+            ref.__pool[instanceID] = ref:new(trans, target)
+        end
+        instance = ref.__pool[instanceID]
+    end
+    return instance
+end

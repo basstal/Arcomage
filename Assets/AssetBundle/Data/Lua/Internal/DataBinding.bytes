@@ -1,0 +1,202 @@
+local DataBinding = {}
+local slotId = 0
+
+local allEntries = {}
+local allSlots = {}
+
+local triggeringData = {}
+local pendingBind = {}
+local pendingUnbind = {}
+
+local function NewSlot(key, callback, autoTrigger)
+    -- setmetatable(slot, {__mode = 'v'})
+    if autoTrigger == nil then
+        autoTrigger = true
+    end
+    slotId = slotId + 1
+    return {
+        id = slotId,
+        key = key,
+        callback = callback,
+        autoTrigger = autoTrigger,
+    }
+end
+
+local function DoBind(slot)
+    local key = slot.key
+    local entry = allEntries[key]
+    if entry == nil then
+        entry = {
+            slots = {}
+        }
+        allEntries[key] = entry
+    end
+    entry.slots[slot] = slot
+    allSlots[slot.id] = slot
+    if slot.autoTrigger then
+        slot.callback(entry.data)
+    end
+end
+
+local function DoUnbind(slot)
+    local entry = allEntries[slot.key]
+    if entry ~= nil then
+        entry.slots[slot] = nil
+    end
+    allSlots[slot.id] = nil
+end
+
+function DataBinding.Resolve(path)
+    local trim = string.gsub(path, "/+$", "")
+    return string.gsub(trim, "%{[^%}]+%}", function(m)
+        return tostring(DataBinding.GetData(string.match(m, "[^{}]+")))
+    end)
+end
+
+function DataBinding.Reset()
+    slotId = 0
+    allEntries = {}
+    allSlots = {}
+    triggeringData = {}
+    pendingBind = {}
+    pendingUnbind = {}
+end
+
+function DataBinding.TriggerData(key)
+    key = DataBinding.Resolve(key)
+    triggeringData[key] = true
+
+    local entry = allEntries[key]
+    if entry ~= nil then
+        for slot, _ in pairs(entry.slots) do
+            slot.callback(entry.data)
+        end
+    end
+
+    triggeringData[key] = nil
+end
+
+function DataBinding.SetData(key, data, isEvent)
+    key = DataBinding.Resolve(key)
+
+    triggeringData[key] = true
+
+    local entry = allEntries[key]
+    if entry == nil then
+        entry = {
+            slots = {}
+        }
+        allEntries[key] = entry
+    end
+
+    if not isEvent then
+        entry.data = data
+    end
+
+    for slot, _ in pairs(entry.slots) do
+        if isEvent then
+            if table.empty(data) then
+                slot.callback(nil)
+            else
+                slot.callback(table.unpack(data))
+            end
+        else
+            slot.callback(data)
+        end
+    end
+
+    local pending = pendingBind[key]
+    if pending ~= nil then
+        for slot, _ in pairs(pending) do
+            DoBind(slot)
+        end
+        pendingBind[key] = nil
+    end
+
+    pending = pendingUnbind[key]
+    if pending ~= nil then
+        for slot, _ in pairs(pending) do
+            DoUnbind(slot)
+        end
+        pendingUnbind[key] = nil
+    end
+
+    triggeringData[key] = nil
+end
+
+function DataBinding.GetData(key)
+    local entry = allEntries[DataBinding.Resolve(key)]
+    if entry ~= nil then
+        return entry.data
+    end
+end
+
+function DataBinding.Bind(key, callback, autoTrigger)
+    key = DataBinding.Resolve(key)
+    local slot = NewSlot(key, callback, autoTrigger)
+
+    if triggeringData[key] then
+        local pending = pendingBind[key]
+        if pending == nil then
+            pending = {}
+            pendingBind[key] = pending
+        end
+        pending[slot] = slot
+    else
+        DoBind(slot)
+    end
+
+    return slot.id
+end
+
+function DataBinding.Unbind(keyOrId, callback)
+    if keyOrId == nil then
+        return
+    end
+
+    local slot, index
+    if type(keyOrId) == "number" then
+        slot = allSlots[keyOrId]
+    else
+        local entry = allEntries[keyOrId]
+        if entry ~= nil then
+	        slot = table.find(entry.slots, function(k, _)
+	            if k.callback == callback then
+	                return true
+	            end
+				if type(callback) == "userdata" then
+	                return callback:Equals(k.callback)
+	            end
+	        end)
+		end
+    end
+
+    if slot ~= nil then
+        if triggeringData[slot.key] then
+            local pending = pendingUnbind[slot.key]
+            if pending == nil then
+                pending = {}
+                pendingUnbind[slot.key] = pending
+            end
+            pending[slot] = slot
+        else
+            DoUnbind(slot)
+        end
+    end
+end
+
+--------------------------------------------------------------
+
+function DataBinding.RegisterEvent(key, callback)
+    return DataBinding.Bind(key, callback, false)
+end
+
+function DataBinding.UnregisterEvent(keyOrId, callback)
+    DataBinding.Unbind(keyOrId, callback)
+end
+
+function DataBinding.TriggerEvent(key, ...)
+    DataBinding.SetData(key, {...}, true)
+end
+
+DB = DataBinding

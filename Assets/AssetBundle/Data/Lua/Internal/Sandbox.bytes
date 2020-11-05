@@ -1,0 +1,54 @@
+local Sandbox = {}
+local chunkCache = {}
+
+function Sandbox.CreateSandbox(gameObject)
+    local box
+    if gameObject ~= nil and not gameObject:IsNull() then
+        box = 
+        {
+            this = gameObject,
+            REF = makeRef(gameObject),
+        }
+    else
+        error("Sandbox", "沙盒创建失败")
+        return
+    end
+
+    return strict(setmetatable(box, {__index = _G}))
+end
+
+function Sandbox:DestroySandbox()
+    for k, v in pairs(self) do
+        self[k] = nil
+    end
+end
+
+local function LoadPackage(...)
+    for _, loader in ipairs(package.searchers) do
+        local func = loader(...)
+        if type(func) == 'function' then
+            return func
+        end
+    end
+end
+
+function Sandbox:DoChunk(path, forceReload)
+    if string.isnilorempty(path) then
+        error("Sandbox", "DoChunk path is nil or empty? DoChunk failed!")
+        return
+    end
+    local func = chunkCache[path]
+    if func == nil or forceReload then
+        func = LoadPackage(path)
+        if func == nil then
+            error("Sandbox", string.format("DoChunk Failed to load path: %s \nref by: %s.", path, self.this.name))
+        else
+            chunkCache[path] = func
+        end
+    end
+    if func ~= nil then
+        setfenv(func, self)()
+    end
+end
+
+return Sandbox
