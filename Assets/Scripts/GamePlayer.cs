@@ -27,7 +27,7 @@ public class GamePlayer : MonoBehaviour
     public RectTransform wallRoof;
     public Image wallBody;
     public GameObject cardBoard;
-    
+
     private void RepositionRoof(RectTransform roof, Image body)
     {
         var position = roof.localPosition;
@@ -52,7 +52,7 @@ public class GamePlayer : MonoBehaviour
         {
             RepositionRoof(towerRoof, towerBody);
         }
-        
+
 
         var hasWall = wall > 0;
         wallBody.fillAmount = hasWall ? Mathf.Max(wall / SceneGamePlay.WALL_MAX_FILLAMOUNT_SCORE, SceneGamePlay.WALL_MIN_FILLAMOUNT) : 0;
@@ -83,12 +83,12 @@ public class GamePlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

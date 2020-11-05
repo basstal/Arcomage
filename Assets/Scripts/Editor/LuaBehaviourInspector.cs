@@ -30,8 +30,8 @@ public class LuaBehaviourInspector : Editor
                     if (luaAssetCandidates == null)
                     {
                         luaAssetCandidates = from path in Directory.GetFiles("Assets/Resources/", "*.bytes", SearchOption.AllDirectories).Select(p => p.Replace("\\", "/"))
-                                                where path.Contains($"/{LuaManager.LuaPathKeyWord}/")
-                                                select path;
+                                             where path.Contains($"/{LuaManager.LuaPathKeyWord}/")
+                                             select path;
                     }
                     return luaAssetCandidates;
                 },

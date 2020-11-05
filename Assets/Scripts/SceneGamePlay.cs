@@ -35,7 +35,8 @@ public class SceneGamePlay : MonoBehaviour
     public GameStatus currentGameStatus
     {
         get => t_currentGameStatus;
-        set {
+        set
+        {
             if (m_frameCountGameStatusChanged != Time.frameCount)
             {
                 t_currentGameStatus = value;
@@ -51,7 +52,7 @@ public class SceneGamePlay : MonoBehaviour
     private GameStatus m_nextGameStatus;
     private GameStatus t_currentGameStatus;
     private GamePlayer m_currentPlayer;
-    
+
     public LuaManager lua = null;
     private static bool isInstantiated = false;
     public static SceneGamePlay instance = null;
@@ -77,7 +78,7 @@ public class SceneGamePlay : MonoBehaviour
         AssetUtility.InstantiatePrefab("Prefabs/UI/Fight", null, Vector3.zero, Quaternion.identity, uiParent.transform);
     }
 
-    
+
     void Start()
     {
         m_statusBehaviours = new Dictionary<GameStatus, Action>(){
