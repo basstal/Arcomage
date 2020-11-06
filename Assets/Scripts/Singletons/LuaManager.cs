@@ -11,7 +11,7 @@ public class DelegateCSLua
     [CSharpCallLua] public delegate void CCL4(LuaTable sandbox, string path, bool forceReload);
 }
 
-public class LuaManager : MonoBehaviour
+public class LuaManager : Singleton<LuaManager>
 {
     private DelegateCSLua.CCL1 collectGarbage;
     private DelegateCSLua.CCL2 createSandbox;
@@ -25,7 +25,7 @@ public class LuaManager : MonoBehaviour
     public DelegateCSLua.CCL4 DoChunk { set => doChunk = value; }
     public DelegateCSLua.CCL1 CollectGarbage { set => collectGarbage = value; }
     public static string LuaPathKeyWord = "Lua";
-    public void Init()
+    public override async void Init()
     {
         luaBehaviourGameObjects = new List<GameObject>();
         luaEnv = new LuaEnv();
@@ -62,7 +62,7 @@ public class LuaManager : MonoBehaviour
             luaEnv.Tick();
         }
     }
-    public void Uninit()
+    public override async void Uninit()
     {
         foreach (var gameObject in luaBehaviourGameObjects)
         {
