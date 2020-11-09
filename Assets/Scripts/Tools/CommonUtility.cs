@@ -7,7 +7,6 @@ using XLua;
 [LuaCallCSharp]
 public static class CommonUtility
 {
-    static Color32 colorWhite = new Color32(255, 255, 255, 255);
     public static uint CalculateHash(string str)
     {
         uint result = 0x01234567u;
@@ -69,7 +68,7 @@ public static class CommonUtility
             return new Color32(r, g, b, a);
         }
 
-        return colorWhite;
+        return Color.white;
     }
 
     public static Color GetColorFromColor32(int r, int g, int b, int a)

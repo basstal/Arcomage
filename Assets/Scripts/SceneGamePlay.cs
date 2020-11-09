@@ -75,7 +75,7 @@ public class SceneGamePlay : MonoBehaviour
         }
 
         var uiParent = GameObject.FindObjectOfType<Canvas>();
-        AssetUtility.InstantiatePrefab("Prefabs/UI/Fight", null, Vector3.zero, Quaternion.identity, uiParent.transform);
+        // AssetUtility.InstantiatePrefab("Prefabs/UI/Fight", null, Vector3.zero, Quaternion.identity, uiParent.transform);
     }
 
 

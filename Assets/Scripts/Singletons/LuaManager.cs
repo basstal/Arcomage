@@ -3,42 +3,42 @@ using System.IO;
 using UnityEngine;
 using XLua;
 
-public class DelegateCSLua
-{
-    [CSharpCallLua] public delegate void CCL1();
-    [CSharpCallLua] public delegate LuaTable CCL2(GameObject go);
-    [CSharpCallLua] public delegate void CCL3(LuaTable sandbox);
-    [CSharpCallLua] public delegate void CCL4(LuaTable sandbox, string path, bool forceReload);
-}
-
 public class LuaManager : Singleton<LuaManager>
 {
-    private DelegateCSLua.CCL1 collectGarbage;
-    private DelegateCSLua.CCL2 createSandbox;
-    private DelegateCSLua.CCL3 destroySandbox;
-    private DelegateCSLua.CCL4 doChunk;
+    [CSharpCallLua]
+    private delegate void DelegateCSCollectGarbage();
+    [CSharpCallLua]
+    public delegate LuaTable CCL2(GameObject go);
+    [CSharpCallLua]
+    public delegate void CCL3(LuaTable sandbox);
+    [CSharpCallLua]
+    public delegate void CCL4(LuaTable sandbox, string path, bool forceReload);
+    private DelegateCSCollectGarbage LuaCollectGarbage;
+    private CCL2 createSandbox;
+    private CCL3 destroySandbox;
+    private CCL4 doChunk;
     private LuaEnv luaEnv;
     private List<GameObject> luaBehaviourGameObjects;
 
-    public DelegateCSLua.CCL2 CreateSandbox { set => createSandbox = value; }
-    public DelegateCSLua.CCL3 DestroySandbox { set => destroySandbox = value; }
-    public DelegateCSLua.CCL4 DoChunk { set => doChunk = value; }
-    public DelegateCSLua.CCL1 CollectGarbage { set => collectGarbage = value; }
+    public CCL2 CreateSandbox { set => createSandbox = value; }
+    public CCL3 DestroySandbox { set => destroySandbox = value; }
+    public CCL4 DoChunk { set => doChunk = value; }
     public static string LuaPathKeyWord = "Lua";
-    public override async void Init()
+    public override void Init()
     {
+        base.Init();
         luaBehaviourGameObjects = new List<GameObject>();
         luaEnv = new LuaEnv();
-        luaEnv.AddLoader((ref string requirePath) =>
-        {
-            if (requirePath[0] == '/' || requirePath[0] == '\\')
-            {
-                requirePath = requirePath.Substring(1);
-            }
-            var path = Path.Combine(LuaPathKeyWord, requirePath);
-            var asset = AssetUtility.LoadResource<TextAsset>(path);
-            return asset.bytes;
-        });
+        // luaEnv.AddLoader((ref string requirePath) =>
+        // {
+        //     if (requirePath[0] == '/' || requirePath[0] == '\\')
+        //     {
+        //         requirePath = requirePath.Substring(1);
+        //     }
+        //     var path = Path.Combine(LuaPathKeyWord, requirePath);
+        //     var asset = AssetUtility.LoadResource<TextAsset>(path);
+        //     return asset.bytes;
+        // });
         var global = luaEnv.Global;
 #if UNITY_EDITOR
         global.Set("__UNITY_EDITOR", true);
@@ -62,8 +62,9 @@ public class LuaManager : Singleton<LuaManager>
             luaEnv.Tick();
         }
     }
-    public override async void Uninit()
+    public override void Uninit()
     {
+        base.Uninit();
         foreach (var gameObject in luaBehaviourGameObjects)
         {
             if (gameObject != null)
