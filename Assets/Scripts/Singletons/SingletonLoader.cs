@@ -10,10 +10,9 @@ public class SingletonLoader : MonoBehaviour
         InitSingletons();
     }
 
-    private void InitSingletons()
+    private async void InitSingletons()
     {
-        singletons = singletons.Where(v => v != null).ToArray();
-        foreach (var singleton in singletons)
+        foreach (var singleton in singletons.Where(v => v != null))
         {
             var singletonBase = singleton.GetComponent<SingletonBase>();
             if (singletonBase == null)
@@ -23,15 +22,15 @@ public class SingletonLoader : MonoBehaviour
 #endif
                 continue;
             }
-            singletonBase.Init();
+            await singletonBase.Init();
         }
     }
-    private void UninitSingletons()
+    private async void UninitSingletons()
     {
-        foreach(var singleton in singletons)
+        foreach(var singleton in singletons.Where(v => v != null))
         {
             var singletonBase = singleton.GetComponent<SingletonBase>();
-            singletonBase.Uninit();
+            await singletonBase.Uninit();
         }
     }
 }

@@ -11,10 +11,12 @@ using System;
 using XLua;
 using System.Reflection;
 using System.Linq;
+using CSObjectWrapEditor;
 
 //配置的详细介绍请看Doc下《XLua的配置.doc》
 public static class XLuaGenConfig
 {
+    [GenPath] private static string xLuaGenPath = "Assets/Externals/xLua/Generated";
     /***************如果你全lua编程，可以参考这份自动化配置***************/
     //--------------begin 纯lua编程配置参考----------------------------
     static List<string> exclude = new List<string> {
@@ -149,42 +151,42 @@ public static class XLuaGenConfig
                 new List<string>(){ "UnityEngine.UI.Text", "OnRebuildRequested"},
 
             };
-    ////自动把LuaCallCSharp涉及到的delegate加到CSharpCallLua列表，后续可以直接用lua函数做callback
-    //[CSharpCallLua]
-    //public static List<Type> CSharpCallLua
-    //{
-    //    get
-    //    {
-    //        var lua_call_csharp = LuaCallCSharp;
-    //        var delegate_types = new List<Type>();
-    //        var flag = BindingFlags.Public | BindingFlags.Instance
-    //            | BindingFlags.Static | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly;
-    //        foreach (var field in (from type in lua_call_csharp select type).SelectMany(type => type.GetFields(flag)))
-    //        {
-    //            if (typeof(Delegate).IsAssignableFrom(field.FieldType))
-    //            {
-    //                delegate_types.Add(field.FieldType);
-    //            }
-    //        }
+    //自动把LuaCallCSharp涉及到的delegate加到CSharpCallLua列表，后续可以直接用lua函数做callback
+    [CSharpCallLua]
+    public static List<Type> CSharpCallLua
+    {
+        get
+        {
+            var lua_call_csharp = LuaCallCSharp;
+            var delegate_types = new List<Type>();
+            var flag = BindingFlags.Public | BindingFlags.Instance
+                | BindingFlags.Static | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly;
+            foreach (var field in (from type in lua_call_csharp select type).SelectMany(type => type.GetFields(flag)))
+            {
+                if (typeof(Delegate).IsAssignableFrom(field.FieldType))
+                {
+                    delegate_types.Add(field.FieldType);
+                }
+            }
 
-    //        foreach (var method in (from type in lua_call_csharp select type).SelectMany(type => type.GetMethods(flag)))
-    //        {
-    //            if (typeof(Delegate).IsAssignableFrom(method.ReturnType))
-    //            {
-    //                delegate_types.Add(method.ReturnType);
-    //            }
-    //            foreach (var param in method.GetParameters())
-    //            {
-    //                var paramType = param.ParameterType.IsByRef ? param.ParameterType.GetElementType() : param.ParameterType;
-    //                if (typeof(Delegate).IsAssignableFrom(paramType))
-    //                {
-    //                    delegate_types.Add(paramType);
-    //                }
-    //            }
-    //        }
-    //        return delegate_types.Distinct().ToList();
-    //    }
-    //}
+            foreach (var method in (from type in lua_call_csharp select type).SelectMany(type => type.GetMethods(flag)))
+            {
+                if (typeof(Delegate).IsAssignableFrom(method.ReturnType))
+                {
+                    delegate_types.Add(method.ReturnType);
+                }
+                foreach (var param in method.GetParameters())
+                {
+                    var paramType = param.ParameterType.IsByRef ? param.ParameterType.GetElementType() : param.ParameterType;
+                    if (typeof(Delegate).IsAssignableFrom(paramType))
+                    {
+                        delegate_types.Add(paramType);
+                    }
+                }
+            }
+            return delegate_types.Distinct().ToList();
+        }
+    }
     //--------------end 纯lua编程配置参考----------------------------
 
     /***************热补丁可以参考这份自动化配置***************/

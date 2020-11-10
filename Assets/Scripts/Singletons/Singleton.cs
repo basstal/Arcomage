@@ -1,20 +1,25 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class SingletonBase : MonoBehaviour
 {
-    public virtual void Init() { }
-    public virtual void Uninit() { }
+#pragma warning disable 1998
+    public virtual async Task Init() { }
+    public virtual async Task Uninit() { }
+#pragma warning restore 1998
 }
 
 public abstract class Singleton<T> : SingletonBase where T : MonoBehaviour
 {
     public static T Instance;
-
-    private void Awake()
+#pragma warning disable 1998
+    public override async Task Init()
     {
         Instance = this as T;
     }
-    private void OnDestroy() {
+    public override async Task Uninit()
+    {
         Instance = null;
     }
+#pragma warning restore 1998
 }

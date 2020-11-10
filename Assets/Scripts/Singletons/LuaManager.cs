@@ -1,80 +1,140 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using XLua;
 
 public class LuaManager : Singleton<LuaManager>
 {
-    [CSharpCallLua]
-    private delegate void DelegateCSCollectGarbage();
-    [CSharpCallLua]
-    public delegate LuaTable CCL2(GameObject go);
-    [CSharpCallLua]
-    public delegate void CCL3(LuaTable sandbox);
-    [CSharpCallLua]
-    public delegate void CCL4(LuaTable sandbox, string path, bool forceReload);
-    private DelegateCSCollectGarbage LuaCollectGarbage;
-    private CCL2 createSandbox;
-    private CCL3 destroySandbox;
-    private CCL4 doChunk;
-    private LuaEnv luaEnv;
-    private List<GameObject> luaBehaviourGameObjects;
+    [CSharpCallLua]private delegate void DelegateCSCollectGarbage();
+    [CSharpCallLua]private delegate LuaTable DelegateCSCreateSandbox(GameObject go);
+    [CSharpCallLua]private delegate void DelegateCSDestroySandbox(LuaTable sandbox);
+    [CSharpCallLua]private delegate void DelegateCSDoChunk(LuaTable sandbox, string path, bool forceReload);
+#pragma warning disable 649
+    private DelegateCSCollectGarbage m_luaCollectGarbage;
+    private DelegateCSCreateSandbox m_luaCreateSandbox;
+    private DelegateCSDestroySandbox m_luaDestroySandbox;
+    private DelegateCSDoChunk m_luaDoChunk;
+#pragma warning restore 649
+    private readonly List<LuaTable> m_sandboxes = new List<LuaTable>();
+    private readonly Dictionary<string, byte[]> m_scriptName2Content = new Dictionary<string, byte[]>();
+    public event Action OnInitFinished;
+    public static string luaScriptsLabel = "Lua";
+    public LuaEnv luaEnv { get; private set; }
 
-    public CCL2 CreateSandbox { set => createSandbox = value; }
-    public CCL3 DestroySandbox { set => destroySandbox = value; }
-    public CCL4 DoChunk { set => doChunk = value; }
-    public static string LuaPathKeyWord = "Lua";
-    public override void Init()
+    public override async Task Init()
     {
-        base.Init();
-        luaBehaviourGameObjects = new List<GameObject>();
-        luaEnv = new LuaEnv();
-        // luaEnv.AddLoader((ref string requirePath) =>
-        // {
-        //     if (requirePath[0] == '/' || requirePath[0] == '\\')
-        //     {
-        //         requirePath = requirePath.Substring(1);
-        //     }
-        //     var path = Path.Combine(LuaPathKeyWord, requirePath);
-        //     var asset = AssetUtility.LoadResource<TextAsset>(path);
-        //     return asset.bytes;
-        // });
-        var global = luaEnv.Global;
+        await base.Init();
+        DestroyAllLuaSandbox();
+        if (luaEnv == null)
+        {
+            var newEnv = new LuaEnv();
+            newEnv.AddLoader(Loader);
+            await ReloadAllLuaContent();
 #if UNITY_EDITOR
-        global.Set("__UNITY_EDITOR", true);
+            newEnv.Global.Set("__UNITY_EDITOR", true);
 #endif
-        luaEnv.DoString("require('InitLua')");
+            var objs = newEnv.DoString("return require('InitLua')");
+            if (objs != null && objs[0] is LuaTable injectedLuaFunctions)
+            {
+                injectedLuaFunctions.Get("CollectGarbage", out m_luaCollectGarbage);
+                injectedLuaFunctions.Get("CreateSandbox", out m_luaCreateSandbox);
+                injectedLuaFunctions.Get("DestroySandbox", out m_luaDestroySandbox);
+                injectedLuaFunctions.Get("DoChunk", out m_luaDoChunk);
+            }
+            luaEnv = newEnv;
+            OnInitFinished?.Invoke();
+        }
     }
-    public void DoChunkDelegate(LuaTable sandbox, string path, bool forceReload)
+
+    private async Task ReloadAllLuaContent()
     {
-        doChunk(sandbox, path, forceReload);
+        List<TextAsset> result = new List<TextAsset>();
+        await AddressableUtility.InitByNameOrLabel(luaScriptsLabel, result);
+        foreach (var asset in result)
+        {
+            Debug.Log($"asset.name : {asset.name}");
+            m_scriptName2Content.Add(asset.name, asset.bytes);
+        }
     }
-    public LuaTable CreateSandboxDelegate(GameObject go)
+
+    private byte[] Loader(ref string requireName)
     {
-        var sandbox = createSandbox(go);
-        luaBehaviourGameObjects.Add(go);
+        m_scriptName2Content.TryGetValue(requireName, out var result);
+        return result;
+    }
+
+    private bool CheckInitiated()
+    {
+        if (luaEnv == null)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("LuaManager has not initiated properly");
+#endif
+            return false;
+        }
+        return true;
+    }
+    public void DoChunk(LuaTable sandbox, byte[] content)
+    {
+        if (sandbox == null || content == null || !CheckInitiated())
+            return;
+
+        luaEnv.DoString(content, "", sandbox);
+    }
+    public void DoChunk(LuaTable sandbox, string path, bool forceReload)
+    {
+        if (sandbox == null || string.IsNullOrWhiteSpace(path) || !CheckInitiated())
+            return;
+        m_luaDoChunk(sandbox, path, forceReload);
+    }
+    public LuaTable CreateSandbox(GameObject go)
+    {
+        if (go == null || !CheckInitiated())
+            return null;
+        var sandbox = m_luaCreateSandbox(go);
+        m_sandboxes.Add(sandbox);
         return sandbox;
     }
-    void Update()
+
+    public void DestroySandbox(LuaTable sandbox)
     {
-        if (luaEnv != null)
-        {
-            luaEnv.Tick();
-        }
+        if (sandbox == null || !CheckInitiated())
+            return;
+        m_sandboxes.Remove(sandbox);
+        m_luaDestroySandbox(sandbox);
     }
-    public override void Uninit()
+
+    public void CollectGarbage()
     {
-        base.Uninit();
-        foreach (var gameObject in luaBehaviourGameObjects)
+        if (!CheckInitiated())
+            return;
+        m_luaCollectGarbage();
+    }
+
+    private void Update()
+    {
+        luaEnv?.Tick();
+    }
+
+    private void DestroyAllLuaSandbox()
+    {
+        foreach (var luaTable in m_sandboxes.Where(t => t != null))
         {
-            if (gameObject != null)
-            {
-                var behaviour = gameObject.GetComponent<LuaBehaviour>();
-                behaviour.BehaviourDestroy();
-                destroySandbox(behaviour.sandbox);
-            }
+            m_luaDestroySandbox(luaTable);
         }
-        luaEnv.DoString("require('UninitLua')");
-        luaEnv.Dispose();
+        m_sandboxes.Clear();
+    }
+    public override async Task Uninit()
+    {
+        await base.Uninit();
+        DestroyAllLuaSandbox();
+        m_luaCollectGarbage = null;
+        m_luaCreateSandbox = null;
+        m_luaDestroySandbox = null;
+        m_luaDoChunk = null;
+        luaEnv?.Dispose();
+        luaEnv = null;
     }
 }

@@ -1,7 +1,0 @@
-local luaManager = CS.TOW.GameGlobal.instance.lua
-luaManager.CollectGarbage = nil
-luaManager.CreateSandbox = nil
-luaManager.DestroySandbox = nil
-luaManager.DoChunk = nil
-
-print('UninitLua', 'success')

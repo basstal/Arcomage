@@ -1,98 +1,101 @@
 using System;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using XLua;
-using UnityEngine.UI;
-[Serializable]
-public class InjectionEntry
-{
-    public string gasketName;
-    public string componentName;
-    public UnityEngine.Object target;
-}
 
 public class LuaBehaviour : MonoBehaviour
 {
     [SerializeField]
-    private string luaScriptPath = "";
-    public LuaTable sandbox;
-    Action luaAwake;
-    Action luaStart;
-    Action luaLateUpdate;
-    Action luaFixedUpdate;
-    Action luaOnEnable;
-    Action luaUpdate;
-    Action luaOnDisable;
-    Action luaOnDestroy;
-    void Awake()
+    public AssetReference script;
+    private LuaTable m_sandbox;
+    Action m_luaAwake;
+    Action m_luaStart;
+    Action m_luaLateUpdate;
+    Action m_luaFixedUpdate;
+    Action m_luaOnEnable;
+    Action m_luaUpdate;
+    Action m_luaOnDisable;
+    Action m_luaOnDestroy;
+
+    private void Awake()
     {
-        //Debug.Log("awake");
-        sandbox = SceneGamePlay.instance.lua.CreateSandboxDelegate(gameObject);
+        script.LoadAssetAsync<TextAsset>().Completed += (op) =>
+        {
+            if (op.Result == null)
+            {
+#if UNITY_EDITOR
+                Debug.LogError("LuaBehaviour Awake load script asset failed.");
+#endif
+                return;
+            }
+            var luaManager = LuaManager.Instance;
+            Action luaBehaviourInit = () =>
+            {
+                m_sandbox = luaManager.CreateSandbox(gameObject);
+                luaManager.DoChunk(m_sandbox, op.Result.bytes);
 
-        var i = luaScriptPath.IndexOf(LuaManager.LuaPathKeyWord);
-        var requirePath = luaScriptPath.Substring(i + LuaManager.LuaPathKeyWord.Length).Replace(".bytes", "");
-        SceneGamePlay.instance.lua.DoChunkDelegate(sandbox, requirePath, false);
+                m_sandbox.Get("Awake", out m_luaAwake);
+                m_sandbox.Get("Start", out m_luaStart);
+                m_sandbox.Get("LateUpdate", out m_luaLateUpdate);
+                m_sandbox.Get("FixedUpdate", out m_luaFixedUpdate);
+                m_sandbox.Get("OnEnable", out m_luaOnEnable);
+                m_sandbox.Get("Update", out m_luaUpdate);
+                m_sandbox.Get("OnDisable", out m_luaOnDisable);
+                m_sandbox.Get("OnDestroy", out m_luaOnDestroy);
 
-        sandbox.Get("Awake", out luaAwake);
-        sandbox.Get("Start", out luaStart);
-        sandbox.Get("LateUpdate", out luaLateUpdate);
-        sandbox.Get("FixedUpdate", out luaFixedUpdate);
-        sandbox.Get("OnEnable", out luaOnEnable);
-        sandbox.Get("Update", out luaUpdate);
-        sandbox.Get("OnDisable", out luaOnDisable);
-        sandbox.Get("OnDestroy", out luaOnDestroy);
-
-        luaAwake.SafeInvoke();
+                m_luaAwake.SafeInvoke();
+            };
+            if (luaManager.luaEnv != null)
+            {
+                luaBehaviourInit.Invoke();
+            }
+            else
+            {
+                luaManager.OnInitFinished += luaBehaviourInit;
+            }
+        };
+    }
+    private void Start()
+    {
+        m_luaStart.SafeInvoke();
     }
 
-    void Start()
+    private void LateUpdate()
     {
-        luaStart.SafeInvoke();
+        m_luaLateUpdate.SafeInvoke();
     }
 
-    void LateUpdate()
+    private void FixedUpdate()
     {
-        luaLateUpdate.SafeInvoke();
+        m_luaFixedUpdate.SafeInvoke();
     }
 
-    void FixedUpdate()
+    private void OnEnable()
     {
-        luaFixedUpdate.SafeInvoke();
+        m_luaOnEnable.SafeInvoke();
     }
 
-    void OnEnable()
+    private void Update()
     {
-        luaOnEnable.SafeInvoke();
+        m_luaUpdate.SafeInvoke();
     }
 
-    void Update()
+    private void OnDisable()
     {
-        luaUpdate.SafeInvoke();
-    }
-
-    void OnDisable()
-    {
-        luaOnDisable.SafeInvoke();
+        m_luaOnDisable.SafeInvoke();
     }
 
     private void OnDestroy()
     {
-        BehaviourDestroy();
-    }
-    public void BehaviourDestroy()
-    {
-        luaOnDestroy.SafeInvoke();
-        var buttons = GetComponentsInChildren<Button>();
-        foreach (var button in buttons)
-        {
-            button.onClick = null;
-        }
-        luaAwake = null;
-        luaStart = null;
-        luaLateUpdate = null;
-        luaFixedUpdate = null;
-        luaOnEnable = null;
-        luaUpdate = null;
-        luaOnDisable = null;
-        luaOnDestroy = null;
+        m_luaOnDestroy.SafeInvoke();
+        m_luaAwake = null;
+        m_luaStart = null;
+        m_luaLateUpdate = null;
+        m_luaFixedUpdate = null;
+        m_luaOnEnable = null;
+        m_luaUpdate = null;
+        m_luaOnDisable = null;
+        m_luaOnDestroy = null;
+        LuaManager.Instance.DestroySandbox(m_sandbox);
     }
 }

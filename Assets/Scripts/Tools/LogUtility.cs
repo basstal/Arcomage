@@ -83,7 +83,7 @@ public static class LogUtility
 #if UNITY_EDITOR
         var color = GetLogColor(level);
 
-        string fullMessage = $"<color='#{ColorUtility.ToHtmlStringRGB(color)}'><b>[{DateTime.Now:HH:mm:ss}|{level}|{tag}]</b></color>\n{message}";
+        string fullMessage = $"<color='#{ColorUtility.ToHtmlStringRGB(color)}'><b>[{level}|{tag}]</b></color>\n{message}";
 #else
         string fullMessage = $"[{DateTime.Now:HH:mm:ss}|{level}|{tag}]\n{message}";
 #endif
