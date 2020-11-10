@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using System.Text.RegularExpressions;
 using System.Linq;
 using XLua;
@@ -22,14 +21,13 @@ public static class LogUtility
         var results = debugTraceback.Call();
         if (results.Length >= 1)
         {
-            string stack = results[0] as string;
-            var lines = stack.Split('\n').Skip(4).Select(s => s.Trim()).ToArray();
-            for (int i = 0; i < lines.Length; i++)
+            if (results[0] is string stack)
             {
-                var line = lines[i];
-                var match = stackRegex.Match(line);
-                if (match != null)
+                var lines = stack.Split('\n').Skip(4).Select(s => s.Trim()).ToArray();
+                for (int i = 0; i < lines.Length; i++)
                 {
+                    var line = lines[i];
+                    var match = stackRegex.Match(line);
                     var requirePath = match.Groups[1].Value;
                     var lineNumber = match.Groups[2].Value;
                     var message = match.Groups[3].Value;
@@ -40,8 +38,8 @@ public static class LogUtility
                     }
                     lines[i] = $"{message} () (at {refPath}:{lineNumber})";
                 }
+                result = string.Join("\n  ", lines);
             }
-            result = string.Join("\n  ", lines);
         }
 
         return result;
@@ -61,23 +59,23 @@ public static class LogUtility
         }
         return Color.white;
     }
-    delegate void LogAction(object message, UnityEngine.Object context = null);
-    public static void LogImpl(LogLevel level, string tag, object message, UnityEngine.Object context = null)
+    delegate void LogAction(object message, Object context = null);
+    public static void LogImpl(LogLevel level, string tag, object message, Object context = null)
     {
-        LogAction action = null;
+        LogAction action = Debug.Log;
         switch (level)
         {
             case LogLevel.Debug:
-                action = UnityEngine.Debug.Log;
+                action = Debug.Log;
                 break;
             case LogLevel.Info:
-                action = UnityEngine.Debug.Log;
+                action = Debug.Log;
                 break;
             case LogLevel.Warning:
-                action = UnityEngine.Debug.LogWarning;
+                action = Debug.LogWarning;
                 break;
             case LogLevel.Error:
-                action = UnityEngine.Debug.LogError;
+                action = Debug.LogError;
                 break;
         }
 #if UNITY_EDITOR
@@ -89,26 +87,26 @@ public static class LogUtility
 #endif
         action(fullMessage, context);
     }
-    public static void LogDebug(string tag, object message, UnityEngine.Object context = null)
+    public static void LogDebug(string tag, object message, Object context = null)
     {
         LogImpl(LogLevel.Debug, tag, message, context);
     }
 
-    public static void LogInfo(string tag, object message, UnityEngine.Object context = null)
+    public static void LogInfo(string tag, object message, Object context = null)
     {
         LogImpl(LogLevel.Info, tag, message, context);
     }
 
-    public static void LogWarning(string tag, object message, UnityEngine.Object context = null)
+    public static void LogWarning(string tag, object message, Object context = null)
     {
         LogImpl(LogLevel.Warning, tag, message, context);
     }
 
-    public static void LogError(string tag, object message, UnityEngine.Object context = null)
+    public static void LogError(string tag, object message, Object context = null)
     {
         LogImpl(LogLevel.Error, tag, message, context);
     }
-    public static bool Assert(bool condition, object message, UnityEngine.Object context = null)
+    public static bool Assert(bool condition, object message, Object context = null)
     {
         if (!condition)
         {

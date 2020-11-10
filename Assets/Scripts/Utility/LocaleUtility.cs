@@ -20,44 +20,31 @@ public static class LocaleUtility
             i18nReplacement = "i18n/" + language + "/";
 
             byte[] bytes = File.ReadAllBytes("Data/Localization/localization_" + language);
-            if (bytes != null)
+            localeMap.Clear();
+            using (MemoryStream ms = new MemoryStream(bytes))
+            using (BinaryReader br = new BinaryReader(ms))
             {
-                localeMap.Clear();
-                using (MemoryStream ms = new MemoryStream(bytes))
-                using (BinaryReader br = new BinaryReader(ms))
+                while (ms.Position < ms.Length)
                 {
-                    while (ms.Position < ms.Length)
-                    {
-                        uint hash = br.ReadUInt32();
-                        int length = br.ReadInt32();
-                        byte[] chars = br.ReadBytes(length);
-                        string text = System.Text.Encoding.UTF8.GetString(chars);
-                        localeMap.Add(hash, text);
-                    }
+                    uint hash = br.ReadUInt32();
+                    int length = br.ReadInt32();
+                    byte[] chars = br.ReadBytes(length);
+                    string text = System.Text.Encoding.UTF8.GetString(chars);
+                    localeMap.Add(hash, text);
                 }
-            }
-            else
-            {
-                LogUtility.LogError("Localization", string.Format("localization data for language {0} not found", language));
             }
         }
     }
 
     public static bool IsExist(string key, GameObject obj = null)
     {
-        var temp = key;
-        if (!localeMap.TryGetValue(CommonUtility.CalculateHash(key), out temp))
-        {
-            return false;
-        }
-        return true;
+        return localeMap.ContainsKey(CommonUtility.CalculateHash(key));
     }
 
 
     public static string GetString(string key)
     {
-        var result = key;
-        if (!localeMap.TryGetValue(CommonUtility.CalculateHash(key), out result))
+        if (!localeMap.TryGetValue(CommonUtility.CalculateHash(key), out var result))
         {
             LogUtility.LogWarning("Localization", $"Missing localization: {key}");
             return key;

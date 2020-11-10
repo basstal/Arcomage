@@ -73,7 +73,7 @@ public static class CommonUtility
 
     public static Color GetColorFromColor32(int r, int g, int b, int a)
     {
-        return (Color)new Color32((byte)r, (byte)g, (byte)b, (byte)a);
+        return new Color32((byte)r, (byte)g, (byte)b, (byte)a);
     }
     public static Sprite GetSpriteFromTexture2D(Texture2D tex)
     {
@@ -124,7 +124,7 @@ public static class CommonUtility
     public static void SetGraphicRaycastTarget(this GameObject target, bool value)
     {
         Graphic graphic;
-        if (target.TryGetComponent<Graphic>(out graphic))
+        if (target.TryGetComponent(out graphic))
         {
             graphic.raycastTarget = value;
         }

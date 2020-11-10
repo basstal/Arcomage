@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 7f187839e0a625d46b43b72a4f118bd2
   m_SerializeEntries:
   - m_GUID: d319a4305a4cc0243914b7427faac355
-    m_Address: Assets/Data/Lua
+    m_Address: Lua
     m_ReadOnly: 0
     m_SerializedLabels:
     - Lua
