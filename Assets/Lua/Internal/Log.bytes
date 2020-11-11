@@ -3,6 +3,7 @@ local function logMessage(level, tag, message, context)
     local stack = nil
     if __UNITY_EDITOR then
         stack = CS.LogUtility.GetCallStack(debug.traceback)
+        -- CS.UnityEngine.Debug.Log(vardump(stack))
     else
         -- ** todo 真机调试的log
         -- stack = table.join(table.slice(debug.traceback():split("\n"), 4), "\n")

@@ -51,6 +51,27 @@ MonoBehaviour:
       type: 3}
     m_TargetAsset: {fileID: 6407823995055015468, guid: d180b78a14b40dc42869ed213459fd53,
       type: 3}
+  - m_GUID: 0dc7c8b7aa06ee249873a4da52cece0a
+    m_Address: Assets/Textures/bricks.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Texture
+    m_MainAsset: {fileID: 2800000, guid: 0dc7c8b7aa06ee249873a4da52cece0a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: 0dc7c8b7aa06ee249873a4da52cece0a, type: 3}
+  - m_GUID: b083467953e78214da1f1c22f1b11b4a
+    m_Address: Assets/Textures/gems.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Texture
+    m_MainAsset: {fileID: 2800000, guid: b083467953e78214da1f1c22f1b11b4a, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: b083467953e78214da1f1c22f1b11b4a, type: 3}
+  - m_GUID: cbbcc8a77446e054797bf65f20e2552c
+    m_Address: Assets/Textures/recruits.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Texture
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5f7785964b4347244b983c2818026cc7, type: 2}
   m_SchemaSet:

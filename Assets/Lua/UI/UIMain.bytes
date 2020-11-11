@@ -74,17 +74,19 @@ end
 --     print(string.format("player %s inited", p.Id))
 -- end
 
+function GameMainCSCallback()
+    DB.TriggerEvent("Player/GenHandCards", GameMainCS, 5)
+    GameData.isStarted = true
+    GameData.CurrentStage = TurnRound
+end
+
 function GameStart()
     print("GameStart")
 
     if GameData.isStarted then
         GameEnd()
     end
-    GameMainCS:Init(function()
-        -- DB.TriggerEvent("Player/GenHandCards", GameMainCS, 5)
-        -- GameData.isStarted = true
-        -- GameData.CurrentStage = TurnRound
-    end)
+    GameMainCS:Init(GameMainCSCallback)
     GameData.CardEvents = {}
     GameData.currentPlayerIdx = 0
     GameData.playerSwitched = false
@@ -125,7 +127,7 @@ end
 function Awake()
     GameMainCS = this:GetComponent(typeof(CS.GameMain))
 
-    REF.Start:BindButtonEvent(GameStart)
+    BindButtonEventCS(REF.Start, GameStart)
     -- REF.SkipRound.gameObject:BindButtonEvent(SkipRound)
     DB.Bind("Left/Player", UIRefresh)
     DB.Bind("Right/Player", UIRefresh)

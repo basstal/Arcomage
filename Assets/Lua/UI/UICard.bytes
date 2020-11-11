@@ -5,14 +5,15 @@ local EmptyTable = {}
 
 function Awake()
     print("awake card")
-    REF.UseCardButton:BindButtonEvent(UseCard)
+    BindButtonEventCS(REF.UseCardButton, UseCard)
+    DB.RegisterEvent("Card/AssignData", OnAssignData)
 end
 
 function Init(p, c)
     -- REF.Button
     -- REF.Button.Image.color = color
     print(p.sprite)
-    REF.Button.Image.sprite = p.sprite
+    .sprite = p.sprite
     player = p
     card = c
     REF.Id.TextMeshProUGUI.text = string.format("%s-%s", card.cardCS.Id, card.uid)
@@ -35,30 +36,14 @@ function Init(p, c)
     end
 end
 
-function Init1(id)
-    local sourceData
-    if id == nil then
-        local count = #DataAllArr
-        local index = math.random(1, count)
-        sourceData = DataAllArr[index]
-        id = sourceData.id
-    else
-        sourceData = DataAllDict[id]
-    end
-    if sourceData == nil then
-        error(string.format("未找到id为%s的卡数据源，初始化失败", id))
-        return
-    end
-    self.id = id
-    self.name = sourceData.name
-    for _, cost in pairs(sourceData.costs) do
-        local card = CS.Card.Types.Cost()
-        card.Type = cost.type
-        card.Count = cost.count
-        self.costs:Add(card)
-    end
-    self.func = sourceData.func
-    self.note = sourceData.note
+function OnAssignData(targetObj, sourceData)
+    if targetObj ~= this then return end
+    m_sourceData = sourceData
+    local transform = this.transform
+    transform.localPosition = CS.UnityEngine.Vector3.zero
+    transform.localScale = CS.UnityEngine.Vector3.one
+    warning(vardump(sourceData))
+    REF.UseCardButtonImage.sprite = sourceData.sprite
 end
 
 function __tostring()

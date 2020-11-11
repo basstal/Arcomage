@@ -61,6 +61,28 @@ function string:isNilOrWhiteSpace()
     return self == nil or (type(self) == "string" and string.trim(self) == "")
 end
 
+function vardump(value, args)
+    if __UNITY_EDITOR then
+        args = args or {}
+        local depth = args.depth or 1
+        local result
+        local vType = type(value)
+        if vType == "table" then
+            result = table.dump(value, depth, args.indentStr)
+        elseif value == nil then
+            result = "nil"
+        else
+            result = string.format("[type:%s, tostring:%s]", vType, tostring(value))
+        end
+        if args.name ~= nil then
+            CS.CommonUtility.WriteToFile("Logs/" .. args.name .. ".log.bytes", result)
+        end
+        return result
+    else
+        return ""
+    end
+end
+
 -- function string:concat(suffix, separator)
 --     if self ~= "" and separator then
 --         return self..separator..suffix
@@ -192,46 +214,70 @@ end
 --     return result
 -- end
 
--- function table:dump()
---     if self ~= nil then
---         local visited = {}
---         local segs = table.linq({})
---         local function print_table_impl(self, indent)
---             segs:insert(indent .. "{")
---             segs:insert("\n")
---             for k, v in pairs(self) do
---                 if type(k) == "number" then
---                     segs:insert(string.format("%s  [%s] = ", indent, k))
---                 else
---                     segs:insert(string.format("%s  %s = ", indent, k))
---                 end
---                 if type(v) == "table" then
---                     if not visited[v] then
---                         visited[v] = true
---                         if table.empty(v) then
---                             segs:insert("{}")
---                         else
---                             segs:insert("\n")
---                             print_table_impl(v, indent .. "  ")
---                         end
---                         segs:insert(",\n")
---                     end
---                 else
---                     if type(v) == "string" then
---                         segs:insert(string.format('"%s",\n', v))
---                     else
---                         segs:insert(string.format("%s,\n", v))
---                     end
---                 end
---             end
---             segs:insert(indent .. "}")
---         end
+local visited = setmetatable({}, {__mode = "kv"})
+local skipped = {
+    __prototype = true
+}
 
---         print_table_impl(self, "")
+function table:dump(depth, indentStr)
+    if self ~= nil then
+        indentStr = indentStr or "  "
+        depth = depth or -1
+        for k in pairs(visited) do
+            visited[k] = nil
+        end
+        local segs = {}
+        local function print_table_impl(this, indentCount)
+            indentCount = indentCount or 0
+            if depth > 0 and indentCount > depth then
+                return
+            end
 
---         return segs:concat("")
---     end
--- end
+            local indent = string.rep(indentStr, indentCount + 1)
+            local notEmpty = false
+            table.insert(segs, "{\n")
+            for k, v in pairs(this) do
+                if not skipped[k] then
+                    notEmpty = true
+                    if type(k) == "string" then
+                        table.insert(segs, string.format("%s['%s'] = ", indent, k))
+                    else
+                        table.insert(segs, string.format("%s[%s] = ", indent, k))
+                    end
+                    if type(v) == "table" then
+                        if not visited[v] then
+                            visited[v] = true
+                            if table.empty(v) then
+                                table.insert(segs, "{}")
+                            else
+                                print_table_impl(v, indentCount + 1)
+                            end
+                        else
+                            table.insert(segs, string.format("%s", v))
+                        end
+                    else
+                        if type(v) == "string" then
+                            table.insert(segs, string.format('"%s"', v))
+                        else
+                            table.insert(segs, string.format("%s", v))
+                        end
+                    end
+                    table.insert(segs, ",\n")
+                end
+            end
+            if notEmpty then
+                table.insert(segs, string.rep(indentStr, indentCount) .. "}")
+            else
+                table.remove(segs, #segs)
+                table.insert(segs, "{}")
+            end
+        end
+
+        print_table_impl(self)
+
+        return table.concat(segs, "")
+    end
+end
 
 -- function table:find(predicate)
 --     if self ~= nil then
@@ -315,12 +361,12 @@ end
 --     return result
 -- end
 
--- function table:empty()
---     for _ in pairs(self) do
---         return false
---     end
---     return true
--- end
+function table.empty(t)
+    for _ in pairs(t) do
+        return false
+    end
+    return true
+end
 
 -- function table:mergefrom(...)
 --     for v, targetTable in pairs({...}) do

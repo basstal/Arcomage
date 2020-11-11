@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using XLua;
 
 [LuaCallCSharp]
@@ -14,14 +13,14 @@ public class GamePlayer : MonoBehaviour
 
     public int tower = 0;
     public int wall = 0;
-    public string playerName = null;
+    public string playerName;
     public bool useAI = false;
     // ** control the fillAmount of tower sprite
-    public const float TOWER_MAX_FILLAMOUNT_SCORE = 100;
-    public const float TOWER_MIN_FILLAMOUNT = 0.05f;
+    public const float TOWER_MAX_FILL_AMOUNT_SCORE = 100;
+    public const float TOWER_MIN_FILL_AMOUNT = 0.05f;
     // ** control the fillAmount of wall sprite
-    public const float WALL_MAX_FILLAMOUNT_SCORE = 100;
-    public const float WALL_MIN_FILLAMOUNT = 0.05f;
+    public const float WALL_MAX_FILL_AMOUNT_SCORE = 100;
+    public const float WALL_MIN_FILL_AMOUNT = 0.05f;
 
     public void Init()
     {

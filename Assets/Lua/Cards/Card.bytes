@@ -1,9 +1,8 @@
-
 local DataAllDict = {}
 local DataAllArr = {}
-local CardResource = require("CardResource")
-local CardAttack = require("CardAttack")
-local CardConstruct = require("CardConstruct")
+-- local CardResource = require("CardResource")
+-- local CardAttack = require("CardAttack")
+-- local CardConstruct = require("CardConstruct")
 local CardArcomage = require("CardArcomage")
 
 local function AddAll(data)
@@ -17,23 +16,9 @@ local function AddAll(data)
     end
 end
 
-AddAll(CardResource)
-AddAll(CardAttack)
-AddAll(CardConstruct)
+-- AddAll(CardResource)
+-- AddAll(CardAttack)
+-- AddAll(CardConstruct)
 AddAll(CardArcomage)
--- ** todo 临时把下发的卡改为只能是资源卡
--- AddAll(CardEnv)
--- AddAll(CardSpecial)
 
-local Card = {}
-Card.__index = Card
-local nextUid = 0
-
-function Card.New()
-    nextUid = nextUid + 1
-    return setmetatable({
-        uid = nextUid
-    }, Card)
-end
-
-return Card
+return DataAllArr

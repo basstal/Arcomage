@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
+using UnityEngine.UI;
 using XLua;
 using Object = UnityEngine.Object;
 
@@ -11,13 +15,13 @@ public class Injection
     public Object value;
 }
 
-public class LuaBehaviour : MonoBehaviour
+public class LuaBehaviour : MonoBehaviour, IDisposable
 {
     [SerializeField]
     public AssetReference script;
     [SerializeField]
     public Injection[] injections;
-    public LuaTable sandbox { get; private set; }
+    public LuaTable Sandbox { get; private set; }
     Action m_luaAwake;
     Action m_luaStart;
     Action m_luaLateUpdate;
@@ -26,9 +30,10 @@ public class LuaBehaviour : MonoBehaviour
     Action m_luaUpdate;
     Action m_luaOnDisable;
     Action m_luaOnDestroy;
-    private bool m_shouldDelayStart = false;
-    private bool m_shouldDelayOnEnable = false;
-    private bool m_completed = false;
+    private bool m_shouldDelayStart;
+    private bool m_shouldDelayOnEnable;
+    private bool m_completed;
+    private HashSet<Button> m_bindButtonCache;
     private void Awake()
     {
         script.LoadAssetAsync<TextAsset>().Completed += (op) =>
@@ -43,30 +48,30 @@ public class LuaBehaviour : MonoBehaviour
             var luaManager = LuaManager.Instance;
             Action luaBehaviourInit = () =>
             {
-                sandbox = luaManager.CreateSandbox(gameObject);
-                luaManager.DoChunk(sandbox, op.Result.bytes);
+                Sandbox = luaManager.CreateSandbox(this);
+                luaManager.DoChunk(Sandbox, op.Result.name, op.Result.bytes);
 
-                sandbox.Get("REF", out LuaTable injectionTable);
+                Sandbox.Get("REF", out LuaTable injectionTable);
                 foreach (var injection in injections)
                 {
                     injectionTable.Set(injection.name, injection.value);
                 }
                 injectionTable.Dispose();
                 
-                Debug.Log($" sandbox : {sandbox}, op.Result : {op.Result}");
-                sandbox.Get("Awake", out m_luaAwake);
-                sandbox.Get("Start", out m_luaStart);
-                sandbox.Get("LateUpdate", out m_luaLateUpdate);
-                sandbox.Get("FixedUpdate", out m_luaFixedUpdate);
-                sandbox.Get("OnEnable", out m_luaOnEnable);
-                sandbox.Get("Update", out m_luaUpdate);
-                sandbox.Get("OnDisable", out m_luaOnDisable);
-                sandbox.Get("OnDestroy", out m_luaOnDestroy);
+                Sandbox.Get("Awake", out m_luaAwake);
+                Sandbox.Get("Start", out m_luaStart);
+                Sandbox.Get("LateUpdate", out m_luaLateUpdate);
+                Sandbox.Get("FixedUpdate", out m_luaFixedUpdate);
+                Sandbox.Get("OnEnable", out m_luaOnEnable);
+                Sandbox.Get("Update", out m_luaUpdate);
+                Sandbox.Get("OnDisable", out m_luaOnDisable);
+                Sandbox.Get("OnDestroy", out m_luaOnDestroy);
+                Sandbox.Set<string, Action<GameObject, UnityAction>>("BindButtonEventCS", BindButtonEventCS);
 
                 m_luaAwake.SafeInvoke();
                 m_completed = true;
             };
-            if (luaManager.luaEnv != null)
+            if (luaManager.LuaEnv != null)
             {
                 luaBehaviourInit.Invoke();
             }
@@ -75,6 +80,17 @@ public class LuaBehaviour : MonoBehaviour
                 luaManager.OnInitFinished += luaBehaviourInit;
             }
         };
+    }
+
+    private void BindButtonEventCS(GameObject obj, UnityAction callback)
+    {
+        if (obj == null)
+            return;
+        var button = obj.GetOrAddComponent<Button>();
+        CommonUtility.SetEventHandler(button.onClick, callback);
+        obj.SetGraphicRaycastTarget(true);
+        m_bindButtonCache = m_bindButtonCache ?? new HashSet<Button>();
+        m_bindButtonCache.Add(button);
     }
     private void Start()
     {
@@ -132,7 +148,7 @@ public class LuaBehaviour : MonoBehaviour
         m_luaOnDisable.SafeInvoke();
     }
 
-    private void OnDestroy()
+    public void Dispose()
     {
         m_luaOnDestroy.SafeInvoke();
         m_luaAwake = null;
@@ -143,6 +159,26 @@ public class LuaBehaviour : MonoBehaviour
         m_luaUpdate = null;
         m_luaOnDisable = null;
         m_luaOnDestroy = null;
-        LuaManager.Instance.DestroySandbox(sandbox);
+        if (m_bindButtonCache != null)
+        {
+            foreach (var button in m_bindButtonCache.Where(button => button != null))
+            {
+#if UNITY_EDITOR
+
+                Debug.Log($" release button {button}");
+#endif
+                button.onClick?.RemoveAllListeners();
+                button.onClick = null;
+            }
+        }
+#if UNITY_EDITOR
+        Debug.Log($"LuaBehaviour {this} disposed");
+#endif
+    }
+    private void OnDestroy()
+    {
+        Dispose();
+        if (LuaManager.Instance != null && LuaManager.Instance.LuaEnv != null)
+            LuaManager.Instance.DestroySandbox(this);
     }
 }

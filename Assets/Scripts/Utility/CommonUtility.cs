@@ -1,6 +1,8 @@
 using UnityEngine.Events;
 using UnityEngine;
 using System;
+using System.IO;
+using UnityEditor;
 using UnityEngine.UI;
 using XLua;
 
@@ -25,6 +27,31 @@ public static class CommonUtility
 
         return result * 0x89ABCDEFu;
     }
+#if UNITY_EDITOR
+    public static void WriteToFile(string path, string content)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+        content = content.Replace("\r", "");
+        var dirty = !File.Exists(path);
+        if (!dirty)
+        {
+            dirty = File.ReadAllText(path) != content;
+        }
+
+        if (dirty)
+        {
+            var dir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrWhiteSpace(dir))
+            {
+                if (!Directory.Exists(dir)) 
+                    Directory.CreateDirectory(dir);
+                File.WriteAllText(path, content);
+                AssetDatabase.ImportAsset(path);
+            }
+        }
+    }
+#endif
     public static void SetEventHandler(UnityEvent @event, UnityAction callback)
     {
         @event.RemoveAllListeners();

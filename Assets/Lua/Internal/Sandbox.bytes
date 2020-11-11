@@ -1,11 +1,11 @@
 local Sandbox = {}
 local chunkCache = {}
-local sandboxMeta = {
+local sandboxMeta = strict({
     __index = _G,
     __gc = function(sandbox)
         print("Sandbox", "LuaGC release sandbox " .. tostring(sandbox))
     end,
-}
+})
 
 function Sandbox.CreateSandbox(gameObject)
     if gameObject == nil or gameObject:IsNull() then

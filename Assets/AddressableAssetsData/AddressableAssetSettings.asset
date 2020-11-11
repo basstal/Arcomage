@@ -70,6 +70,7 @@ MonoBehaviour:
     - default
     - Lua
     - prefab
+    - Texture
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: e51b6740e7322b54cb41d52ff6b164ca, type: 2}

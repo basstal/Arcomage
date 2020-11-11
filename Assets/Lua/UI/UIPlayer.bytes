@@ -1,3 +1,4 @@
+local Data = require("Card")
 local GamePlayerCS
 
 function Awake()
@@ -26,7 +27,7 @@ function Start()
     local hasTower = tower > 0
     REF.TowerRoof:SetActive(hasTower)
     if hasTower then
-        REF.TowerBodyImage.fillAmount = math.max(tower / GamePlayerCS.TOWER_MAX_FILLAMOUNT_SCORE, GamePlayerCS.TOWER_MIN_FILLAMOUNT)
+        REF.TowerBodyImage.fillAmount = math.max(tower / GamePlayerCS.TOWER_MAX_FILL_AMOUNT_SCORE, GamePlayerCS.TOWER_MIN_FILL_AMOUNT)
         RepositionRoof(REF.TowerRoof.transform, REF.TowerBodyImage)
     else
         REF.TowerBodyImage.fillAmount = 0
@@ -37,47 +38,35 @@ function Start()
     REF.WallRoof:SetActive(hasWall)
     if hasWall then
         RepositionRoof(REF.WallRoof.transform, REF.WallBodyImage);
-        REF.WallBodyImage.fillAmount = math.max(wall / GamePlayerCS.WALL_MAX_FILLAMOUNT_SCORE, GamePlayerCS.WALL_MIN_FILLAMOUNT)
+        REF.WallBodyImage.fillAmount = math.max(wall / GamePlayerCS.WALL_MAX_FILL_AMOUNT_SCORE, GamePlayerCS.WALL_MIN_FILL_AMOUNT)
     else
         REF.WallBodyImage.fillAmount = 0
     end
 end
 
 function OnGenHandCards(GameMainCS, cardCount)
-    -- GameMainCS
-    -- local handCards = {}
-    -- local used = {}
-    -- info(string.format("生成玩家%s 手牌张数%d ", player.Id, count))
-    -- local boardCardsCount = #boardCards
-    -- for _ = 1, count do
-    --     local r = math.random(1, boardCardsCount)
-    --     if used[r] == nil then
-    --         local c = boardCards[r]
-    --         used[r] = c
-    --         player.HandCards:Add(c.cardCS)
-    --         table.insert(handCards, c)
-    --         info("board card [" .. tostring(c) .. "]")
-    --     else
-    --         info("随机到重复卡牌 [" .. tostring(used[r]) .. "]")
-    --         local next = r % boardCardsCount + 1
-    --         while true do
-    --             if used[next] == nil then
-    --                 local nc = boardCards[next]
-    --                 used[next] = nc
-    --                 player.HandCards:Add(nc.cardCS)
-    --                 table.insert(handCards, nc)
-    --                 info("按next顺序添加 board card [" .. tostring(nc) .. "]")
-    --                 break
-    --             else
-    --                 next = next % boardCardsCount + 1
-    --             end
-    --             if next == r then
-    --                 error(string.format("玩家%s 卡组中没有足够的牌 可用于生成手牌", player.Id))
-    --                 return false
-    --             end
-    --         end
-    --     end
-    -- end
-    -- return true, handCards
-
+    local used = {}
+    info(string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, cardCount))
+    local dataSize = #Data
+    local cardObjCacheRoot = GameMainCS.CardObjCacheRoot
+    local ID2Sprite = GameMainCS.ID2Sprite
+    for _ = 1, cardCount do
+        local index = math.random(1, dataSize)
+        if used[index] == nil then
+            if cardObjCacheRoot.childCount > 0 then
+                local trans = cardObjCacheRoot:GetChild(0)
+                trans.parent = REF.HandCards.transform
+                local sourceData = Data[index]
+                -- ** todo 对齐 id
+                local tempId = sourceData.id - 7001
+                warning(vardump(tempId))
+                sourceData.sprite = ID2Sprite[tempId]
+                DB.TriggerEvent("Card/AssignData", trans.gameObject, sourceData)
+                used[index] = true
+            else
+                warning("GamePlay", "预设的(白板)卡牌数量已用完")
+                return
+            end
+        end
+    end
 end

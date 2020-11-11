@@ -1,7 +1,7 @@
 local EN = {
-    BrickCount = "{0} <size=80%>bricks",
-    GemsCount = "{0} <size=80%>gems",
-    RecuritsCount = "{0} <size=80%>recurits",
+    BrickCount = "{0} <size=80%>bricks</size>",
+    GemsCount = "{0} <size=80%>gems</size>",
+    RecuritsCount = "{0} <size=80%>recurits</size>",
     SingleScore = "{0}",
 }
 local localeMap = {

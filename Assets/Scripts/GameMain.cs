@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using XLua;
+using Object = UnityEngine.Object;
 
 [LuaCallCSharp]
 public class GameMain : MonoBehaviour
@@ -12,9 +14,13 @@ public class GameMain : MonoBehaviour
     [SerializeField] private AssetReference player1AssetRef;
     [SerializeField] private AssetReference player2AssetRef;
     [SerializeField] private AssetReference cardAssetRef;
+    [SerializeField] private AssetReference brickTextureAssetRef;
+    [SerializeField] private AssetReference gemTextureAssetRef;
+    [SerializeField] private AssetReference recruitTextureAssetRef;
     private GameObject m_player1Obj;
     private GameObject m_player2Obj;
-    public GameObject[] cardCache { get; private set; }
+    public Transform CardObjCacheRoot { get; private set; }
+    public Dictionary<int, Sprite> ID2Sprite { get; private set; }
     public async void Init(Action callback)
     {
         round = 0;
@@ -30,24 +36,47 @@ public class GameMain : MonoBehaviour
         }
         m_player2Obj.GetComponent<GamePlayer>().Init();
 
-        if (cardCache == null)
+        if (CardObjCacheRoot == null)
         {
-            cardCache = new GameObject[CardCacheSize];
-            var cardTemplate = await cardAssetRef.LoadAssetAsync<GameObject>().Task;
-            var cardsObjCache = transform.Find("CardsObjCache");
-            if (cardsObjCache == null)
+            CardObjCacheRoot = transform.Find("CardObjCacheRoot");
+            if (CardObjCacheRoot == null)
             {
-                cardsObjCache = new GameObject("CardsObjCache").transform;
-                cardsObjCache.parent = transform;
+                CardObjCacheRoot = new GameObject("CardObjCacheRoot").transform;
+                CardObjCacheRoot.parent = transform;
             }
-            for(int i = 0; i < CardCacheSize; ++i)
+            var cardTemplate = await cardAssetRef.LoadAssetAsync<GameObject>().Task;
+            for(var i = 0; i < CardCacheSize; ++i)
             {
-                cardCache[i] = Instantiate(cardTemplate, cardsObjCache);
-            };
+                Instantiate(cardTemplate, CardObjCacheRoot);
+            }
         }
-        foreach (var card in cardCache)
+        for (var i = 0; i < CardObjCacheRoot.childCount; ++i)
         {
-            card.GetComponent<GameCard>().Init();
+            CardObjCacheRoot.GetChild(i).GetComponent<GameCard>().Init();
+        }
+
+        if (ID2Sprite == null)
+        {
+            ID2Sprite = new Dictionary<int, Sprite>();
+
+            async Task LoadSprites(AssetReference assetRef, int addID)
+            {
+                var loadedTex = await assetRef.LoadAssetAsync<IList<Sprite>>().Task;
+                // ** TODO make real ID
+                foreach (var sprite in loadedTex)
+                {
+                    var splitResult = sprite.name.Split('_');
+                    int.TryParse(splitResult[1], out var id);
+                    if (id == 34)
+                        continue;
+                    Debug.Log($" add ID : {id + addID}");
+                    ID2Sprite.Add(id + addID, sprite);
+                }
+            }
+
+            await LoadSprites(brickTextureAssetRef, 0);
+            await LoadSprites(gemTextureAssetRef, 34);
+            await LoadSprites(recruitTextureAssetRef, 68);
         }
         callback.SafeInvoke();
     }

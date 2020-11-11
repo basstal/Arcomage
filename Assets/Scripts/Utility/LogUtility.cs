@@ -31,12 +31,8 @@ public static class LogUtility
                     var requirePath = match.Groups[1].Value;
                     var lineNumber = match.Groups[2].Value;
                     var message = match.Groups[3].Value;
-                    string refPath = $"{Application.dataPath}/Scripts/{requirePath}.bytes";
-                    if (requirePath.EndsWith(".bytes"))
-                    {
-                        refPath = $"{Application.dataPath}/Scripts/{requirePath}";
-                    }
-                    lines[i] = $"{message} () (at {refPath}:{lineNumber})";
+                    // ** TODO make it can be clicked on console
+                    lines[i] = $"{message} () (at {requirePath}:{lineNumber})";
                 }
                 result = string.Join("\n  ", lines);
             }

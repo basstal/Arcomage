@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 using XLua;
@@ -19,7 +20,7 @@ public class LocaleManager : Singleton<LocaleManager>
 
         void LoadLocaleMap()
         {
-            var envGlobal = luaManager.luaEnv;
+            var envGlobal = luaManager.LuaEnv;
             var objs = envGlobal.DoString(@"return require('LocaleMap')");
             if (objs != null && objs[0] is LuaTable localeMapT)
             {
@@ -29,7 +30,7 @@ public class LocaleManager : Singleton<LocaleManager>
                     uint hashKey = CommonUtility.CalculateHash(k);
                     m_localeMap.Add(hashKey, v);
 #if UNITY_EDITOR
-                    Debug.Log($"hashKey :{hashKey}, v : {v}");
+                    Debug.Log($"hashKey :{hashKey}, v : {Regex.Replace(v, @"<[^>]*>", "")}");
 #endif
                 });
                 englishMapT?.Dispose();
@@ -37,7 +38,7 @@ public class LocaleManager : Singleton<LocaleManager>
             }
         }
 
-        if (luaManager.luaEnv != null)
+        if (luaManager.LuaEnv != null)
         {
             LoadLocaleMap();
         }

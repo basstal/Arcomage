@@ -350,6 +350,15 @@ MonoBehaviour:
   cardAssetRef:
     m_AssetGUID: d180b78a14b40dc42869ed213459fd53
     m_SubObjectName: 
+  brickTextureAssetRef:
+    m_AssetGUID: 0dc7c8b7aa06ee249873a4da52cece0a
+    m_SubObjectName: 
+  gemTextureAssetRef:
+    m_AssetGUID: b083467953e78214da1f1c22f1b11b4a
+    m_SubObjectName: 
+  recruitTextureAssetRef:
+    m_AssetGUID: cbbcc8a77446e054797bf65f20e2552c
+    m_SubObjectName: 
 --- !u!1001 &431881276
 PrefabInstance:
   m_ObjectHideFlags: 0

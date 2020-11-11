@@ -10,7 +10,7 @@ public enum CostType
 public class GameCard : MonoBehaviour
 {
     public int id = 0;
-    public string cardName = null;
+    public string cardName;
     public CostType costType = CostType.None;
     public int cost = 0;
 
