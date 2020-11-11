@@ -1,24 +1,26 @@
 local Sandbox = {}
 local chunkCache = {}
+local sandboxMeta = {
+    __index = _G,
+    __gc = function(sandbox)
+        print("Sandbox", "LuaGC release sandbox " .. tostring(sandbox))
+    end,
+}
 
 function Sandbox.CreateSandbox(gameObject)
-    local box
-    if gameObject ~= nil and not gameObject:IsNull() then
-        box = 
-        {
-            this = gameObject,
-            REF = makeRef(gameObject),
-        }
-    else
-        error("Sandbox", "沙盒创建失败")
+    if gameObject == nil or gameObject:IsNull() then
+        error("Sandbox", "create sandbox failed")
         return
     end
-
-    return strict(setmetatable(box, {__index = _G}))
+    local box = setmetatable({
+        this = gameObject,
+        REF = {},
+    }, sandboxMeta)
+    return box
 end
 
 function Sandbox:DestroySandbox()
-    for k, v in pairs(self) do
+    for k in pairs(self) do
         self[k] = nil
     end
 end
@@ -33,7 +35,7 @@ local function LoadPackage(...)
 end
 
 function Sandbox:DoChunk(path, forceReload)
-    if string.isnilorempty(path) then
+    if string.isNilOrWhiteSpace(path) then
         error("Sandbox", "DoChunk path is nil or empty? DoChunk failed!")
         return
     end

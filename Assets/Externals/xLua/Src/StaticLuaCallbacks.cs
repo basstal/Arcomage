@@ -636,7 +636,7 @@ namespace XLua
         }
 #endif
 
-#if !UNITY_SWITCH || UNITY_EDITOR
+#if (!UNITY_SWITCH && !UNITY_WEBGL) || UNITY_EDITOR
         [MonoPInvokeCallback(typeof(LuaCSFunction))]
         internal static int LoadSocketCore(RealStatePtr L)
         {
@@ -680,7 +680,7 @@ namespace XLua
             }
         }
 
-#if !XLUA_GENERAL
+/*#if !XLUA_GENERAL
         [MonoPInvokeCallback(typeof(LuaCSFunction))]
         internal static int LoadFromResource(RealStatePtr L)
         {
@@ -769,7 +769,7 @@ namespace XLua
                 return LuaAPI.luaL_error(L, "c# exception in LoadFromStreamingAssetsPath:" + e);
             }
         }
-#endif
+#endif*/
 
         [MonoPInvokeCallback(typeof(LuaCSFunction))]
         internal static int LoadFromCustomLoaders(RealStatePtr L)

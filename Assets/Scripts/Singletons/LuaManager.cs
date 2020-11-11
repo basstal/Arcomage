@@ -19,6 +19,7 @@ public class LuaManager : Singleton<LuaManager>
 #pragma warning restore 649
     private readonly List<LuaTable> m_sandboxes = new List<LuaTable>();
     private readonly Dictionary<string, byte[]> m_scriptName2Content = new Dictionary<string, byte[]>();
+    private float m_lastGCTime = 0;
     public event Action OnInitFinished;
     public static string luaScriptsLabel = "Lua";
     public LuaEnv luaEnv { get; private set; }
@@ -42,6 +43,7 @@ public class LuaManager : Singleton<LuaManager>
                 injectedLuaFunctions.Get("CreateSandbox", out m_luaCreateSandbox);
                 injectedLuaFunctions.Get("DestroySandbox", out m_luaDestroySandbox);
                 injectedLuaFunctions.Get("DoChunk", out m_luaDoChunk);
+                injectedLuaFunctions.Dispose();
             }
             luaEnv = newEnv;
             OnInitFinished?.Invoke();
@@ -53,10 +55,7 @@ public class LuaManager : Singleton<LuaManager>
         List<TextAsset> result = new List<TextAsset>();
         await AddressableUtility.InitByNameOrLabel(luaScriptsLabel, result);
         foreach (var asset in result)
-        {
-            Debug.Log($"asset.name : {asset.name}");
-            m_scriptName2Content.Add(asset.name, asset.bytes);
-        }
+            m_scriptName2Content[asset.name] = asset.bytes;
     }
 
     private byte[] Loader(ref string requireName)
@@ -104,6 +103,7 @@ public class LuaManager : Singleton<LuaManager>
             return;
         m_sandboxes.Remove(sandbox);
         m_luaDestroySandbox(sandbox);
+        sandbox.Dispose();
     }
 
     public void CollectGarbage()
@@ -115,7 +115,9 @@ public class LuaManager : Singleton<LuaManager>
 
     private void Update()
     {
+        if (Time.time - m_lastGCTime <= 1) return;
         luaEnv?.Tick();
+        m_lastGCTime = Time.time;
     }
 
     private void DestroyAllLuaSandbox()
@@ -123,6 +125,7 @@ public class LuaManager : Singleton<LuaManager>
         foreach (var luaTable in m_sandboxes.Where(t => t != null))
         {
             m_luaDestroySandbox(luaTable);
+            luaTable.Dispose();
         }
         m_sandboxes.Clear();
     }
@@ -136,5 +139,8 @@ public class LuaManager : Singleton<LuaManager>
         m_luaDoChunk = null;
         luaEnv?.Dispose();
         luaEnv = null;
+#if UNITY_EDITOR
+        Debug.Log($"LuaManager Uninit");
+#endif
     }
 }

@@ -1,12 +1,3 @@
-local type2String = {
-    [CS.TOW.ResourceType.None] = "None",
-    [CS.TOW.ResourceType.Monster] = "Monster",
-    [CS.TOW.ResourceType.Jewelry] = "Jewelry",
-    [CS.TOW.ResourceType.Brick] = "Brick",
-    [CS.TOW.ResourceType.Food] = "Food",
-    [CS.TOW.ResourceType.Labor] = "Labor",
-}
-
 local card
 local player
 local U = require("Utils")
@@ -14,18 +5,75 @@ local EmptyTable = {}
 
 function Awake()
     print("awake card")
-    REF.Button.gameObject:BindButtonEvent(UseCard)
+    REF.UseCardButton:BindButtonEvent(UseCard)
+end
+
+function Init(p, c)
+    -- REF.Button
+    -- REF.Button.Image.color = color
+    print(p.sprite)
+    REF.Button.Image.sprite = p.sprite
+    player = p
+    card = c
+    REF.Id.TextMeshProUGUI.text = string.format("%s-%s", card.cardCS.Id, card.uid)
+
+    local costText = ""
+    -- for i = 0, card.cardCS.Costs.Count - 1 do
+    --     local cost = card.cardCS.Costs[i]
+    --     costText = costText .. type2String[cost.Type] .. "(" .. cost.Count .. ")\n"
+    -- end
+    REF.Cost.TextMeshProUGUI.text = costText
+    REF.Func.TextMeshProUGUI.text = card.note
+
+    local result = U.ValidCardCost(player, card)
+    if result then
+        print(string.format("play tween uid : %s", card.uid))
+        REF.root.DOTweenAnimation:DORestart()
+    else
+        print(string.format("stop tween uid : %s", card.uid))
+        REF.root.DOTweenAnimation:DOPause()
+    end
+end
+
+function Init1(id)
+    local sourceData
+    if id == nil then
+        local count = #DataAllArr
+        local index = math.random(1, count)
+        sourceData = DataAllArr[index]
+        id = sourceData.id
+    else
+        sourceData = DataAllDict[id]
+    end
+    if sourceData == nil then
+        error(string.format("未找到id为%s的卡数据源，初始化失败", id))
+        return
+    end
+    self.id = id
+    self.name = sourceData.name
+    for _, cost in pairs(sourceData.costs) do
+        local card = CS.Card.Types.Cost()
+        card.Type = cost.type
+        card.Count = cost.count
+        self.costs:Add(card)
+    end
+    self.func = sourceData.func
+    self.note = sourceData.note
+end
+
+function __tostring()
+    return string.format("uid(%s) : %s", self.uid, self.id)
 end
 
 function UseCard()
     if card == nil then
         error("卡面为空数据？？")
-        return 
+        return
     end
 
-    local sd = CS.UnityEngine.GameObject.Find("Fight"):GetComponent(typeof(CS.TOW.LuaBehaviour)).sandbox
+    local sd = CS.UnityEngine.GameObject.Find("Fight"):GetComponent(typeof(CS.LuaBehaviour)).sandbox
     local FightLua = sd.FightLua
-	if FightLua.CurrentStage == sd.WaitPlayer then
+    if FightLua.CurrentStage == sd.WaitPlayer then
         local player = FightLua.players[FightLua.currentPlayer]
         local valid = U.ValidCardCost(player, card)
         if valid then
@@ -43,7 +91,7 @@ function UseCard()
             -- for i, c in pairs(player.handCards) do
             --     print("index ".. tostring(i) .. " card " .. tostring(c))
             -- end
-            
+
             U.RefreshPlayerUI(player)
             if result.enemyInfoRefresh then
                 local target = U.GetEnemyPlayer(player)
@@ -53,32 +101,5 @@ function UseCard()
         else
             warning("资源不够使用该卡牌")
         end
-    end
-end
-
-function Init(p, c)
-    -- REF.Button
-    -- REF.Button.Image.color = color
-    print(p.sprite)
-    REF.Button.Image.sprite = p.sprite
-    player = p
-    card = c
-    REF.Id.TextMeshProUGUI.text = string.format("%s-%s", card.cardCS.Id, card.uid)
-
-    local costText = ""
-    for i = 0, card.cardCS.Costs.Count - 1 do
-        local cost = card.cardCS.Costs[i]
-        costText = costText .. type2String[cost.Type] .. "(" .. cost.Count .. ")\n"
-    end
-    REF.Cost.TextMeshProUGUI.text = costText
-    REF.Func.TextMeshProUGUI.text = card.note
-
-    local result = U.ValidCardCost(player, card)
-    if result then
-        print(string.format("play tween uid : %s", card.uid))
-        REF.root.DOTweenAnimation:DORestart()
-    else
-        print(string.format("stop tween uid : %s", card.uid))
-        REF.root.DOTweenAnimation:DOPause()
     end
 end

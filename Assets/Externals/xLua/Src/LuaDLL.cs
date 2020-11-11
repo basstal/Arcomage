@@ -33,7 +33,7 @@ namespace XLua.LuaDLL
 
     public partial class Lua
 	{
-#if (UNITY_IPHONE || UNITY_WEBGL || UNITY_SWITCH) && !UNITY_EDITOR
+#if (UNITY_IPHONE || UNITY_TVOS || UNITY_WEBGL || UNITY_SWITCH) && !UNITY_EDITOR
         const string LUADLL = "__Internal";
 #else
         const string LUADLL = "xlua";
@@ -292,7 +292,7 @@ namespace XLua.LuaDLL
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_pushstring(IntPtr L, string str);
 #else
-        public static void lua_pushstring(IntPtr L, string str) //ҵ��ʹ��
+        public static void lua_pushstring(IntPtr L, string str) //业务使用
         {
             if (str == null)
             {
@@ -456,7 +456,7 @@ namespace XLua.LuaDLL
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaopen_i64lib(IntPtr L);//[,,m]
 
-#if !UNITY_SWITCH || UNITY_EDITOR
+#if (!UNITY_SWITCH && !UNITY_WEBGL) || UNITY_EDITOR
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern int luaopen_socket_core(IntPtr L);//[,,m]
 #endif
@@ -542,7 +542,7 @@ namespace XLua.LuaDLL
         //[DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         //public static extern void xlua_pushbuffer(IntPtr L, byte[] buff);
 
-        //����Unity����������ɵ�struct�϶࣬�⼸��api�����Ż�����struct
+        //对于Unity，仅浮点组成的struct较多，这几个api用于优化这类struct
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern bool xlua_pack_float2(IntPtr buff, int offset, float f1, float f2);
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]

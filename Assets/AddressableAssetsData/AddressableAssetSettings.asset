@@ -27,7 +27,6 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 066d027afab839741986e53e19d15d98, type: 2}
   - {fileID: 11400000, guid: df9909d96e295a145bf4c3bf5d14e9eb, type: 2}
-  - {fileID: 11400000, guid: ec24299b6b3731b46a8df5e5c68b92bc, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -70,6 +69,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - Lua
+    - prefab
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: e51b6740e7322b54cb41d52ff6b164ca, type: 2}

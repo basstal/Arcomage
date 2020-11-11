@@ -1,0 +1,83 @@
+local GamePlayerCS
+
+function Awake()
+    GamePlayerCS = this:GetComponent(typeof(CS.GamePlayer))
+    DB.RegisterEvent("Player/GenHandCards", OnGenHandCards)
+end
+
+local function RepositionRoof(roofTrans, bodyImage)
+    local position = roofTrans.localPosition
+    local parentImage = roofTrans.parent:GetComponent(typeof(CS.UnityEngine.UI.Image))
+    position.y = parentImage.preferredHeight / 2 + bodyImage.preferredHeight * bodyImage.fillAmount
+    roofTrans.localPosition = position
+end
+
+function Start()
+    local GetString = CS.LocaleManager.GetString
+    REF.BricksCountTMP.text = GetString("BrickCount", GamePlayerCS.brick)
+    REF.GemsCountTMP.text = GetString("GemsCount", GamePlayerCS.gem)
+    REF.RecruitsCountTMP.text = GetString("RecuritsCount", GamePlayerCS.recruit)
+    local tower = GamePlayerCS.tower
+    REF.TowerScoreTMP.text = GetString("SingleScore", tower)
+    local wall = GamePlayerCS.wall
+    REF.WallScoreTMP.text = GetString("SingleScore", wall)
+    REF.PlayerNameTMP.text = GamePlayerCS.playerName
+
+    local hasTower = tower > 0
+    REF.TowerRoof:SetActive(hasTower)
+    if hasTower then
+        REF.TowerBodyImage.fillAmount = math.max(tower / GamePlayerCS.TOWER_MAX_FILLAMOUNT_SCORE, GamePlayerCS.TOWER_MIN_FILLAMOUNT)
+        RepositionRoof(REF.TowerRoof.transform, REF.TowerBodyImage)
+    else
+        REF.TowerBodyImage.fillAmount = 0
+    end
+
+
+    local hasWall = wall > 0
+    REF.WallRoof:SetActive(hasWall)
+    if hasWall then
+        RepositionRoof(REF.WallRoof.transform, REF.WallBodyImage);
+        REF.WallBodyImage.fillAmount = math.max(wall / GamePlayerCS.WALL_MAX_FILLAMOUNT_SCORE, GamePlayerCS.WALL_MIN_FILLAMOUNT)
+    else
+        REF.WallBodyImage.fillAmount = 0
+    end
+end
+
+function OnGenHandCards(GameMainCS, cardCount)
+    -- GameMainCS
+    -- local handCards = {}
+    -- local used = {}
+    -- info(string.format("生成玩家%s 手牌张数%d ", player.Id, count))
+    -- local boardCardsCount = #boardCards
+    -- for _ = 1, count do
+    --     local r = math.random(1, boardCardsCount)
+    --     if used[r] == nil then
+    --         local c = boardCards[r]
+    --         used[r] = c
+    --         player.HandCards:Add(c.cardCS)
+    --         table.insert(handCards, c)
+    --         info("board card [" .. tostring(c) .. "]")
+    --     else
+    --         info("随机到重复卡牌 [" .. tostring(used[r]) .. "]")
+    --         local next = r % boardCardsCount + 1
+    --         while true do
+    --             if used[next] == nil then
+    --                 local nc = boardCards[next]
+    --                 used[next] = nc
+    --                 player.HandCards:Add(nc.cardCS)
+    --                 table.insert(handCards, nc)
+    --                 info("按next顺序添加 board card [" .. tostring(nc) .. "]")
+    --                 break
+    --             else
+    --                 next = next % boardCardsCount + 1
+    --             end
+    --             if next == r then
+    --                 error(string.format("玩家%s 卡组中没有足够的牌 可用于生成手牌", player.Id))
+    --                 return false
+    --             end
+    --         end
+    --     end
+    -- end
+    -- return true, handCards
+
+end

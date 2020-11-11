@@ -1,12 +1,10 @@
 
 local DataAllDict = {}
 local DataAllArr = {}
-local CardResource = require("Cards/CardResource")
-local CardAttack = require("Cards/CardAttack")
-local CardConstruct = require("Cards/CardConstruct")
-local CardEnv = require("Cards/CardEnv")
-local CardSpecial = require("Cards/CardSpecial")
-local CardArcomage = require("Cards/CardArcomage")
+local CardResource = require("CardResource")
+local CardAttack = require("CardAttack")
+local CardConstruct = require("CardConstruct")
+local CardArcomage = require("CardArcomage")
 
 local function AddAll(data)
     for _, res in pairs(data) do
@@ -29,51 +27,13 @@ AddAll(CardArcomage)
 
 local Card = {}
 Card.__index = Card
-Card.uidRoot = 1
+local nextUid = 0
 
 function Card.New()
-    local n = {
-        uid = Card.uidRoot
-    }
-    Card.uidRoot = Card.uidRoot + 1
-    n.cardCS = CS.TOW.Card()
-    setmetatable(n, Card)
-    return n
-end
-
-function Card:Init(id)
-    local sourceData
-    if id == nil then
-        local count = #DataAllArr
-        local index = math.random(1, count)
-        sourceData = DataAllArr[index]
-        id = sourceData.id
-    else
-        sourceData = DataAll[id]
-    end
-    if sourceData == nil then
-        error(string.format("未找到id为%s的卡数据源，初始化失败", id))
-        return
-    end
-    self.cardCS.Id = id
-    self.cardCS.Name = sourceData.name
-    for _, cost in pairs(sourceData.costs) do
-        local card = CS.TOW.Card.Types.Cost()
-        card.Type = cost.type
-        card.Count = cost.count
-        self.cardCS.Costs:Add(card)
-    end
-    self.func = sourceData.func
-    self.note = sourceData.note
-end
-
-function Card:GenEnvTag()
-    local r = math.random(1, 4)
-    self.cardCS.EnvTag = r
-end
-
-function Card:__tostring()
-    return string.format("uid(%s) : %s", self.uid, self.cardCS:ToString())
+    nextUid = nextUid + 1
+    return setmetatable({
+        uid = nextUid
+    }, Card)
 end
 
 return Card

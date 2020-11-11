@@ -14,6 +14,17 @@ public static class CommonUtility
             result = (result ^ ((uint)str[i] & 0xFF)) * 0x89ABCDEFu;
         return result * 0x89ABCDEFu;
     }
+    public static uint CalculateHash(char[] chars,int length)
+    {
+        uint result = 0x01234567u;
+        for (int i = 0; i < length; ++i)
+        {
+            var b = (uint)chars[i];
+            result = (result ^ (b & 0xFF)) * 0x89ABCDEFu;
+        }
+
+        return result * 0x89ABCDEFu;
+    }
     public static void SetEventHandler(UnityEvent @event, UnityAction callback)
     {
         @event.RemoveAllListeners();
@@ -70,15 +81,6 @@ public static class CommonUtility
 
         return Color.white;
     }
-
-    public static Color GetColorFromColor32(int r, int g, int b, int a)
-    {
-        return new Color32((byte)r, (byte)g, (byte)b, (byte)a);
-    }
-    public static Sprite GetSpriteFromTexture2D(Texture2D tex)
-    {
-        return Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
-    }
     #region Object
     public static bool IsNull(this UnityEngine.Object o)
     {
@@ -123,8 +125,7 @@ public static class CommonUtility
     }
     public static void SetGraphicRaycastTarget(this GameObject target, bool value)
     {
-        Graphic graphic;
-        if (target.TryGetComponent(out graphic))
+        if (target.TryGetComponent(out Graphic graphic))
         {
             graphic.raycastTarget = value;
         }

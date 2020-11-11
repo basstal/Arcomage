@@ -83,7 +83,7 @@ public static class LogUtility
 
         string fullMessage = $"<color='#{ColorUtility.ToHtmlStringRGB(color)}'><b>[{level}|{tag}]</b></color>\n{message}";
 #else
-        string fullMessage = $"[{DateTime.Now:HH:mm:ss}|{level}|{tag}]\n{message}";
+        string fullMessage = $"[{level}|{tag}]\n{message}";
 #endif
         action(fullMessage, context);
     }

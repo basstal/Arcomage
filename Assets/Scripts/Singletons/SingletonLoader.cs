@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -32,5 +33,10 @@ public class SingletonLoader : MonoBehaviour
             var singletonBase = singleton.GetComponent<SingletonBase>();
             await singletonBase.Uninit();
         }
+    }
+
+    private void OnDestroy()
+    {
+        UninitSingletons();
     }
 }

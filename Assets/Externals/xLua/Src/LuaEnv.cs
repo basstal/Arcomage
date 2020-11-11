@@ -71,14 +71,19 @@ namespace XLua
 
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock(luaEnvLock)
-            {
 #endif
+            {
                 LuaIndexes.LUA_REGISTRYINDEX = LuaAPI.xlua_get_registry_index();
 #if GEN_CODE_MINIMIZE
                 LuaAPI.xlua_set_csharp_wrapper_caller(InternalGlobals.CSharpWrapperCallerPtr);
 #endif
                 // Create State
+#if XLUA_ENABLE_MEMORYPOOL
+                LuaAPI.luaM_pool_reset();
+                rawL = LuaAPI.lua_newstate(LuaAPI.luaM_pool_alloc, IntPtr.Zero);
+#else
                 rawL = LuaAPI.luaL_newstate();
+#endif
 
                 //Init Base Libs
                 LuaAPI.luaopen_xlua(rawL);
@@ -104,10 +109,10 @@ namespace XLua
 
                 AddSearcher(StaticLuaCallbacks.LoadBuiltinLib, 2); // just after the preload searcher
                 AddSearcher(StaticLuaCallbacks.LoadFromCustomLoaders, 3);
-#if !XLUA_GENERAL
-                AddSearcher(StaticLuaCallbacks.LoadFromResource, 4);
-                AddSearcher(StaticLuaCallbacks.LoadFromStreamingAssetsPath, -1);
-#endif
+// #if !XLUA_GENERAL
+//                 AddSearcher(StaticLuaCallbacks.LoadFromResource, 4);
+//                 AddSearcher(StaticLuaCallbacks.LoadFromStreamingAssetsPath, -1);
+// #endif
                 DoString(init_xlua, "Init");
                 init_xlua = null;
 
@@ -184,9 +189,7 @@ namespace XLua
                 translator.CreateArrayMetatable(rawL);
                 translator.CreateDelegateMetatable(rawL);
                 translator.CreateEnumerablePairs(rawL);
-#if THREAD_SAFE || HOTFIX_ENABLE
             }
-#endif
         }
 
         private static List<Action<LuaEnv, ObjectTranslator>> initers = null;
@@ -359,7 +362,7 @@ namespace XLua
 #endif
         }
 
-        //����API
+        //兼容API
         public void GC()
         {
             Tick();
@@ -398,7 +401,7 @@ namespace XLua
             System.GC.WaitForPendingFinalizers();
         }
 
-        public virtual void Dispose(bool dispose)
+        public virtual void Dispose(bool dispose,bool force = false)
         {
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnvLock)
@@ -407,9 +410,10 @@ namespace XLua
                 if (disposed) return;
                 Tick();
 
-                if (!translator.AllDelegateBridgeReleased())
+                if (!force && !translator.AllDelegateBridgeReleased())
                 {
-                    throw new InvalidOperationException("try to dispose a LuaEnv with C# callback!");
+                    try { DoString("print_func_ref_by_csharp()"); }
+                    catch(Exception) {}                    throw new InvalidOperationException("try to dispose a LuaEnv with C# callback!");
                 }
                 
                 ObjectTranslatorPool.Instance.Remove(L);
@@ -594,14 +598,27 @@ namespace XLua
             base = function(csobj)
                 return setmetatable({__csobj = csobj}, base_mt)
             end
+
+            local __print = print
+
+            function print_func_ref_by_csharp()
+                local registry = debug.getregistry()
+                __print('Unreleased C# referenced lua functions:')
+                for k, v in pairs(registry) do
+                    if type(k) == 'number' and type(v) == 'function' and registry[v] == k then
+                        local info = debug.getinfo(v)
+                        __print(string.format('%s:%d', info.short_src, info.linedefined))
+                    end
+                end
+            end
             ";
 
         public delegate byte[] CustomLoader(ref string filepath);
 
         internal List<CustomLoader> customLoaders = new List<CustomLoader>();
 
-        //loader : CustomLoader�� filepath��������ref���ͣ�������require�Ĳ����������Ҫ֧�ֵ��ԣ���Ҫ�����ʵ·����
-        //                        ����ֵ���������null��������ظ�Դ���޺��ʵ��ļ������򷵻�UTF8�����byte[]
+        //loader : CustomLoader， filepath参数：（ref类型）输入是require的参数，如果需要支持调试，需要输出真实路径。
+        //                        返回值：如果返回null，代表加载该源下无合适的文件，否则返回UTF8编码的byte[]
         public void AddLoader(CustomLoader loader)
         {
             customLoaders.Add(loader);

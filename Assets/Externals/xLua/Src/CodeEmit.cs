@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Tencent is pleased to support the open source community by making xLua available.
  * Copyright (C) 2016 THL A29 Limited, a Tencent company. All rights reserved.
  * Licensed under the MIT License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -231,7 +231,7 @@ namespace XLua
             {
                 var to_be_impl = group.Key;
 
-                var method_builder = defineImplementMethod(impl_type_builder, to_be_impl, to_be_impl.Attributes, "Invoke" + (genID++));
+                var method_builder = defineImplementMethod(impl_type_builder, to_be_impl, to_be_impl.Attributes, "__Gen_Delegate_Imp" + (genID++));
 
                 emitMethodImpl(to_be_impl, method_builder.GetILGenerator(), false);
 
@@ -1590,6 +1590,60 @@ namespace XLua
             return -1;
         }
 
+        MethodBuilder emitLuaCSFunction(MethodBuilder methodBuilder, MethodBase method, Type declaringType, string methodDesciption = null)
+        {
+            ILGenerator il = methodBuilder.GetILGenerator();
+            bool isStatic = method.IsStatic;
+            var paramInfos = method.GetParameters();
+            bool needObj = false;
+            Type objType = null;
+            if (Utils.IsDefined(method, typeof(System.Runtime.CompilerServices.ExtensionAttribute)))
+            {
+                needObj = true;
+                objType = declaringType;
+            }
+            else if (!isStatic)
+            {
+                needObj = true;
+                objType = method.DeclaringType;
+            }
+
+#if LUACSFUNC_TRY_CATCH
+            LocalBuilder wrapRet = il.DeclareLocal(typeof(int));
+            LocalBuilder ex = il.DeclareLocal(typeof(Exception));
+            Label retPoint = il.DefineLabel();
+#endif
+            LocalBuilder L = il.DeclareLocal(typeof(RealStatePtr));
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Stloc, L);
+#if LUACSFUNC_TRY_CATCH
+            Label exceptionBlock = il.BeginExceptionBlock();
+#endif
+            if (needObj)
+            {
+                LocalBuilder translator = il.DeclareLocal(typeof(ObjectTranslator));
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Call, ObjectTranslatorPool_FindTranslator);
+                il.Emit(OpCodes.Stloc, translator);
+                EmitGetObject(il, 1, objType, L, translator, null);
+                il.Emit(OpCodes.Ldarg_0);
+                il.Emit(OpCodes.Ldc_I4_1);
+                il.Emit(OpCodes.Call, LuaAPI_lua_remove);
+            }
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(isStatic ? OpCodes.Call : OpCodes.Callvirt, method as MethodInfo);
+            il.Emit(OpCodes.Ret);
+#if LUACSFUNC_TRY_CATCH
+            il.Emit(OpCodes.Leave, exceptionBlock);
+            emitCatchBlock(il, ex, wrapRet, retPoint, exceptionBlock);
+            il.MarkLabel(retPoint);
+            il.Emit(OpCodes.Ldloc, wrapRet);
+            il.Emit(OpCodes.Ret);
+#endif
+
+            return methodBuilder;
+        }
+
         MethodBuilder emitMethodWrap(TypeBuilder typeBuilder, List<MethodBase> methodsToCall, bool isIndexer, Type declaringType, string methodDesciption = null)
         {
             string wrapName = (methodsToCall.Count > 0 ? methodsToCall[0].Name : "Constructor");
@@ -1608,6 +1662,21 @@ namespace XLua
                 needCheckParameterType = true;
             }
 
+
+            for (int i = 0; i < methodsToCall.Count; i++)
+            {
+                var method = methodsToCall[i];
+                if (Utils.IsDefined(method, typeof(LuaCSFunctionAttribute)))
+                {
+                    if (methodsToCall.Count > 1)
+                    {
+                        methodsToCall.Clear();
+                        methodsToCall.Add(method);
+                        //UnityEngine.Debug.LogWarning("LuaCSFunction can not make overloads");
+                    }
+                    return emitLuaCSFunction(methodBuilder, methodsToCall[0], declaringType, methodDesciption);
+                }
+            }
             ILGenerator il = methodBuilder.GetILGenerator();
 
             LocalBuilder wrapRet = il.DeclareLocal(typeof(int));
@@ -1618,7 +1687,6 @@ namespace XLua
 
             il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Stloc, L);
-
             Label exceptionBlock = il.BeginExceptionBlock();
             Label retPoint = il.DefineLabel();
             il.Emit(OpCodes.Ldarg_0);
@@ -1631,6 +1699,7 @@ namespace XLua
                 il.Emit(OpCodes.Call, LuaAPI_lua_gettop);
                 il.Emit(OpCodes.Stloc, top);
             }
+
 
             for (int i = 0; i < methodsToCall.Count; i++)
             {
@@ -1909,7 +1978,6 @@ namespace XLua
             il.MarkLabel(retPoint);
             il.Emit(OpCodes.Ldloc, wrapRet);
             il.Emit(OpCodes.Ret);
-
             return methodBuilder;
         }
     }
