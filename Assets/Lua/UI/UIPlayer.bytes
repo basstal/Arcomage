@@ -61,7 +61,8 @@ function OnGenHandCards(GameMainCS, cardCount)
                 local tempId = sourceData.id - 7001
                 warning(vardump(tempId))
                 sourceData.sprite = ID2Sprite[tempId]
-                DB.TriggerEvent("Card/AssignData", trans.gameObject, sourceData)
+                local instanceId = trans.gameObject:GetInstanceID()
+                DB.SetData("Card/AssignData/" .. tostring(instanceId), sourceData)
                 used[index] = true
             else
                 warning("GamePlay", "预设的(白板)卡牌数量已用完")

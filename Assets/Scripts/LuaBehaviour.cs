@@ -30,8 +30,8 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
     Action m_luaUpdate;
     Action m_luaOnDisable;
     Action m_luaOnDestroy;
-    private bool m_shouldDelayStart;
-    private bool m_shouldDelayOnEnable;
+    private bool m_pendingStart;
+    private bool m_pendingOnEnable;
     private bool m_completed;
     private HashSet<Button> m_bindButtonCache;
     private void Awake()
@@ -96,7 +96,7 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
     {
         if (!m_completed)
         {
-            m_shouldDelayStart = true;
+            m_pendingStart = true;
         }
         else
         {
@@ -118,7 +118,7 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
     {
         if (!m_completed)
         {
-            m_shouldDelayOnEnable = true;
+            m_pendingOnEnable = true;
         }
         else
         {
@@ -129,16 +129,16 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
     private void Update()
     {
         if (!m_completed) return;
-        if (m_shouldDelayStart)
+        if (m_pendingStart)
         {
             m_luaStart.SafeInvoke();
-            m_shouldDelayStart = false;
+            m_pendingStart = false;
         }
 
-        if (m_shouldDelayOnEnable)
+        if (m_pendingOnEnable)
         {
             m_luaOnEnable.SafeInvoke();
-            m_shouldDelayOnEnable = false;
+            m_pendingOnEnable = false;
         }
         m_luaUpdate.SafeInvoke();
     }

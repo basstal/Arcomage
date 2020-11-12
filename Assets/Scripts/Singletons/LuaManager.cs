@@ -19,7 +19,7 @@ public class LuaManager : Singleton<LuaManager>
 #pragma warning restore 649
     private readonly List<LuaBehaviour> m_luaBehaviours = new List<LuaBehaviour>();
     private readonly Dictionary<string, byte[]> m_scriptName2Content = new Dictionary<string, byte[]>();
-    private float m_lastGCTime = 0;
+    private float m_lastGCTime;
     public event Action OnInitFinished;
     public static string LuaScriptsLabel = "Lua";
     public LuaEnv LuaEnv { get; private set; }

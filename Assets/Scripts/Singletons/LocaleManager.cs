@@ -11,7 +11,7 @@ using XLua.LuaDLL;
 public class LocaleManager : Singleton<LocaleManager>
 {
     private Dictionary<uint, string> m_localeMap = new Dictionary<uint, string>();
-    private static char[] m_cbuffer = new char[128];
+    private static char[] _cbuffer = new char[128];
 
     public override async Task Init()
     {
@@ -79,8 +79,8 @@ public class LocaleManager : Singleton<LocaleManager>
 
     private static string L_GetString(IntPtr L, int idx)
     {
-        int len = CopyStrToBuffer(L, idx, ref m_cbuffer);
-        uint key = CommonUtility.CalculateHash(m_cbuffer, len);
+        int len = CopyStrToBuffer(L, idx, ref _cbuffer);
+        uint key = CommonUtility.CalculateHash(_cbuffer, len);
         string locale = GetString(key);
         if (locale != null)
         {

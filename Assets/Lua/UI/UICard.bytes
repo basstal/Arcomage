@@ -2,11 +2,13 @@ local card
 local player
 local U = require("Utils")
 local EmptyTable = {}
+local m_assignData
 
 function Awake()
     print("awake card")
     BindButtonEventCS(REF.UseCardButton, UseCard)
-    DB.RegisterEvent("Card/AssignData", OnAssignData)
+    local instanceId = this:GetInstanceID()
+    DB.Bind("Card/AssignData/" .. instanceId, OnAssignData)
 end
 
 function Init(p, c)
@@ -36,14 +38,13 @@ function Init(p, c)
     end
 end
 
-function OnAssignData(targetObj, sourceData)
-    if targetObj ~= this then return end
-    m_sourceData = sourceData
+function OnAssignData(assignData)
+    m_assignData = assignData
     local transform = this.transform
     transform.localPosition = CS.UnityEngine.Vector3.zero
     transform.localScale = CS.UnityEngine.Vector3.one
-    warning(vardump(sourceData))
-    REF.UseCardButtonImage.sprite = sourceData.sprite
+    warning(vardump(assignData))
+    REF.UseCardButtonImage.sprite = assignData.sprite
 end
 
 function __tostring()

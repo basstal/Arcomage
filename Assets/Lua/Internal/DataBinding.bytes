@@ -1,187 +1,191 @@
 local DataBinding = {}
-local slotId = 0
 
-local allEntries = {}
-local allSlots = {}
+local m_slotID = 0
+local m_allEntries = {}
+local m_allSlots = {}
 
-local triggeringData = {}
-local pendingBind = {}
-local pendingUnbind = {}
+local m_triggeringData = {}
+local m_pendingBind = {}
+local m_pendingUnbind = {}
 
 local function NewSlot(key, callback, autoTrigger)
-    -- setmetatable(slot, {__mode = 'v'})
-    if autoTrigger == nil then
-        autoTrigger = true
+    if __UNITY_EDITOR then
+        if type(key) ~= "string" then
+            error("DataBinding", "Only allow string as binding key")
+        end
     end
-    slotId = slotId + 1
-    return {
-        id = slotId,
+    m_slotID = m_slotID + 1
+    local slot = {
+        ID = m_slotID,
         key = key,
         callback = callback,
-        autoTrigger = autoTrigger,
+        autoTrigger = autoTrigger == nil and true or autoTrigger
     }
+    m_allSlots[m_slotID] = slot
+    return slot
 end
 
 local function DoBind(slot)
     local key = slot.key
-    local entry = allEntries[key]
-    if entry == nil then
-        entry = {
-            slots = {}
-        }
-        allEntries[key] = entry
-    end
+    local entry = m_allEntries[key] or {slots = {}}
+    m_allEntries[key] = entry
     entry.slots[slot] = slot
-    allSlots[slot.id] = slot
     if slot.autoTrigger then
         slot.callback(entry.data)
     end
 end
 
 local function DoUnbind(slot)
-    local entry = allEntries[slot.key]
+    local entry = m_allEntries[slot.key]
     if entry ~= nil then
         entry.slots[slot] = nil
     end
-    allSlots[slot.id] = nil
 end
 
-function DataBinding.Resolve(path)
+local function ResolveReplace(m)
+    return tostring(DataBinding.GetData(string.match(m, "[^{}]+")))
+end
+
+local function Resolve(path)
     local trim = string.gsub(path, "/+$", "")
-    return string.gsub(trim, "%{[^%}]+%}", function(m)
-        return tostring(DataBinding.GetData(string.match(m, "[^{}]+")))
-    end)
+    return string.gsub(
+        trim,
+        "%{[^%}]+%}",
+        ResolveReplace
+    )
 end
 
-function DataBinding.Reset()
-    slotId = 0
-    allEntries = {}
-    allSlots = {}
-    triggeringData = {}
-    pendingBind = {}
-    pendingUnbind = {}
-end
+local function HandlePendingAndMarkTrigering(key)
+    key = Resolve(key)
 
-function DataBinding.TriggerData(key)
-    key = DataBinding.Resolve(key)
-    triggeringData[key] = true
-
-    local entry = allEntries[key]
-    if entry ~= nil then
-        for slot, _ in pairs(entry.slots) do
-            slot.callback(entry.data)
-        end
-    end
-
-    triggeringData[key] = nil
-end
-
-function DataBinding.SetData(key, data, isEvent)
-    key = DataBinding.Resolve(key)
-
-    triggeringData[key] = true
-
-    local entry = allEntries[key]
-    if entry == nil then
-        entry = {
-            slots = {}
-        }
-        allEntries[key] = entry
-    end
-
-    if not isEvent then
-        entry.data = data
-    end
-
-    for slot, _ in pairs(entry.slots) do
-        if isEvent then
-            if table.empty(data) then
-                slot.callback(nil)
-            else
-                slot.callback(table.unpack(data))
-            end
-        else
-            slot.callback(data)
-        end
-    end
-
-    local pending = pendingBind[key]
+    local pending = m_pendingBind[key]
     if pending ~= nil then
-        for slot, _ in pairs(pending) do
+        for slot in pairs(pending) do
             DoBind(slot)
         end
-        pendingBind[key] = nil
+        m_pendingBind[key] = nil
     end
 
-    pending = pendingUnbind[key]
+    pending = m_pendingUnbind[key]
     if pending ~= nil then
         for slot, _ in pairs(pending) do
             DoUnbind(slot)
         end
-        pendingUnbind[key] = nil
+        m_pendingUnbind[key] = nil
     end
 
-    triggeringData[key] = nil
+    m_triggeringData[key] = true
+end
+
+local function FindCallbackSlot(slots, callback)
+    for k in pairs(slots) do
+        local kCallback = k.callback
+        if kCallback == callback then
+            return true
+        end
+        if type(callback) == "userdata" and callback:Equals(kCallback) then
+            return true
+        end
+    end
+    return false
+end
+
+local function CheckTriggeringAndDoPending(slot, pendingTable)
+    if slot == nil then return end
+    local key = slot.key
+    local isTriggering = m_triggeringData[key]
+    if isTriggering then
+        local slots = pendingTable[key] or {}
+        slots[slot] = slot
+        pendingTable[key] = slots
+    end
+    return isTriggering
+end
+
+function DataBinding.Reset()
+    m_slotID = 0
+    for k, slots in pairs(m_allEntries) do
+        if k == "slots" then
+            for slot in pairs(slots) do
+                slots[slot] = nil
+                slot.callback = nil
+            end
+        end
+        m_allEntries[k] = nil
+    end
+    for _, slot in pairs(m_allSlots) do
+        slot.callback = nil
+    end
+    m_triggeringData = {}
+    m_pendingBind = {}
+    m_pendingUnbind = {}
+end
+
+-- ** nil will not trigger
+function DataBinding.TriggerData(key)
+    key = Resolve(key)
+
+    local entry = m_allEntries[key]
+    if entry ~= nil then
+        DataBinding.SetData(key, entry.data)
+    end
+end
+
+function DataBinding.SetData(key, data)
+    HandlePendingAndMarkTrigering(key)
+
+    local entry = m_allEntries[key] or {slots = {}}
+    m_allEntries[key] = entry
+    entry.data = data
+
+    for slot in pairs(entry.slots) do
+        slot.callback(data)
+    end
+
+    m_triggeringData[key] = nil
 end
 
 function DataBinding.GetData(key)
-    local entry = allEntries[DataBinding.Resolve(key)]
+    local entry = m_allEntries[Resolve(key)]
     if entry ~= nil then
         return entry.data
     end
 end
 
 function DataBinding.Bind(key, callback, autoTrigger)
-    key = DataBinding.Resolve(key)
+    if key == nil then return end
+    key = Resolve(key)
     local slot = NewSlot(key, callback, autoTrigger)
 
-    if triggeringData[key] then
-        local pending = pendingBind[key]
-        if pending == nil then
-            pending = {}
-            pendingBind[key] = pending
-        end
-        pending[slot] = slot
-    else
+    if CheckTriggeringAndDoPending(slot, m_pendingBind) == false then
         DoBind(slot)
     end
-
-    return slot.id
+    return slot.ID
 end
 
-function DataBinding.Unbind(keyOrId, callback)
-    if keyOrId == nil then
-        return
-    end
-
-    local slot, index
-    if type(keyOrId) == "number" then
-        slot = allSlots[keyOrId]
-    else
-        local entry = allEntries[keyOrId]
-        if entry ~= nil then
-	        slot = table.find(entry.slots, function(k, _)
-	            if k.callback == callback then
-	                return true
-	            end
-				if type(callback) == "userdata" then
-	                return callback:Equals(k.callback)
-	            end
-	        end)
-		end
-    end
-
-    if slot ~= nil then
-        if triggeringData[slot.key] then
-            local pending = pendingUnbind[slot.key]
-            if pending == nil then
-                pending = {}
-                pendingUnbind[slot.key] = pending
-            end
-            pending[slot] = slot
-        else
-            DoUnbind(slot)
+function DataBinding.Unbind(keyOrID, callback)
+    if keyOrID == nil then return end
+    -- ** 删除被延迟绑定
+    local pendingSlots = m_pendingBind[keyOrID]
+    if pendingSlots ~= nil then
+        local slot = FindCallbackSlot(pendingSlots, callback)
+        if slot then
+            pendingSlots[slot] = nil
         end
+    end
+
+    -- ** 解绑定 先找到解绑定对象 再看是否需要被延迟 最后执行解绑定过程
+    local slot
+    if type(keyOrID) == "number" then
+        slot = m_allSlots[keyOrID]
+    else
+        local entry = m_allEntries[keyOrID]
+        if entry ~= nil then
+            slot = FindCallbackSlot(entry.slots, callback)
+        end
+    end
+    if CheckTriggeringAndDoPending(slot, m_pendingUnbind) == false then
+        DoUnbind(slot)
     end
 end
 
@@ -191,12 +195,18 @@ function DataBinding.RegisterEvent(key, callback)
     return DataBinding.Bind(key, callback, false)
 end
 
-function DataBinding.UnregisterEvent(keyOrId, callback)
-    DataBinding.Unbind(keyOrId, callback)
+function DataBinding.UnregisterEvent(key, callback)
+    DataBinding.Unbind(key, callback)
 end
 
 function DataBinding.TriggerEvent(key, ...)
-    DataBinding.SetData(key, {...}, true)
+    local entry = m_allEntries[key]
+    if entry == nil then return end
+    HandlePendingAndMarkTrigering(key)
+    for slot, _ in pairs(entry.slots) do
+        slot.callback(...)
+    end
+    m_triggeringData[key] = nil
 end
 
-DB = DataBinding
+return DataBinding
