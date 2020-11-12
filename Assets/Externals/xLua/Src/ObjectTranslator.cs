@@ -536,7 +536,12 @@ namespace XLua
             }
             try {
                 var ret = getDelegate(bridge, delegateType);
+                UnityEngine.Debug.Log($"getDelegate ret : {ret}, delegateType :{delegateType}, reference : {reference}");
                 bridge.AddDelegate(delegateType, ret);
+                if (delegate_bridges.ContainsKey(reference))
+                {
+                    UnityEngine.Debug.Log($" delegate_bridges contains : {reference}");
+                }
                 delegate_bridges[reference] = new WeakReference(bridge);
                 return ret;
             }
@@ -551,6 +556,11 @@ namespace XLua
         {
             foreach (var kv in delegate_bridges)
             {
+                var val = kv.Value;
+                if (val.Target is LuaBase db)
+                {
+                    UnityEngine.Debug.Log($"db.luaReference : {db.luaReferenceV}");
+                }
                 if (kv.Value.IsAlive)
                 {
                     return false;
@@ -561,6 +571,7 @@ namespace XLua
 
         public void ReleaseLuaBase(RealStatePtr L, int reference, bool is_delegate)
         {
+            UnityEngine.Debug.Log($" reference : {reference}, is_delegate : {is_delegate}");
             if(is_delegate)
             {
                 LuaAPI.xlua_rawgeti(L, LuaIndexes.LUA_REGISTRYINDEX, reference);
@@ -574,7 +585,7 @@ namespace XLua
                     LuaAPI.lua_rawget(L, LuaIndexes.LUA_REGISTRYINDEX);
                     if (LuaAPI.lua_type(L, -1) == LuaTypes.LUA_TNUMBER && LuaAPI.xlua_tointeger(L, -1) == reference) //
                     {
-                        //UnityEngine.Debug.LogWarning("release delegate ref = " + luaReference);
+                        UnityEngine.Debug.LogWarning("release delegate ref = " + reference);
                         LuaAPI.lua_pop(L, 1);// pop LUA_REGISTRYINDEX[func]
                         LuaAPI.lua_pushnil(L);
                         LuaAPI.lua_rawset(L, LuaIndexes.LUA_REGISTRYINDEX); // LUA_REGISTRYINDEX[func] = nil
@@ -587,6 +598,7 @@ namespace XLua
 
                 LuaAPI.lua_unref(L, reference);
                 delegate_bridges.Remove(reference);
+                UnityEngine.Debug.Log($"remove {reference} from delegate_bridge , delegate_bridge left : {delegate_bridges.Count}");
             }
             else
             {

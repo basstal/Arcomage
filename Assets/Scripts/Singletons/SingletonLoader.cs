@@ -1,13 +1,13 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SingletonLoader : MonoBehaviour
 {
     public GameObject[] singletons;
     private void Awake()
     {
-        DontDestroyOnLoad(this);
         InitSingletons();
     }
 
@@ -34,7 +34,10 @@ public class SingletonLoader : MonoBehaviour
             await singletonBase.Uninit();
         }
     }
-
+    public void ReloadScene()
+    {
+        SceneManager.LoadSceneAsync("GamePlay");
+    }
     private void OnDestroy()
     {
         UninitSingletons();

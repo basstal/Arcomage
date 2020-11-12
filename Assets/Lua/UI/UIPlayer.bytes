@@ -1,5 +1,6 @@
 local Data = require("Card")
-local GamePlayerCS
+GamePlayerCS = nil
+local m_handCards = {}
 
 function Awake()
     GamePlayerCS = this:GetComponent(typeof(CS.GamePlayer))
@@ -14,6 +15,7 @@ local function RepositionRoof(roofTrans, bodyImage)
 end
 
 function Start()
+    GamePlayerCS:Init(GamePlayerCS.playerID)
     local GetString = CS.LocaleManager.GetString
     REF.BricksCountTMP.text = GetString("BrickCount", GamePlayerCS.brick)
     REF.GemsCountTMP.text = GetString("GemsCount", GamePlayerCS.gem)
@@ -27,7 +29,7 @@ function Start()
     local hasTower = tower > 0
     REF.TowerRoof:SetActive(hasTower)
     if hasTower then
-        REF.TowerBodyImage.fillAmount = math.max(tower / GamePlayerCS.TOWER_MAX_FILL_AMOUNT_SCORE, GamePlayerCS.TOWER_MIN_FILL_AMOUNT)
+        REF.TowerBodyImage.fillAmount = math.max(tower / CS.GamePlayer.TOWER_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.TOWER_MIN_FILL_AMOUNT)
         RepositionRoof(REF.TowerRoof.transform, REF.TowerBodyImage)
     else
         REF.TowerBodyImage.fillAmount = 0
@@ -37,37 +39,52 @@ function Start()
     local hasWall = wall > 0
     REF.WallRoof:SetActive(hasWall)
     if hasWall then
+        REF.WallBodyImage.fillAmount = math.max(wall / CS.GamePlayer.WALL_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.WALL_MIN_FILL_AMOUNT)
         RepositionRoof(REF.WallRoof.transform, REF.WallBodyImage);
-        REF.WallBodyImage.fillAmount = math.max(wall / GamePlayerCS.WALL_MAX_FILL_AMOUNT_SCORE, GamePlayerCS.WALL_MIN_FILL_AMOUNT)
     else
         REF.WallBodyImage.fillAmount = 0
     end
+    DB.SetData(string.format("Player%s", GamePlayerCS.playerID), _ENV)
 end
 
-function OnGenHandCards(GameMainCS, cardCount)
+function RemoveFromHandCards(cardData)
+    for i = #m_handCards, 1, -1 do
+        if m_handCards[i] == cardData then
+            table.remove(m_handCards, i)
+            break
+        end
+    end
+end
+
+function OnGenHandCards(cardCount)
     local used = {}
     info(string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, cardCount))
     local dataSize = #Data
-    local cardObjCacheRoot = GameMainCS.CardObjCacheRoot
-    local ID2Sprite = GameMainCS.ID2Sprite
+    local gameMain = DB.GetData("Main")
+    local gameMainCS = gameMain.GameMainCS
+    local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
+    local ID2Sprite = gameMainCS.ID2Sprite
+    local parentTrans = REF.HandCards.transform
     for _ = 1, cardCount do
         local index = math.random(1, dataSize)
         if used[index] == nil then
             if cardObjCacheRoot.childCount > 0 then
                 local trans = cardObjCacheRoot:GetChild(0)
-                trans.parent = REF.HandCards.transform
-                local sourceData = Data[index]
+                trans:SetParent(parentTrans, false)
+                local cardData = Data[index]
                 -- ** todo 对齐 id
-                local tempId = sourceData.id - 7001
-                warning(vardump(tempId))
-                sourceData.sprite = ID2Sprite[tempId]
+                local tempId = cardData.id - 7001
+                cardData.sprite = ID2Sprite[tempId]
+                cardData.transform = trans
                 local instanceId = trans.gameObject:GetInstanceID()
-                DB.SetData("Card/AssignData/" .. tostring(instanceId), sourceData)
+                DB.SetData(string.format("Card/Data/%s", instanceId), cardData)
                 used[index] = true
+                table.insert(m_handCards, cardData)
             else
                 warning("GamePlay", "预设的(白板)卡牌数量已用完")
                 return
             end
         end
     end
+    DB.SetData(string.format("Player%s/HandCards", GamePlayerCS.playerID), m_handCards)
 end

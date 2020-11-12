@@ -869,15 +869,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 724d89dbe6473354981b20c6bf5b8ed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brick: 0
-  gem: 0
-  recruit: 0
+  brick: 15
+  gem: 15
+  recruit: 15
   brickIncRate: 1
   gemIncRate: 1
   recruitIncRate: 1
-  tower: 0
-  wall: 0
-  playerName: 
+  tower: 10
+  wall: 10
+  playerName: default
+  playerID: 0
   useAI: 0
 --- !u!1 &7359019911660175588
 GameObject:
@@ -1790,6 +1791,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1000}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

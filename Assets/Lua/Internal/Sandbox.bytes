@@ -1,11 +1,11 @@
 local Sandbox = {}
 local chunkCache = {}
-local sandboxMeta = strict({
+local sandboxMeta = {
     __index = _G,
     __gc = function(sandbox)
         print("Sandbox", "LuaGC release sandbox " .. tostring(sandbox))
     end,
-})
+}
 
 function Sandbox.CreateSandbox(gameObject)
     if gameObject == nil or gameObject:IsNull() then
@@ -19,10 +19,13 @@ function Sandbox.CreateSandbox(gameObject)
     return box
 end
 
-function Sandbox:DestroySandbox()
-    for k in pairs(self) do
-        self[k] = nil
+function Sandbox.DestroySandbox(sandbox)
+    info("sandbox", vardump(sandbox))
+    setmetatable(sandbox, nil)
+    for k in pairs(sandbox) do
+        sandbox[k] = nil
     end
+    info("sandbox", "destroyed")
 end
 
 local function LoadPackage(...)

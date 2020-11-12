@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 using XLua;
 using Object = UnityEngine.Object;
 
@@ -10,6 +11,7 @@ using Object = UnityEngine.Object;
 public class GameMain : MonoBehaviour
 {
     public int round = 0;
+    public int firstPlayer = 1;
     private const int CARD_CACHE_SIZE = 20;
     [SerializeField] private AssetReference player1AssetRef;
     [SerializeField] private AssetReference player2AssetRef;
@@ -28,13 +30,13 @@ public class GameMain : MonoBehaviour
         {
             m_player1Obj = await player1AssetRef.InstantiateAsync(transform).Task;
         }
-        m_player1Obj.GetComponent<GamePlayer>().Init();
+        m_player1Obj.GetComponent<GamePlayer>().Init(1);
 
         if (m_player2Obj == null)
         {
             m_player2Obj = await player2AssetRef.InstantiateAsync(transform).Task;
         }
-        m_player2Obj.GetComponent<GamePlayer>().Init();
+        m_player2Obj.GetComponent<GamePlayer>().Init(2);
 
         if (CardObjCacheRoot == null)
         {
@@ -42,6 +44,7 @@ public class GameMain : MonoBehaviour
             if (CardObjCacheRoot == null)
             {
                 CardObjCacheRoot = new GameObject("CardObjCacheRoot").transform;
+                CardObjCacheRoot.gameObject.SetActive(false);
                 CardObjCacheRoot.parent = transform;
             }
             var cardTemplate = await cardAssetRef.LoadAssetAsync<GameObject>().Task;

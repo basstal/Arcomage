@@ -42,6 +42,7 @@ public class LuaManager : Singleton<LuaManager>
                 injectedLuaFunctions.Get("CollectGarbage", out m_luaCollectGarbage);
                 injectedLuaFunctions.Get("CreateSandbox", out m_luaCreateSandbox);
                 injectedLuaFunctions.Get("DestroySandbox", out m_luaDestroySandbox);
+                Debug.Log($"m_luaDestroySandbox  assign: {m_luaDestroySandbox}");
                 injectedLuaFunctions.Get("DoChunk", out m_luaDoChunk);
                 injectedLuaFunctions.Dispose();
             }
@@ -101,8 +102,11 @@ public class LuaManager : Singleton<LuaManager>
     {
         if (luaBehaviour == null || !CheckInitiated())
             return;
+
         m_luaBehaviours.Remove(luaBehaviour);
         m_luaDestroySandbox(luaBehaviour.Sandbox);
+        Debug.Log("m_luaDestroySandbox finished CS in DestroySandbox");
+        
         luaBehaviour.Sandbox.Dispose();
     }
 
@@ -122,10 +126,12 @@ public class LuaManager : Singleton<LuaManager>
 
     private void ClearAllLuaBehaviours()
     {
+        Debug.Log("ClearAllLuaBehaviours !");
         foreach (var behaviour in m_luaBehaviours.Where(t => t != null))
         {
             behaviour.Dispose();
             m_luaDestroySandbox(behaviour.Sandbox);
+            Debug.Log("m_luaDestroySandbox finished CS in ClearAllLuaBehaviours");
             behaviour.Sandbox.Dispose();
         }
         m_luaBehaviours.Clear();

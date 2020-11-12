@@ -1,25 +1,33 @@
 local ResourceType = CS.ResourceType
 local U = require("Utils")
-local AI = require("Simple")
+-- local AI = require("Simple")
 
 local BOARD_CARD_LIMIT = 20
 local HAND_CARD_INIT = 3
 local HAND_CARD_LIMIT = 6
-local GameMainCS
+GameMainCS = nil
 GameData = {
     isStarted = false,
     players = {},
-    currentPlayerIdx = 0,
-    firstPlayer = 0,
+    currentPlayer = 0,
     CurrentStage = function()
     end,
-    CardEvents = {}
+    CardEvents = {},
+    iEnumeratorCS = {}
 }
+
+local function SetCurrentPlayer(n)
+    GameData.currentPlayer = n
+    DB.SetData("CurrentPlayer", n)
+end
 
 function TurnRound()
     print("TurnRound")
     GameMainCS.round = GameMainCS.round + 1
-    GameData.CurrentStage = PlayerRandomStart
+    if GameMainCS.round == 1 then
+        SetCurrentPlayer(GameMainCS.firstPlayer)
+    end
+    GameData.CurrentStage = PlayerRound
 end
 
 function GameEnd()
@@ -75,20 +83,20 @@ end
 -- end
 
 function GameMainCSCallback()
-    DB.TriggerEvent("Player/GenHandCards", GameMainCS, 5)
+    DB.TriggerEvent("Player/GenHandCards", 5)
     GameData.isStarted = true
     GameData.CurrentStage = TurnRound
 end
 
 function GameStart()
-    print("GameStart")
-
+    print("GameStart1")
+    REF.Start:SetActive(false)
     if GameData.isStarted then
         GameEnd()
     end
     GameMainCS:Init(GameMainCSCallback)
     GameData.CardEvents = {}
-    GameData.currentPlayerIdx = 0
+    SetCurrentPlayer(0)
     GameData.playerSwitched = false
 end
 
@@ -116,25 +124,33 @@ end
 function SkipRound()
     if GameData.CurrentStage == WaitPlayer then
         print("SkipRound")
-        local player = GameData.players[GameData.currentPlayerIdx]
-        if #player.handCards < HAND_CARD_LIMIT then
-            DrawCard(player, 1)
-        end
-        PlayerSwitch()
+        -- local player = GameData.players[GameData.currentPlayer]
+        -- if #player.handCards < HAND_CARD_LIMIT then
+        --     DrawCard(player, 1)
+        -- end
+        OnPlayerSwitch()
     end
 end
 
 function Awake()
     GameMainCS = this:GetComponent(typeof(CS.GameMain))
 
-    BindButtonEventCS(REF.Start, GameStart)
+    BindButtonEvent(REF.Start, GameStart)
     -- REF.SkipRound.gameObject:BindButtonEvent(SkipRound)
     DB.Bind("Left/Player", UIRefresh)
     DB.Bind("Right/Player", UIRefresh)
     DB.RegisterEvent("SkipRound", SkipRound)
+    DB.RegisterEvent("Main/ShowUseCard", OnShowUseCard)
+    DB.RegisterEvent("Main/PlayerSwitch", OnPlayerSwitch)
     -- GameData.textures = {}
     -- GameData.textures.card = CS.AssetUtility.LoadTexture2D("Sprites/Card1")
     -- GameData.textures.enemyCard = CS.AssetUtility.LoadTexture2D("Sprites/Card1")
+    DB.SetData("Main", _ENV)
+end
+
+function OnShowUseCard(cardGameObj)
+    cardGameObj.transform:SetParent(this.transform, false)
+
 end
 
 function UIRefresh(player)
@@ -183,7 +199,7 @@ end
 function Update()
     if GameData.isStarted then
         if CS.UnityEngine.Input.GetKeyDown(CS.UnityEngine.KeyCode.Alpha1) then
-            local current = GameData.players[GameData.currentPlayerIdx]
+            local current = GameData.players[GameData.currentPlayer]
             if current ~= nil then
                 for i, card in pairs(current.handCards) do
                     if card.note ~= nil then
@@ -287,7 +303,7 @@ end
 function RoundEnd()
     print("RoundEnd")
     GameData.playerSwitched = false
-    GameData.currentPlayerIdx = 0
+    SetCurrentPlayer(0)
     -- GameData.nextPlayer = 0
 
     -- ** 处理所有Card事件
@@ -331,89 +347,89 @@ function RoundEnd()
     end
 end
 
-function PlayerSwitch(playAgain)
-    if GameData.currentPlayerIdx ~= 0 then
-        REF[string.format("Player%dName", GameData.currentPlayerIdx)].DOTweenAnimation:DOPause()
-    end
+function OnPlayerSwitch(result)
+    -- if GameData.currentPlayer ~= 0 then
+    --     REF[string.format("Player%dName", GameData.currentPlayer)].DOTweenAnimation:DOPause()
+    -- end
     -- ** 再次出牌直接不改变当前玩家进入PlayerRound
-    if playAgain then
+    if result ~= nil and result.playAgain then
         GameData.CurrentStage = PlayerRound
         return
     end
-    if GameData.playerSwitched then
-        ResourceGrowth(GameData.players[GameData.currentPlayerIdx])
-        GameData.CurrentStage = RoundEnd
-    else
-        if GameData.currentPlayerIdx == 0 then
-            GameData.currentPlayerIdx = GameData.firstPlayer
-        else
-            ResourceGrowth(GameData.players[GameData.currentPlayerIdx])
-            GameData.currentPlayerIdx = GameData.firstPlayer % 2 + 1
-            GameData.playerSwitched = true
-            print(" playerSwitched : " .. tostring(GameData.playerSwitched))
-        end
-        GameData.CurrentStage = PlayerRound
-    end
+    -- if GameData.playerSwitched then
+    --     ResourceGrowth(GameData.players[GameData.currentPlayer])
+    --     GameData.CurrentStage = RoundEnd
+    -- else
+    --     -- if GameData.currentPlayer == 0 then
+    --     --     GameData.currentPlayer = GameData.firstPlayer
+    --     -- else
+    --     ResourceGrowth(GameData.players[GameData.currentPlayer])
+    --     SetCurrentPlayer(GameData.firstPlayer % 2 + 1)
+    --     GameData.playerSwitched = true
+    --     print(" playerSwitched : " .. tostring(GameData.playerSwitched))
+    --     -- end
+    --     GameData.CurrentStage = PlayerRound
+    -- end
 end
 
 function WaitPlayer()
     -- print("WaitPlayer")
-    local player = GameData.players[GameData.currentPlayerIdx]
-    if player.useAI then
-        AI.TryUseCard(player)
-    end
+    -- local player = GameData.players[GameData.currentPlayer]
+    -- if player.useAI then
+    -- AI.TryUseCard(player)
+    -- end
     -- REF.CurrentPlayerName.TextMeshProUGUI.text = string.format("Player %s, id %s", player.playerCS.Name, player.playerCS.Id)
 end
 
 function PlayerRound()
     print("PlayerRound")
-    REF[string.format("Player%dName", GameData.currentPlayerIdx)].DOTweenAnimation:DORestart()
-    local player = GameData.players[GameData.currentPlayerIdx]
-    print(player.playerCS.Id)
+    -- REF[string.format("Player%dName", )].DOTweenAnimation:DORestart()
+    -- local player = GameData.players[currentPlayer]
+    -- print(player.playerCS.Id)
 
-    local rootName = "MyCards"
-    local enemyRootName = "EnemyCards"
-    if player.playerCS.Id == 2 then
-        rootName, enemyRootName = enemyRootName, rootName
-    end
-
-    REF[enemyRootName].gameObject:SetActive(false)
-    for i = 0, #REF[enemyRootName] - 1 do
-        REF[enemyRootName][i].root.LuaBehaviour.enabled = false
-    end
-    REF[rootName].gameObject:SetActive(true)
-
-    REF.BoardCards.TextMeshProUGUI.text = "BoardCards Count:" .. tostring(#player.cards - #player.handCards)
-    player.cardPrefabs = player.cardPrefabs or {}
-    -- if #player.cardPrefabs ~= #player.handCards then
-    for index, card in ipairs(player.handCards) do
-        local prefab = player.cardPrefabs[index]
-        if prefab == nil then
-            local root = CS.UnityEngine.GameObject.Find(rootName)
-            prefab = CS.AssetUtility.InstantiatePrefab("Prefabs/UI/Card")
-            prefab.transform:SetParent(root.transform, false)
-            player.cardPrefabs[index] = prefab
-        end
-        prefab:SetActive(true)
-        local behaviour = prefab.transform:GetComponent(typeof(CS.LuaBehaviour))
-        behaviour.enabled = true
-        behaviour.sandbox.Init(player, card)
-
-        card.sandbox = behaviour.sandbox
-    end
-    if #player.cardPrefabs > #player.handCards then
-        for i = #player.handCards + 1, #player.cardPrefabs do
-            player.cardPrefabs[i]:SetActive(false)
-        end
-    end
+    -- local rootName = "MyCards"
+    -- local enemyRootName = "EnemyCards"
+    -- if player.playerCS.Id == 2 then
+    --     rootName, enemyRootName = enemyRootName, rootName
     -- end
-    print(string.format("player id : %s, player cardPrefabs : %s ", player.playerCS.Id, #player.cardPrefabs))
-    GameData.CurrentStage = WaitPlayer
-end
 
-function PlayerRandomStart()
-    print("PlayerRandomStart")
-    -- GameData.firstPlayer = math.random(1, 2)
-    GameData.firstPlayer = 1
-    PlayerSwitch()
+    -- REF[enemyRootName].gameObject:SetActive(false)
+    -- for i = 0, #REF[enemyRootName] - 1 do
+    --     REF[enemyRootName][i].root.LuaBehaviour.enabled = false
+    -- end
+    -- REF[rootName].gameObject:SetActive(true)
+    local handCards = DB.GetData("Player{CurrentPlayer}/HandCards")
+    local parentTrans = REF.HandCardsLayout.transform
+    for _, cardData in pairs(handCards) do
+        local trans = cardData.transform
+        trans:SetParent(parentTrans, false)
+    end
+    CS.UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(parentTrans);
+
+    -- REF.BoardCards.TextMeshProUGUI.text = "BoardCards Count:" .. tostring(#player.cards - #player.handCards)
+    -- player.cardPrefabs = player.cardPrefabs or {}
+    -- -- if #player.cardPrefabs ~= #player.handCards then
+    -- for index, card in ipairs(player.handCards) do
+    --     local prefab = player.cardPrefabs[index]
+    --     if prefab == nil then
+    --         local root = CS.UnityEngine.GameObject.Find(rootName)
+    --         prefab = CS.AssetUtility.InstantiatePrefab("Prefabs/UI/Card")
+    --         prefab.transform:SetParent(root.transform, false)
+    --         player.cardPrefabs[index] = prefab
+    --     end
+    --     prefab:SetActive(true)
+    --     local behaviour = prefab.transform:GetComponent(typeof(CS.LuaBehaviour))
+    --     behaviour.enabled = true
+    --     behaviour.sandbox.Init(player, card)
+
+    --     card.sandbox = behaviour.sandbox
+    -- end
+    -- if #player.cardPrefabs > #player.handCards then
+    --     for i = #player.handCards + 1, #player.cardPrefabs do
+    --         player.cardPrefabs[i]:SetActive(false)
+    --     end
+    -- end
+    -- end
+    -- print(string.format("player id : %s, player cardPrefabs : %s ", player.playerCS.Id, #player.cardPrefabs))
+    GameData.CurrentStage = WaitPlayer
 end

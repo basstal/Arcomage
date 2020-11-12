@@ -15,6 +15,7 @@ using LuaAPI = XLua.LuaDLL.Lua;
 using RealStatePtr = System.IntPtr;
 using LuaCSFunction = XLua.LuaDLL.lua_CSFunction;
 #endif
+using UnityEngine;
 
 
 namespace XLua
@@ -351,6 +352,7 @@ namespace XLua
                     while (refQueue.Count > 0)
                     {
                         GCAction gca = refQueue.Dequeue();
+                        Debug.Log($"refQueue : {refQueue.Count}, gca : {gca.Reference}");
                         translator.ReleaseLuaBase(_L, gca.Reference, gca.IsDelegate);
                     }
                 }
@@ -462,6 +464,7 @@ namespace XLua
         {
             lock (refQueue)
             {
+                Debug.Log($" equeueGCAction refQueue :{refQueue.Count}, action : {action.Reference}, is delegate : {action.IsDelegate}");
                 refQueue.Enqueue(action);
             }
         }
@@ -706,6 +709,7 @@ namespace XLua
             lock (luaEnvLock)
             {
 #endif
+                LuaAPI.lua_gc(L, LuaGCOptions.LUA_GCCOLLECT, 0);
                 LuaAPI.lua_gc(L, LuaGCOptions.LUA_GCCOLLECT, 0);
 #if THREAD_SAFE || HOTFIX_ENABLE
             }

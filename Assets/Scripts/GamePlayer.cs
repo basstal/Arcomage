@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using XLua;
 
 [LuaCallCSharp]
@@ -13,7 +14,8 @@ public class GamePlayer : MonoBehaviour
 
     public int tower = 0;
     public int wall = 0;
-    public string playerName;
+    public string playerName = "Default";
+    public int playerID;
     public bool useAI = false;
     // ** control the fillAmount of tower sprite
     public const float TOWER_MAX_FILL_AMOUNT_SCORE = 100;
@@ -22,19 +24,8 @@ public class GamePlayer : MonoBehaviour
     public const float WALL_MAX_FILL_AMOUNT_SCORE = 100;
     public const float WALL_MIN_FILL_AMOUNT = 0.05f;
 
-    public void Init()
+    public void Init(int playerID)
     {
-        brick = 0;
-        gem = 0;
-        recruit = 0;
-        brickIncRate = 1;
-        gemIncRate = 1;
-        recruitIncRate = 1;
-        tower = 0;
-        wall = 0;
-        useAI = false;
-        if (string.IsNullOrWhiteSpace(playerName))
-            playerName = "Default";
-            
+        this.playerID = playerID; 
     }
 }

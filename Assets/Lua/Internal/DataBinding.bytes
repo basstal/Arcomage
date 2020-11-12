@@ -9,10 +9,8 @@ local m_pendingBind = {}
 local m_pendingUnbind = {}
 
 local function NewSlot(key, callback, autoTrigger)
-    if __UNITY_EDITOR then
-        if type(key) ~= "string" then
-            error("DataBinding", "Only allow string as binding key")
-        end
+    if __UNITY_EDITOR and type(key) ~= "string" then
+        error("DataBinding", "Only allow string as binding key")
     end
     m_slotID = m_slotID + 1
     local slot = {
@@ -48,11 +46,7 @@ end
 
 local function Resolve(path)
     local trim = string.gsub(path, "/+$", "")
-    return string.gsub(
-        trim,
-        "%{[^%}]+%}",
-        ResolveReplace
-    )
+    return string.gsub(trim, "%{[^%}]+%}", ResolveReplace)
 end
 
 local function HandlePendingAndMarkTrigering(key)
@@ -91,7 +85,6 @@ local function FindCallbackSlot(slots, callback)
 end
 
 local function CheckTriggeringAndDoPending(slot, pendingTable)
-    if slot == nil then return end
     local key = slot.key
     local isTriggering = m_triggeringData[key]
     if isTriggering then
@@ -113,9 +106,11 @@ function DataBinding.Reset()
         end
         m_allEntries[k] = nil
     end
-    for _, slot in pairs(m_allSlots) do
+    for k, slot in pairs(m_allSlots) do
         slot.callback = nil
+        m_allSlots[k] = nil
     end
+    m_allSlots = {}
     m_triggeringData = {}
     m_pendingBind = {}
     m_pendingUnbind = {}
@@ -153,18 +148,22 @@ function DataBinding.GetData(key)
 end
 
 function DataBinding.Bind(key, callback, autoTrigger)
-    if key == nil then return end
+    if key == nil then
+        return
+    end
     key = Resolve(key)
     local slot = NewSlot(key, callback, autoTrigger)
 
-    if CheckTriggeringAndDoPending(slot, m_pendingBind) == false then
+    if not CheckTriggeringAndDoPending(slot, m_pendingBind) then
         DoBind(slot)
     end
     return slot.ID
 end
 
 function DataBinding.Unbind(keyOrID, callback)
-    if keyOrID == nil then return end
+    if keyOrID == nil then
+        return
+    end
     -- ** 删除被延迟绑定
     local pendingSlots = m_pendingBind[keyOrID]
     if pendingSlots ~= nil then
@@ -184,7 +183,7 @@ function DataBinding.Unbind(keyOrID, callback)
             slot = FindCallbackSlot(entry.slots, callback)
         end
     end
-    if CheckTriggeringAndDoPending(slot, m_pendingUnbind) == false then
+    if slot ~= nil and not CheckTriggeringAndDoPending(slot, m_pendingUnbind) then
         DoUnbind(slot)
     end
 end
@@ -195,13 +194,15 @@ function DataBinding.RegisterEvent(key, callback)
     return DataBinding.Bind(key, callback, false)
 end
 
-function DataBinding.UnregisterEvent(key, callback)
-    DataBinding.Unbind(key, callback)
+function DataBinding.UnregisterEvent(keyOrID, callback)
+    DataBinding.Unbind(keyOrID, callback)
 end
 
 function DataBinding.TriggerEvent(key, ...)
     local entry = m_allEntries[key]
-    if entry == nil then return end
+    if entry == nil then
+        return
+    end
     HandlePendingAndMarkTrigering(key)
     for slot, _ in pairs(entry.slots) do
         slot.callback(...)

@@ -2,6 +2,9 @@ using UnityEngine.Events;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Linq;
+using System.Text;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine.UI;
 using XLua;
@@ -38,7 +41,7 @@ public static class CommonUtility
         {
             dirty = File.ReadAllText(path) != content;
         }
-
+        Debug.LogWarning($"dirty : {dirty}");
         if (dirty)
         {
             var dir = Path.GetDirectoryName(path);
@@ -47,7 +50,6 @@ public static class CommonUtility
                 if (!Directory.Exists(dir)) 
                     Directory.CreateDirectory(dir);
                 File.WriteAllText(path, content);
-                AssetDatabase.ImportAsset(path);
             }
         }
     }
@@ -156,6 +158,25 @@ public static class CommonUtility
         {
             graphic.raycastTarget = value;
         }
+    }
+    #endregion
+
+    #region UGUI
+    public static void SetAlpha(this Graphic graphic, float val)
+    {
+        Color c = graphic.color;
+        c.a = Mathf.Clamp(val, 0, 1);
+        graphic.color = c;
+    }
+    public static void SetColor(this Graphic graphic, uint val)
+    {
+        float inv = 1f / 255f;
+        Color c = Color.black;
+        c.r = inv * ((val >> 24) & 0xFF);
+        c.g = inv * ((val >> 16) & 0xFF);
+        c.b = inv * ((val >> 8) & 0xFF);
+        c.a = inv * (val & 0xFF);
+        graphic.color = c;
     }
     #endregion
 }

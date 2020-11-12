@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -46,10 +47,11 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
                 return;
             }
             var luaManager = LuaManager.Instance;
+            var textAssetName = op.Result.name;
             Action luaBehaviourInit = () =>
             {
                 Sandbox = luaManager.CreateSandbox(this);
-                luaManager.DoChunk(Sandbox, op.Result.name, op.Result.bytes);
+                luaManager.DoChunk(Sandbox, textAssetName, false);
 
                 Sandbox.Get("REF", out LuaTable injectionTable);
                 foreach (var injection in injections)
@@ -66,7 +68,10 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
                 Sandbox.Get("Update", out m_luaUpdate);
                 Sandbox.Get("OnDisable", out m_luaOnDisable);
                 Sandbox.Get("OnDestroy", out m_luaOnDestroy);
-                Sandbox.Set<string, Action<GameObject, UnityAction>>("BindButtonEventCS", BindButtonEventCS);
+                // ** set delegate lua function
+                Sandbox.Set<string, Action<GameObject, UnityAction>>("BindButtonEvent", BindButtonEvent);
+                Sandbox.Set<string, Func<int, Action, IEnumerator>>("DelayInvokeInFrames", DelayInvokeInFrames);
+                Sandbox.Set<string, Func<Action, IEnumerator>>("DelayInvokeEndOfFrame", DelayInvokeEndOfFrame);
 
                 m_luaAwake.SafeInvoke();
                 m_completed = true;
@@ -81,8 +86,32 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
             }
         };
     }
+    IEnumerator DelayInvokeInFramesImpl(int frame, Action callback)
+    {
+        for (int i = 0; i < frame; i++) yield return null;
+        callback();
+    }
 
-    private void BindButtonEventCS(GameObject obj, UnityAction callback)
+    IEnumerator DelayInvokeEndOfFrameImpl(Action callback)
+    {
+        yield return new WaitForEndOfFrame();
+        callback();
+    }
+
+    private IEnumerator DelayInvokeInFrames(int frames, Action callback)
+    {
+        var enumerator = DelayInvokeInFramesImpl(frames, callback);
+        StartCoroutine(enumerator);
+        return enumerator;
+    }
+
+    private IEnumerator DelayInvokeEndOfFrame(Action callback)
+    {
+        var enumerator = DelayInvokeEndOfFrameImpl(callback);
+        StartCoroutine(enumerator);
+        return enumerator;
+    }
+    private void BindButtonEvent(GameObject obj, UnityAction callback)
     {
         if (obj == null)
             return;
@@ -180,5 +209,6 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
         Dispose();
         if (LuaManager.Instance != null && LuaManager.Instance.LuaEnv != null)
             LuaManager.Instance.DestroySandbox(this);
+        script.ReleaseAsset();
     }
 }

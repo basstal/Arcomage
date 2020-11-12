@@ -17,6 +17,7 @@ using LuaCSFunction = XLua.LuaDLL.lua_CSFunction;
 #endif
 
 using System;
+using UnityEngine;
 
 namespace XLua
 {
@@ -25,7 +26,7 @@ namespace XLua
         protected bool disposed;
         protected readonly int luaReference;
         protected readonly LuaEnv luaEnv;
-
+        public int luaReferenceV => luaReference;
 #if UNITY_EDITOR || XLUA_GENERAL
         protected int _errorFuncRef { get { return luaEnv.errorFuncRef; } }
         protected RealStatePtr _L { get { return luaEnv.L; } }
@@ -34,6 +35,10 @@ namespace XLua
 
         public LuaBase(int reference, LuaEnv luaenv)
         {
+            if (reference == 22)
+            {
+                Debug.Log($"LuaBase 22 : luaenv :{luaenv}");
+            }
             luaReference = reference;
             luaEnv = luaenv;
         }
@@ -51,6 +56,7 @@ namespace XLua
 
         public virtual void Dispose(bool disposeManagedResources)
         {
+            Debug.Log($"disposed : {disposed}, luaReference : {luaReference}");
             if (!disposed)
             {
                 if (luaReference != 0)

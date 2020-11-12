@@ -45,13 +45,13 @@ public static class LogUtility
         switch (level)
         {
             case LogLevel.Debug:
-                return new Color32(211, 211, 211, 255);
+                return Color.green;
             case LogLevel.Info:
-                return new Color32(173, 216, 230, 255);
+                return Color.green;
             case LogLevel.Warning:
-                return new Color32(255, 165, 0, 255);
+                return Color.yellow;
             case LogLevel.Error:
-                return new Color32(255, 0, 255, 255);
+                return Color.red;
         }
         return Color.white;
     }

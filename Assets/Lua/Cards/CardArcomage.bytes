@@ -1,4 +1,4 @@
-local ResourceType = CS.TOW.ResourceType
+local ResourceType = CS.CostType
 local U = require("Utils")
 local Data = 
 {

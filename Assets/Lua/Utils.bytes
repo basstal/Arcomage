@@ -46,16 +46,23 @@ function U.AddCardEvent(player, triggerRound, event)
 end
 
 function U.ResChange(player, type, change)
-    local r = U.HandlePlayerResources(player)
-    r[type].Count = math.max(r[type].Count + change, 0)
+    warning("player", vardump(player))
+    local gamePlayerCS = player.GamePlayerCS
+    if type == CS.CostType.Brick then
+        gamePlayerCS.brick = math.max(gamePlayerCS.brick + change, 0)
+    elseif type == CS.CostType.Gem then
+        gamePlayerCS.gem = math.max(gamePlayerCS.gem + change, 0)
+    else
+        gamePlayerCS.recruit = math.max(gamePlayerCS.recruit + change, 0)
+    end
 end
 
 function U.BuildingChange(player, building, change)
-    local b = player.playerCS[building]
-    if b.Hp ~= nil then
-        b.Hp = b.Hp + change
+    local gamePlayerCS = player.GamePlayerCS
+    if building == "Wall" then
+        gamePlayerCS.wall = gamePlayerCS.wall + change
     else
-        warning(building .. " 没有HP字段 不能够Change")
+        gamePlayerCS.tower = gamePlayerCS.tower + change
     end
 end
 

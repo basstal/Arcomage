@@ -8,7 +8,7 @@ require("Strict")
 -- makeRef
 require("RefInject")
 -- DataBinding as DB
-require("DataBinding")
+DB = require("DataBinding")
 
 -- lua 垃圾回收
 local GC = require("GC")
