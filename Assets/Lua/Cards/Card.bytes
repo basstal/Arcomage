@@ -3,7 +3,7 @@ local DataAllArr = {}
 -- local CardResource = require("CardResource")
 -- local CardAttack = require("CardAttack")
 -- local CardConstruct = require("CardConstruct")
-local CardArcomage = require("CardArcomage")
+local CardArcomage = require("Cards/CardArcomage")
 
 local function AddAll(data)
     for _, res in pairs(data) do

@@ -1,4 +1,4 @@
-local Data = require("Card")
+local Data = require("Cards/Card")
 GamePlayerCS = nil
 local m_handCards = {}
 

@@ -35,10 +35,6 @@ namespace XLua
 
         public LuaBase(int reference, LuaEnv luaenv)
         {
-            if (reference == 22)
-            {
-                Debug.Log($"LuaBase 22 : luaenv :{luaenv}");
-            }
             luaReference = reference;
             luaEnv = luaenv;
         }
@@ -56,7 +52,7 @@ namespace XLua
 
         public virtual void Dispose(bool disposeManagedResources)
         {
-            Debug.Log($"disposed : {disposed}, luaReference : {luaReference}");
+            // Debug.Log($"disposed : {disposed}, luaReference : {luaReference}");
             if (!disposed)
             {
                 if (luaReference != 0)

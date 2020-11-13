@@ -831,9 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e9a980c7e01587438079795ea9a5aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  script:
-    m_AssetGUID: 98246e7947f878b429aace3b39de27f8
-    m_SubObjectName: 
+  script: UI/UIPlayer
   injections:
   - name: BricksCountTMP
     value: {fileID: 7359019911571253201}

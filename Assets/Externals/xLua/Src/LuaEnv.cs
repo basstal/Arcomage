@@ -352,7 +352,7 @@ namespace XLua
                     while (refQueue.Count > 0)
                     {
                         GCAction gca = refQueue.Dequeue();
-                        Debug.Log($"refQueue : {refQueue.Count}, gca : {gca.Reference}");
+                        // Debug.Log($"refQueue : {refQueue.Count}, gca : {gca.Reference}");
                         translator.ReleaseLuaBase(_L, gca.Reference, gca.IsDelegate);
                     }
                 }
@@ -464,7 +464,7 @@ namespace XLua
         {
             lock (refQueue)
             {
-                Debug.Log($" equeueGCAction refQueue :{refQueue.Count}, action : {action.Reference}, is delegate : {action.IsDelegate}");
+                // Debug.Log($" equeueGCAction refQueue :{refQueue.Count}, action : {action.Reference}, is delegate : {action.IsDelegate}");
                 refQueue.Enqueue(action);
             }
         }

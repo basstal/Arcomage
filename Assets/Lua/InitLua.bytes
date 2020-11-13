@@ -1,20 +1,20 @@
 -- [[ 完成Lua初始化工作 ]]
 -- table string math 扩展方法
-require("Extension")
+require("Internal/Extension")
 -- print info warning error assert
-require("Log")
+require("Internal/Log")
 -- strict 严格全局变量检查
-require("Strict")
+require("Internal/Strict")
 -- makeRef
-require("RefInject")
+require("Internal/RefInject")
 -- DataBinding as DB
-DB = require("DataBinding")
+DB = require("Internal/DataBinding")
 
 -- lua 垃圾回收
-local GC = require("GC")
+local GC = require("Internal/GC")
 GC.restart()
 -- lua 沙盒
-local Sandbox = require("Sandbox")
+local Sandbox = require("Internal/Sandbox")
 local injectedLuaFunctions = {
     CollectGarbage = GC.collect,
     CreateSandbox = Sandbox.CreateSandbox,

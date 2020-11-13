@@ -285,9 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e9a980c7e01587438079795ea9a5aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  script:
-    m_AssetGUID: 7eae46f7a654d3b46824ae5215d2d515
-    m_SubObjectName: 
+  script: UI/UIMain
   injections:
   - name: Start
     value: {fileID: 1500940751}

@@ -2,10 +2,6 @@ using UnityEngine.Events;
 using UnityEngine;
 using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using Sirenix.Utilities;
-using UnityEditor;
 using UnityEngine.UI;
 using XLua;
 

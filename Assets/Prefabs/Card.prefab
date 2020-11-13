@@ -170,9 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e9a980c7e01587438079795ea9a5aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  script:
-    m_AssetGUID: 856e07c09c7cf5c408a82ba7b26d4abe
-    m_SubObjectName: 
+  script: UI/UICard
   injections:
   - name: UseCardButton
     value: {fileID: 4027142120998796341}

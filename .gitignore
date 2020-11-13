@@ -75,3 +75,12 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 *.DotSettings
+
+
+
+
+# direct file ignore
+Assets/Externals/Sirenix/Demos/Custom Attribute Processors.unitypackage.meta
+Assets/Externals/Sirenix/Demos/Custom Drawers.unitypackage.meta
+Assets/Externals/Sirenix/Demos/Editor Windows.unitypackage.meta
+Assets/Externals/Sirenix/Demos/Sample - RPG Editor.unitypackage.meta

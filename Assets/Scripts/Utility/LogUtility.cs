@@ -1,7 +1,10 @@
+using System;
+using System.IO;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Linq;
 using XLua;
+using Object = UnityEngine.Object;
 
 public enum LogLevel
 {
@@ -31,8 +34,19 @@ public static class LogUtility
                     var requirePath = match.Groups[1].Value;
                     var lineNumber = match.Groups[2].Value;
                     var message = match.Groups[3].Value;
-                    // ** TODO make it can be clicked on console
-                    lines[i] = $"{message} () (at {requirePath}:{lineNumber})";
+                    var fullPath = requirePath;
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(requirePath))
+                        {
+                            fullPath = Path.Combine(LuaManager.UniqueLuaScriptsPath, $"{requirePath}.bytes");
+                        }
+                    }
+                    catch(Exception e){}
+                    finally
+                    {
+                        lines[i] = $"{message} () (at {fullPath}:{lineNumber})";
+                    }
                 }
                 result = string.Join("\n  ", lines);
             }

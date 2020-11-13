@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using XLua;
 
 public class LuaManager : Singleton<LuaManager>
@@ -22,6 +24,7 @@ public class LuaManager : Singleton<LuaManager>
     private float m_lastGCTime;
     public event Action OnInitFinished;
     public static string LuaScriptsLabel = "Lua";
+    public static string UniqueLuaScriptsPath = "Assets/Lua/";
     public LuaEnv LuaEnv { get; private set; }
 
     public override async Task Init()
@@ -42,7 +45,6 @@ public class LuaManager : Singleton<LuaManager>
                 injectedLuaFunctions.Get("CollectGarbage", out m_luaCollectGarbage);
                 injectedLuaFunctions.Get("CreateSandbox", out m_luaCreateSandbox);
                 injectedLuaFunctions.Get("DestroySandbox", out m_luaDestroySandbox);
-                Debug.Log($"m_luaDestroySandbox  assign: {m_luaDestroySandbox}");
                 injectedLuaFunctions.Get("DoChunk", out m_luaDoChunk);
                 injectedLuaFunctions.Dispose();
             }
@@ -53,10 +55,20 @@ public class LuaManager : Singleton<LuaManager>
 
     private async Task ReloadAllLuaContent()
     {
-        List<TextAsset> result = new List<TextAsset>();
-        await AddressableUtility.InitByNameOrLabel(LuaScriptsLabel, result);
-        foreach (var asset in result)
-            m_scriptName2Content[asset.name] = asset.bytes;
+        var locations = await Addressables.LoadResourceLocationsAsync(LuaScriptsLabel).Task;
+
+        foreach (var location in locations)
+        {
+            var asset = await Addressables.LoadAssetAsync<TextAsset>(location).Task;
+            string refPath = location.InternalId.Replace(UniqueLuaScriptsPath, "");
+            var dotIndex = refPath.LastIndexOf('.');
+            if (dotIndex >= 0)
+            {
+                refPath = refPath.Substring(0, dotIndex);
+            }
+            Debug.Log($"refPath :{refPath}");
+            m_scriptName2Content[refPath] = asset.bytes;
+        }
     }
 
     private byte[] Loader(ref string requireName)
@@ -105,8 +117,6 @@ public class LuaManager : Singleton<LuaManager>
 
         m_luaBehaviours.Remove(luaBehaviour);
         m_luaDestroySandbox(luaBehaviour.Sandbox);
-        Debug.Log("m_luaDestroySandbox finished CS in DestroySandbox");
-        
         luaBehaviour.Sandbox.Dispose();
     }
 
@@ -126,12 +136,12 @@ public class LuaManager : Singleton<LuaManager>
 
     private void ClearAllLuaBehaviours()
     {
-        Debug.Log("ClearAllLuaBehaviours !");
-        foreach (var behaviour in m_luaBehaviours.Where(t => t != null))
+        var count = m_luaBehaviours.Count;
+        for (var i = 0; i < count; ++i)
         {
+            var behaviour = m_luaBehaviours[i];
             behaviour.Dispose();
             m_luaDestroySandbox(behaviour.Sandbox);
-            Debug.Log("m_luaDestroySandbox finished CS in ClearAllLuaBehaviours");
             behaviour.Sandbox.Dispose();
         }
         m_luaBehaviours.Clear();
@@ -144,7 +154,7 @@ public class LuaManager : Singleton<LuaManager>
         m_luaCreateSandbox = null;
         m_luaDestroySandbox = null;
         m_luaDoChunk = null;
-        LuaEnv?.Dispose();
+        LuaEnv.Dispose();
         LuaEnv = null;
 #if UNITY_EDITOR
         Debug.Log($"LuaManager Uninit");
