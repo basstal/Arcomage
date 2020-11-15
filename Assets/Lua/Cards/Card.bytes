@@ -1,9 +1,6 @@
 local DataAllDict = {}
 local DataAllArr = {}
--- local CardResource = require("CardResource")
--- local CardAttack = require("CardAttack")
--- local CardConstruct = require("CardConstruct")
-local CardArcomage = require("Cards/CardArcomage")
+local CardArcomage = require("Data/CardArcomage")
 
 local function AddAll(data)
     for _, res in pairs(data) do
@@ -11,14 +8,11 @@ local function AddAll(data)
             DataAllDict[res.id] = res
             table.insert(DataAllArr, res)
         else
-            warning(string.format("卡数据中添加了重复的id:%s", res.id))
+            warning("GamePlay", string.format("卡数据中添加了重复的id:%s", res.id))
         end
     end
 end
 
--- AddAll(CardResource)
--- AddAll(CardAttack)
--- AddAll(CardConstruct)
 AddAll(CardArcomage)
 
 return DataAllArr

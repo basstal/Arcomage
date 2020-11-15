@@ -6,7 +6,7 @@ require("Internal/Log")
 -- strict 严格全局变量检查
 require("Internal/Strict")
 -- makeRef
-require("Internal/RefInject")
+-- require("Internal/RefInject")
 -- DataBinding as DB
 DB = require("Internal/DataBinding")
 

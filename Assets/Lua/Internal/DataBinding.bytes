@@ -141,7 +141,9 @@ function DataBinding.SetData(key, data)
 end
 
 function DataBinding.GetData(key)
-    local entry = m_allEntries[Resolve(key)]
+    key = Resolve(key)
+    warning("key", vardump(key))
+    local entry = m_allEntries[key]
     if entry ~= nil then
         return entry.data
     end

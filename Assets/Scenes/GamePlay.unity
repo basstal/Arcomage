@@ -367,15 +367,21 @@ MonoBehaviour:
   cardAssetRef:
     m_AssetGUID: d180b78a14b40dc42869ed213459fd53
     m_SubObjectName: 
-  brickTextureAssetRef:
-    m_AssetGUID: 0dc7c8b7aa06ee249873a4da52cece0a
+  cardsAssetRef:
+    m_AssetGUID: e1fc82e6a360a3440b38ca41dad9c58c
     m_SubObjectName: 
-  gemTextureAssetRef:
-    m_AssetGUID: b083467953e78214da1f1c22f1b11b4a
-    m_SubObjectName: 
-  recruitTextureAssetRef:
-    m_AssetGUID: cbbcc8a77446e054797bf65f20e2552c
-    m_SubObjectName: 
+  brickAssetRef:
+    m_AssetGUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_SubObjectName: others_5
+  gemAssetRef:
+    m_AssetGUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_SubObjectName: others_8
+  recruitAssetRef:
+    m_AssetGUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_SubObjectName: others_9
+  brick: {fileID: 0}
+  gem: {fileID: 0}
+  recruit: {fileID: 0}
 --- !u!1001 &431881276
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -807,7 +813,7 @@ RectTransform:
   m_GameObject: {fileID: 1643376510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1}
   m_Children: []
   m_Father: {fileID: 169328486}
   m_RootOrder: 2

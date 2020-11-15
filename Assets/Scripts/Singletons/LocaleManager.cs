@@ -21,7 +21,7 @@ public class LocaleManager : Singleton<LocaleManager>
         void LoadLocaleMap()
         {
             var envGlobal = luaManager.LuaEnv;
-            var objs = envGlobal.DoString(@"return require('LocaleMap')");
+            var objs = envGlobal.DoString(@"return require('Data/LocaleMap')");
             if (objs != null && objs[0] is LuaTable localeMapT)
             {
                 localeMapT.Get("EN", out LuaTable englishMapT);

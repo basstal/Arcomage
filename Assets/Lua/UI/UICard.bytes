@@ -1,7 +1,3 @@
--- local card
--- local player
--- local U = require("Utils")
--- local EmptyTable = {}
 local m_cardData
 
 function Awake()
@@ -11,61 +7,48 @@ function Awake()
     DB.Bind(string.format("Card/Data/%s", instanceId), OnData)
 end
 
--- function Init(p, c)
---     -- REF.Button
---     -- REF.Button.Image.color = color
---     -- print(p.sprite).sprite = p.sprite
---     -- player = p
---     -- card = c
---     -- REF.Id.TextMeshProUGUI.text = string.format("%s-%s", card.cardCS.Id, card.uid)
-
---     -- local costText = ""
---     -- -- for i = 0, card.cardCS.Costs.Count - 1 do
---     -- --     local cost = card.cardCS.Costs[i]
---     -- --     costText = costText .. type2String[cost.Type] .. "(" .. cost.Count .. ")\n"
---     -- -- end
---     -- REF.Cost.TextMeshProUGUI.text = costText
---     -- REF.Func.TextMeshProUGUI.text = card.note
-
---     -- local result = U.ValidCardCost(player, card)
---     -- if result then
---     --     print(string.format("play tween uid : %s", card.uid))
---     --     REF.root.DOTweenAnimation:DORestart()
---     -- else
---     --     print(string.format("stop tween uid : %s", card.uid))
---     --     REF.root.DOTweenAnimation:DOPause()
---     -- end
--- end
-
 function OnData(cardData)
-    -- local transform = this.transform
-    -- transform.localPosition = CS.UnityEngine.Vector3.zero
-    -- transform.localScale = CS.UnityEngine.Vector3.one
+    if cardData == nil then
+        return
+    end
     m_cardData = cardData
-    local image = REF.UseCardButtonImage
+    local image = REF.CardImage
     image.sprite = cardData.sprite
     image:SetNativeSize()
-    image:SetAlpha(1)
-
+    local gameMain = DB.GetData("Main")
+    local gameMainCS = gameMain.GameMainCS
+    local costData = cardData.cost
+    if costData.type == CS.CostType.Brick then
+        REF.UseCardButtonImage.sprite = gameMainCS.brick
+    elseif costData.type == CS.CostType.Gem then
+        REF.UseCardButtonImage.sprite = gameMainCS.gem
+    else
+        REF.UseCardButtonImage.sprite = gameMainCS.recruit
+    end
+    local GetString = CS.LocaleManager.GetString
+    REF.CardNameTMP.text = GetString(string.format("CardName_%s", cardData.id))
+    REF.CardDescribeTMP.text = GetString(string.format("CardDescribe_%s", cardData.id))
+    REF.CardCostTMP.text = costData.count
+    warning("cardData", vardump(cardData))
+    if __UNITY_EDITOR then
+        local gameCardCS = this:GetComponent(typeof(CS.GameCard))
+        gameCardCS.id = cardData.id
+        warning("costData.type", vardump(costData.type))
+        gameCardCS.costType = costData.type
+        gameCardCS.cost = costData.count
+    end
     local extentImage = REF.CardExtent:GetComponent(typeof(CS.UnityEngine.UI.Image))
-    local costData = cardData.costs[1]
-    local left = HandleCost(costData)
-    REF.UseCardButtonImage.raycastTarget = left >= 0
+    local player = DB.GetData(string.format("Player%s", cardData.owner))
+    local left = HandleCost(player, costData)
+    REF.UseCardButton:SetGraphicRaycastTarget(left >= 0)
     if left >= 0 then
         extentImage.color = CS.UnityEngine.Color.white
     else
         extentImage.color = CS.UnityEngine.Color.red
     end
-
 end
 
--- function __tostring()
---     return string.format("uid(%s) : %s", self.uid, self.id)
--- end
-
-function HandleCost(costData, pay)
-    local player = DB.GetData("Player{CurrentPlayer}")
-    warning("player", vardump(player))
+function HandleCost(player, costData, pay)
     local left
     if costData.type == CS.CostType.Brick then
         left = player.GamePlayerCS.brick - costData.count
@@ -91,38 +74,17 @@ function UseCard()
         error("卡面为空数据？？")
         return
     end
-
-    -- local sd = CS.UnityEngine.GameObject.Find("Fight"):GetComponent(typeof(CS.LuaBehaviour)).sandbox
-    -- local FightLua = sd.FightLua
-    -- if FightLua.CurrentStage == sd.WaitPlayer then
-    -- local player = FightLua.players[FightLua.currentPlayer]
-    -- warning("player", vardump(player, {name = "log_player"}))
-    -- print(card)
-    local costData = m_cardData.costs[1]
-    HandleCost(costData, true)
-    -- local resources = U.HandlePlayerResources(player)
-    -- for i = 0, card.cardCS.Costs.Count - 1 do
-    --     local cost = card.cardCS.Costs[i]
-    --     local res = resources[cost.Type]
-    --     res.Count = res.Count - cost.Count
-    -- end
-    local player = DB.GetData("Player{CurrentPlayer}")
+    local costData = m_cardData.cost
+    local currentPlayer = DB.GetData("CurrentPlayer")
+    local player = DB.GetData(string.format("Player%s", currentPlayer))
+    HandleCost(player, costData, true)
     local result = m_cardData.func(player)
-    -- local result = card.func(player) or EmptyTable
-    -- U.RemoveHandCard(player, card)
-    -- print("remove index : " .. tostring(index))
-    -- print("剩余数量 ： " .. tostring(#player.handCards))
-    -- for i, c in pairs(player.handCards) do
-    --     print("index ".. tostring(i) .. " card " .. tostring(c))
-    -- end
     DB.TriggerEvent("Main/ShowUseCard", this)
     player.RemoveFromHandCards(m_cardData)
-    player.OnGenHandCards(1)
-    -- U.RefreshPlayerUI(player)
-    -- if result.enemyInfoRefresh then
-    --     local target = U.GetEnemyPlayer(player)
-    --     U.RefreshPlayerUI(target)
-    -- end
+    DB.TriggerEvent(string.format("Player%s/Refresh", currentPlayer))
+    if result ~= nil and result.enemyInfoRefresh then
+        local enemy = currentPlayer == 1 and 2 or 1
+        DB.TriggerEvent(string.format("Player%s/Refresh", enemy))
+    end
     DB.TriggerEvent("Main/PlayerSwitch", result)
-    -- end
 end

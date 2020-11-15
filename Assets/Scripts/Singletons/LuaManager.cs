@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using XLua;
@@ -66,7 +64,9 @@ public class LuaManager : Singleton<LuaManager>
             {
                 refPath = refPath.Substring(0, dotIndex);
             }
-            Debug.Log($"refPath :{refPath}");
+#if UNITY_EDITOR
+            // Debug.Log($"refPath :{refPath}");
+#endif
             m_scriptName2Content[refPath] = asset.bytes;
         }
     }

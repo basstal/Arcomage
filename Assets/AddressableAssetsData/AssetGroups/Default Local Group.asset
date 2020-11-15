@@ -22,51 +22,38 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Lua
-    m_MainAsset: {fileID: 102900000, guid: d319a4305a4cc0243914b7427faac355, type: 3}
-    m_TargetAsset: {fileID: 102900000, guid: d319a4305a4cc0243914b7427faac355, type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 7c9d90b48a6294e42a5ed1874e48bd5f
     m_Address: Assets/Prefabs/PlayerLeft.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - prefab
-    m_MainAsset: {fileID: 985753703244735246, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-      type: 3}
-    m_TargetAsset: {fileID: 985753703244735246, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-      type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 4fa5d3334302681489d0f699671f2d81
     m_Address: Assets/Prefabs/PlayerRight.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - prefab
-    m_MainAsset: {fileID: 7279918838035444053, guid: 4fa5d3334302681489d0f699671f2d81,
-      type: 3}
-    m_TargetAsset: {fileID: 7279918838035444053, guid: 4fa5d3334302681489d0f699671f2d81,
-      type: 3}
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: d180b78a14b40dc42869ed213459fd53
     m_Address: Assets/Prefabs/Card.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
     - prefab
-    m_MainAsset: {fileID: 6407823995055015468, guid: d180b78a14b40dc42869ed213459fd53,
-      type: 3}
-    m_TargetAsset: {fileID: 6407823995055015468, guid: d180b78a14b40dc42869ed213459fd53,
-      type: 3}
-  - m_GUID: 0dc7c8b7aa06ee249873a4da52cece0a
-    m_Address: Assets/Textures/bricks.png
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: e1fc82e6a360a3440b38ca41dad9c58c
+    m_Address: Assets/Textures/cards.png
     m_ReadOnly: 0
     m_SerializedLabels:
     - Texture
-    m_MainAsset: {fileID: 2800000, guid: 0dc7c8b7aa06ee249873a4da52cece0a, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: 0dc7c8b7aa06ee249873a4da52cece0a, type: 3}
-  - m_GUID: b083467953e78214da1f1c22f1b11b4a
-    m_Address: Assets/Textures/gems.png
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Texture
-    m_MainAsset: {fileID: 2800000, guid: b083467953e78214da1f1c22f1b11b4a, type: 3}
-    m_TargetAsset: {fileID: 2800000, guid: b083467953e78214da1f1c22f1b11b4a, type: 3}
-  - m_GUID: cbbcc8a77446e054797bf65f20e2552c
-    m_Address: Assets/Textures/recruits.png
+    m_MainAsset: {fileID: 2800000, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}
+    m_TargetAsset: {fileID: 2800000, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}
+  - m_GUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_Address: Assets/Textures/others.png
     m_ReadOnly: 0
     m_SerializedLabels:
     - Texture

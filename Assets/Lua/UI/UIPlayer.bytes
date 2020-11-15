@@ -2,11 +2,6 @@ local Data = require("Cards/Card")
 GamePlayerCS = nil
 local m_handCards = {}
 
-function Awake()
-    GamePlayerCS = this:GetComponent(typeof(CS.GamePlayer))
-    DB.RegisterEvent("Player/GenHandCards", OnGenHandCards)
-end
-
 local function RepositionRoof(roofTrans, bodyImage)
     local position = roofTrans.localPosition
     local parentImage = roofTrans.parent:GetComponent(typeof(CS.UnityEngine.UI.Image))
@@ -14,8 +9,15 @@ local function RepositionRoof(roofTrans, bodyImage)
     roofTrans.localPosition = position
 end
 
-function Start()
-    GamePlayerCS:Init(GamePlayerCS.playerID)
+function Awake()
+    GamePlayerCS = this:GetComponent(typeof(CS.GamePlayer))
+    DB.RegisterEvent("Player/GenHandCards", OnGenHandCards)
+    DB.RegisterEvent("Player/RecycleHandCards", OnRecycleHandCards)
+    DB.RegisterEvent(string.format("Player%s/Refresh", GamePlayerCS.playerID), OnRefresh)
+end
+
+function OnRefresh()
+    warning("Player%s fresh", GamePlayerCS.playerID)
     local GetString = CS.LocaleManager.GetString
     REF.BricksCountTMP.text = GetString("BrickCount", GamePlayerCS.brick)
     REF.GemsCountTMP.text = GetString("GemsCount", GamePlayerCS.gem)
@@ -24,27 +26,37 @@ function Start()
     REF.TowerScoreTMP.text = GetString("SingleScore", tower)
     local wall = GamePlayerCS.wall
     REF.WallScoreTMP.text = GetString("SingleScore", wall)
+    REF.BricksIncRateTMP.text = GetString("IncRate", GamePlayerCS.brickIncRate)
+    REF.GemsIncRateTMP.text = GetString("IncRate", GamePlayerCS.gemIncRate)
+    REF.RecruitsIncRateTMP.text = GetString("IncRate", GamePlayerCS.recruitIncRate)
     REF.PlayerNameTMP.text = GamePlayerCS.playerName
 
     local hasTower = tower > 0
     REF.TowerRoof:SetActive(hasTower)
     if hasTower then
-        REF.TowerBodyImage.fillAmount = math.max(tower / CS.GamePlayer.TOWER_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.TOWER_MIN_FILL_AMOUNT)
+        REF.TowerBodyImage.fillAmount =
+            math.max(tower / CS.GamePlayer.TOWER_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.TOWER_MIN_FILL_AMOUNT)
         RepositionRoof(REF.TowerRoof.transform, REF.TowerBodyImage)
     else
         REF.TowerBodyImage.fillAmount = 0
     end
 
-
     local hasWall = wall > 0
     REF.WallRoof:SetActive(hasWall)
     if hasWall then
-        REF.WallBodyImage.fillAmount = math.max(wall / CS.GamePlayer.WALL_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.WALL_MIN_FILL_AMOUNT)
-        RepositionRoof(REF.WallRoof.transform, REF.WallBodyImage);
+        REF.WallBodyImage.fillAmount =
+            math.max(wall / CS.GamePlayer.WALL_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.WALL_MIN_FILL_AMOUNT)
+        RepositionRoof(REF.WallRoof.transform, REF.WallBodyImage)
     else
         REF.WallBodyImage.fillAmount = 0
     end
-    DB.SetData(string.format("Player%s", GamePlayerCS.playerID), _ENV)
+end
+
+function Start()
+    OnRefresh()
+    local key = string.format("Player%s", GamePlayerCS.playerID)
+    DB.SetData(key, _ENV)
+    warning("key => _ENV", vardump(key) .. " \n ENV:\n" .. vardump(_ENV))
 end
 
 function RemoveFromHandCards(cardData)
@@ -53,6 +65,16 @@ function RemoveFromHandCards(cardData)
             table.remove(m_handCards, i)
             break
         end
+    end
+end
+
+function OnRecycleHandCards()
+    local gameMain = DB.GetData("Main")
+    local gameMainCS = gameMain.GameMainCS
+    local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
+    for i = #m_handCards, 1, -1 do
+        m_handCards[i].transform:SetParent(cardObjCacheRoot, false)
+        table.remove(m_handCards, i)
     end
 end
 
@@ -72,10 +94,9 @@ function OnGenHandCards(cardCount)
                 local trans = cardObjCacheRoot:GetChild(0)
                 trans:SetParent(parentTrans, false)
                 local cardData = Data[index]
-                -- ** todo 对齐 id
-                local tempId = cardData.id - 7001
-                cardData.sprite = ID2Sprite[tempId]
+                cardData.sprite = ID2Sprite[cardData.id]
                 cardData.transform = trans
+                cardData.owner = GamePlayerCS.playerID
                 local instanceId = trans.gameObject:GetInstanceID()
                 DB.SetData(string.format("Card/Data/%s", instanceId), cardData)
                 used[index] = true
@@ -86,5 +107,6 @@ function OnGenHandCards(cardCount)
             end
         end
     end
+    info("GamePlay", string.format("当前玩家%s手牌%s => \n%s", GamePlayerCS.playerID, #m_handCards, vardump(m_handCards)))
     DB.SetData(string.format("Player%s/HandCards", GamePlayerCS.playerID), m_handCards)
 end

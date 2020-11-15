@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,8 +34,20 @@ public class SingletonLoader : MonoBehaviour
             await singletonBase.Uninit();
         }
     }
+#if UNITY_EDITOR
+    static void ClearLog()
+    {
+        var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
+        var type = assembly.GetType("UnityEditor.LogEntries");
+        var method = type.GetMethod("Clear");
+        method?.Invoke(new object(), null);
+    }
+#endif
     public void ReloadScene()
     {
+#if UNITY_EDITOR
+        ClearLog();
+#endif
         SceneManager.LoadSceneAsync("GamePlay");
     }
     private void OnDestroy()

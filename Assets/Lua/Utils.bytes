@@ -1,52 +1,6 @@
 local U = {}
 
-function U.HandlePlayerResources(player)
-    local resources = {}
-    local r = player.playerCS.Resources
-    for i = 0, r.Count - 1 do
-        local resource = r[i]
-        resources[resource.Type] = resource
-    end
-    return resources
-end
-
--- ** 从手牌中删除该卡牌
-function U.RemoveHandCard(player, card)
-    local index = table.find(player.handCards, function(_, hc)
-        return hc.uid == card.uid
-    end)
-    table.remove(player.handCards, index)
-    card.sandbox = nil
-end
-
-function U.ValidCardCost(player, card)
-    local resources = U.HandlePlayerResources(player)
-    for i = 0, card.cardCS.Costs.Count - 1 do
-        local cost = card.cardCS.Costs[i]
-        if resources[cost.Type].Count < cost.Count then
-            return false
-        end
-    end
-    return true
-end
-
-function U.AddCardEvent(player, triggerRound, event)
-    local sd = CS.UnityEngine.GameObject.Find("Fight"):GetComponent(typeof(CS.TOW.LuaBehaviour)).sandbox
-    local f = table.find(sd.FightLua.CardEvents, function(_, eventWrap)
-        return eventWrap.event == event
-    end)
-    if f ~= nil then
-        warning("重复的卡牌事件被添加??")
-    end
-    table.insert(sd.FightLua.CardEvents, {
-        event = event,
-        triggerRound = triggerRound,
-        player = player,
-    })
-end
-
 function U.ResChange(player, type, change)
-    warning("player", vardump(player))
     local gamePlayerCS = player.GamePlayerCS
     if type == CS.CostType.Brick then
         gamePlayerCS.brick = math.max(gamePlayerCS.brick + change, 0)
@@ -67,108 +21,37 @@ function U.BuildingChange(player, building, change)
 end
 
 function U.GrowthChange(player, type, change)
-    local r = U.HandlePlayerResources(player)
+    local gamePlayerCS = player.GamePlayerCS
     change = math.ceil(change)
-    r[type].Growth = r[type].Growth + change
-end
-
-function U.DynamicGrowthChange(player, type, change)
-    local r = U.HandlePlayerResources(player)
-    change = math.ceil(change)
-    r[type].GrowthDynamic = r[type].GrowthDynamic + change
+    if type == CS.CostType.Brick then
+        gamePlayerCS.brickIncRate = gamePlayerCS.brickIncRate + change
+    elseif type == CS.CostType.Gem then
+        gamePlayerCS.gemIncRate = gamePlayerCS.gemIncRate + change
+    else
+        gamePlayerCS.recruitIncRate = gamePlayerCS.recruitIncRate + change
+    end
 end
 
 function U.CauseDamage(player, damage)
     local target = U.GetEnemyPlayer(player)
-    local wallHp = target.playerCS.Wall.Hp
-    local castleHp = target.playerCS.Castle.Hp
-    if wallHp > 0 then
-        local realDamage = damage * 1.0
-        local overflow = realDamage  - wallHp
-        if overflow > 5 then
-            target.playerCS.College.Exist = false
-        end
-        target.playerCS.Wall.Hp = math.max(wallHp - realDamage, 0)
-    elseif castleHp > 0 then
-        local realDamage = damage * 0.5
-        target.playerCS.Castle.Hp = math.max(castleHp - realDamage, 0)
+    local gamePlayerCS = target.GamePlayerCS
+    local wall = gamePlayerCS.wall
+    if damage > wall then
+        gamePlayerCS.wall = 0
+        gamePlayerCS.tower = math.max(gamePlayerCS.tower + wall - damage, 0)
     else
-        local realDamage = damage * 2
-        target.playerCS.College.Exist = false
-        -- local buildings = {"Tower", "Camp", "Furnace", "Cave"}
-        local buildings = {"Tower"}
-        -- ** 直到剩余伤害小于或等于0
-        while realDamage > 0 do
-            -- ** 随机找一个没有归零的建筑
-            local index = math.random(1, #buildings)
-            local selectBuilding = buildings[index]
-            local hp = target.playerCS[selectBuilding].Hp
-            if hp > 0 then
-                realDamage = realDamage - hp
-                target.playerCS[selectBuilding].Hp = math.max(hp - realDamage, 0)
-            end
-            local isAllZero = true
-            for _, name in pairs(buildings) do
-                if target.playerCS[name].Hp > 0 then
-                    isAllZero = false
-                end
-            end
-            -- ** 直到所有建筑都为0
-            if isAllZero then
-                break
-            end
-        end
+        gamePlayerCS.wall = wall - damage
     end
-    U.RefreshPlayerUI(target)
+    DB.TriggerEvent(string.format("Player%s/Refresh", gamePlayerCS.playerID))
 end
 
-function U.RefreshPlayerUI(player)
-    local bindKey = "Left/Player"
-    if player.playerCS.Id == 2 then
-        bindKey = "Right/Player"
+function U.GetEnemyPlayer(player)
+    local playerID = player.GamePlayerCS.playerID
+    if playerID == 1 then
+        return DB.GetData("Player2")
+    else
+        return DB.GetData("Player1")
     end
-    DB.SetData(bindKey, player)
-end
-
-function U.GetEnemyPlayer(thisPlayer)
-    local sd = CS.UnityEngine.GameObject.Find("Fight"):GetComponent(typeof(CS.TOW.LuaBehaviour)).sandbox
-    local players = sd.FightLua.players
-    for _, player in pairs(players) do
-        if player ~= thisPlayer then
-            return player
-        end
-    end
-end
-
-function U.GetResourceLimit(player, type)
-    local resourceType = CS.TOW.ResourceType
-    if type == resourceType.Monster then
-        return player.playerCS.Tower.Hp * 1.0
-    elseif type == resourceType.Jewelry then
-        return player.playerCS.Castle.Hp * 1.0
-    elseif type == resourceType.Brick then
-        return player.playerCS.Wall.Hp * 1.0
-
-    -- elseif type == resourceType.Food then
-    --     return player.playerCS.Tower.Hp * 1.0
-
-    -- elseif type == resourceType.Labor then
-    --     return player.playerCS.Camp.Hp * 1.0
-        
-    end
-    warning("未定义的资源上限", type)
-    return 0
-end
-
-function U.GetAllBuildingsHp(player)
-    local total = 0
-    total = total + player.playerCS.Wall.Hp
-    total = total + player.playerCS.Castle.Hp
-    total = total + player.playerCS.Tower.Hp
-    -- total = total + player.playerCS.Cave.Hp
-    -- total = total + player.playerCS.Furnace.Hp
-    -- total = total + player.playerCS.Camp.Hp
-    return total
 end
 
 return U

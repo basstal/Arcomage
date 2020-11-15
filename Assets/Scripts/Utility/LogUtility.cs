@@ -42,7 +42,7 @@ public static class LogUtility
                             fullPath = Path.Combine(LuaManager.UniqueLuaScriptsPath, $"{requirePath}.bytes");
                         }
                     }
-                    catch(Exception e){}
+                    catch(Exception){}
                     finally
                     {
                         lines[i] = $"{message} () (at {fullPath}:{lineNumber})";

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using XLua;
 
 [LuaCallCSharp]
@@ -23,9 +22,4 @@ public class GamePlayer : MonoBehaviour
     // ** control the fillAmount of wall sprite
     public const float WALL_MAX_FILL_AMOUNT_SCORE = 100;
     public const float WALL_MIN_FILL_AMOUNT = 0.05f;
-
-    public void Init(int playerID)
-    {
-        this.playerID = playerID; 
-    }
 }

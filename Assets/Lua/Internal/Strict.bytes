@@ -17,8 +17,8 @@ function strict(_table)
     end
 
     function mt.__newindex(obj, key, value)
-        local what = what()
-        if not ignore(key) and not declared[key] and what == "Lua" then
+        local isWhat = what()
+        if not ignore(key) and not declared[key] and isWhat == "Lua" then
             error("internal", "global variable not declared before assign '" .. key .. "'")
         else
             declared[key] = true
