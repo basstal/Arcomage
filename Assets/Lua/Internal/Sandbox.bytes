@@ -20,12 +20,10 @@ function Sandbox.CreateSandbox(gameObject)
 end
 
 function Sandbox.DestroySandbox(sandbox)
-    info("sandbox", vardump(sandbox))
     setmetatable(sandbox, nil)
     for k in pairs(sandbox) do
         sandbox[k] = nil
     end
-    info("sandbox", "destroyed")
 end
 
 local function LoadPackage(...)

@@ -22,8 +22,17 @@ local injectedLuaFunctions = {
     DoChunk = Sandbox.DoChunk,
 }
 
+if __UNITY_EDITOR then
+    -- use rider emmylua
+    local status, err = pcall(function()
+        package.cpath = package.cpath .. ';C:/Users/33047/AppData/Roaming/JetBrains/Rider2020.1/plugins/intellij-emmylua/classes/debugger/emmy/windows/x64/?.dll'
+        local dbg = require('emmy_core')
+        dbg.tcpConnect('localhost', 9966)
+    end)
+    if err ~= nil then
+        warning("Debug", "EmmyLua Debugger failed" .. tostring(err))
+    end
+end
 strict(_G)
-
-print('InitLua', 'success')
 
 return injectedLuaFunctions

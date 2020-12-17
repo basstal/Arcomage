@@ -17,11 +17,10 @@ function Awake()
 end
 
 function OnRefresh()
-    warning("Player%s fresh", GamePlayerCS.playerID)
     local GetString = CS.LocaleManager.GetString
     REF.BricksCountTMP.text = GetString("BrickCount", GamePlayerCS.brick)
     REF.GemsCountTMP.text = GetString("GemsCount", GamePlayerCS.gem)
-    REF.RecruitsCountTMP.text = GetString("RecuritsCount", GamePlayerCS.recruit)
+    REF.RecruitsCountTMP.text = GetString("RecruitsCount", GamePlayerCS.recruit)
     local tower = GamePlayerCS.tower
     REF.TowerScoreTMP.text = GetString("SingleScore", tower)
     local wall = GamePlayerCS.wall
@@ -56,7 +55,6 @@ function Start()
     OnRefresh()
     local key = string.format("Player%s", GamePlayerCS.playerID)
     DB.SetData(key, _ENV)
-    warning("key => _ENV", vardump(key) .. " \n ENV:\n" .. vardump(_ENV))
 end
 
 function RemoveFromHandCards(cardData)
@@ -80,7 +78,7 @@ end
 
 function OnGenHandCards(cardCount)
     local used = {}
-    info(string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, cardCount))
+    info("GamePlay", string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, cardCount))
     local dataSize = #Data
     local gameMain = DB.GetData("Main")
     local gameMainCS = gameMain.GameMainCS
@@ -102,7 +100,6 @@ function OnGenHandCards(cardCount)
                 used[index] = true
                 table.insert(m_handCards, cardData)
             else
-                warning("GamePlay", "预设的(白板)卡牌数量已用完")
                 return
             end
         end

@@ -1,7 +1,6 @@
 local m_cardData
 
 function Awake()
-    print("awake card")
     BindButtonEvent(REF.UseCardButton, UseCard)
     local instanceId = this:GetInstanceID()
     DB.Bind(string.format("Card/Data/%s", instanceId), OnData)
@@ -29,11 +28,9 @@ function OnData(cardData)
     REF.CardNameTMP.text = GetString(string.format("CardName_%s", cardData.id))
     REF.CardDescribeTMP.text = GetString(string.format("CardDescribe_%s", cardData.id))
     REF.CardCostTMP.text = costData.count
-    warning("cardData", vardump(cardData))
     if __UNITY_EDITOR then
         local gameCardCS = this:GetComponent(typeof(CS.GameCard))
         gameCardCS.id = cardData.id
-        warning("costData.type", vardump(costData.type))
         gameCardCS.costType = costData.type
         gameCardCS.cost = costData.count
     end

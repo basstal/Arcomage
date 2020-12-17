@@ -4,10 +4,21 @@ function U.ResChange(player, type, change)
     local gamePlayerCS = player.GamePlayerCS
     if type == CS.CostType.Brick then
         gamePlayerCS.brick = math.max(gamePlayerCS.brick + change, 0)
+        if change > 0 then
+            player.REF.BricksAddEffect:Play()
+        else
+            
+        end
     elseif type == CS.CostType.Gem then
         gamePlayerCS.gem = math.max(gamePlayerCS.gem + change, 0)
+        if change > 0 then
+            player.REF.GemsAddEffect:Play()
+        end
     else
         gamePlayerCS.recruit = math.max(gamePlayerCS.recruit + change, 0)
+        if change > 0 then
+            player.REF.RecruitsAddEffect:Play()
+        end
     end
 end
 
@@ -15,8 +26,14 @@ function U.BuildingChange(player, building, change)
     local gamePlayerCS = player.GamePlayerCS
     if building == "Wall" then
         gamePlayerCS.wall = gamePlayerCS.wall + change
+        if change > 0 then
+            player.REF.WallAddEffect:Play()
+        end
     else
         gamePlayerCS.tower = gamePlayerCS.tower + change
+        if change > 0 then
+            player.REF.TowerAddEffect:Play()
+        end
     end
 end
 
@@ -25,10 +42,19 @@ function U.GrowthChange(player, type, change)
     change = math.ceil(change)
     if type == CS.CostType.Brick then
         gamePlayerCS.brickIncRate = gamePlayerCS.brickIncRate + change
+        if change > 0 then
+            player.REF.BricksIncRateAnimation:DORestartById("start")
+        end
     elseif type == CS.CostType.Gem then
         gamePlayerCS.gemIncRate = gamePlayerCS.gemIncRate + change
+        if change > 0 then
+            player.REF.GemsIncRateAnimation:DORestartById("start")
+        end
     else
         gamePlayerCS.recruitIncRate = gamePlayerCS.recruitIncRate + change
+        if change > 0 then
+            player.REF.RecruitsIncRateAnimation:DORestartById("start")
+        end
     end
 end
 

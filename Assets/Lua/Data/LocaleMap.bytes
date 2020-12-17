@@ -1,7 +1,7 @@
 local EN = {
     BrickCount = "{0} <size=80%>bricks</size>",
     GemsCount = "{0} <size=80%>gems</size>",
-    RecuritsCount = "{0} <size=80%>recurits</size>",
+    RecruitsCount = "{0} <size=80%>recruits</size>",
     SingleScore = "{0}",
     IncRate = "+ {0}",
     CardName_1 = "BrickShortage",
