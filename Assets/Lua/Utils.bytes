@@ -1,59 +1,87 @@
 local U = {}
 
 function U.ResChange(player, type, change)
+    if change == 0 then
+        return
+    end
     local gamePlayerCS = player.GamePlayerCS
     if type == CS.CostType.Brick then
         gamePlayerCS.brick = math.max(gamePlayerCS.brick + change, 0)
         if change > 0 then
             player.REF.BricksAddEffect:Play()
         else
-            
+            player.REF.BricksDropEffect:Play()
         end
     elseif type == CS.CostType.Gem then
         gamePlayerCS.gem = math.max(gamePlayerCS.gem + change, 0)
         if change > 0 then
             player.REF.GemsAddEffect:Play()
+        else
+            player.REF.GemsDropEffect:Play()
+
         end
     else
         gamePlayerCS.recruit = math.max(gamePlayerCS.recruit + change, 0)
         if change > 0 then
             player.REF.RecruitsAddEffect:Play()
+        else
+            player.REF.RecruitsDropEffect:Play()
+
         end
     end
 end
 
 function U.BuildingChange(player, building, change)
+    if change == 0 then
+        return
+    end
     local gamePlayerCS = player.GamePlayerCS
     if building == "Wall" then
         gamePlayerCS.wall = gamePlayerCS.wall + change
         if change > 0 then
             player.REF.WallAddEffect:Play()
+        else
+            player.REF.WallDropEffect:Play()
+            
         end
     else
         gamePlayerCS.tower = gamePlayerCS.tower + change
         if change > 0 then
             player.REF.TowerAddEffect:Play()
+        else
+            player.REF.TowerDropEffect:Play()
         end
     end
 end
 
 function U.GrowthChange(player, type, change)
+    if change == 0 then
+        return
+    end
     local gamePlayerCS = player.GamePlayerCS
     change = math.ceil(change)
     if type == CS.CostType.Brick then
         gamePlayerCS.brickIncRate = gamePlayerCS.brickIncRate + change
         if change > 0 then
-            player.REF.BricksIncRateAnimation:DORestartById("start")
+            player.REF.BricksIncRateAnimation:DORestartById("startInc")
+        else
+            player.REF.BricksDecRateAnimation:DORestartById("startDec")
         end
     elseif type == CS.CostType.Gem then
         gamePlayerCS.gemIncRate = gamePlayerCS.gemIncRate + change
         if change > 0 then
-            player.REF.GemsIncRateAnimation:DORestartById("start")
+            player.REF.GemsIncRateAnimation:DORestartById("startInc")
+        else
+            player.REF.GemsDecRateAnimation:DORestartById("startDec")
+
         end
     else
         gamePlayerCS.recruitIncRate = gamePlayerCS.recruitIncRate + change
         if change > 0 then
-            player.REF.RecruitsIncRateAnimation:DORestartById("start")
+            player.REF.RecruitsIncRateAnimation:DORestartById("startInc")
+        else
+            player.REF.RecruitsDecRateAnimation:DORestartById("startDec")
+
         end
     end
 end
@@ -63,10 +91,11 @@ function U.CauseDamage(player, damage)
     local gamePlayerCS = target.GamePlayerCS
     local wall = gamePlayerCS.wall
     if damage > wall then
-        gamePlayerCS.wall = 0
-        gamePlayerCS.tower = math.max(gamePlayerCS.tower + wall - damage, 0)
+        local tower = gamePlayerCS.tower
+        U.BuildingChange(target, "wall", -wall)
+        U.BuildingChange(target, "tower", -math.max(tower, damage - wall))
     else
-        gamePlayerCS.wall = wall - damage
+        U.BuildingChange(target, "wall", -damage)
     end
     DB.TriggerEvent(string.format("Player%s/Refresh", gamePlayerCS.playerID))
 end
@@ -77,6 +106,16 @@ function U.GetEnemyPlayer(player)
         return DB.GetData("Player2")
     else
         return DB.GetData("Player1")
+    end
+end
+
+function U.HandleCost(player, type, count)
+    if type == CS.CostType.Brick then
+        return player.GamePlayerCS.brick - count
+    elseif type == CS.CostType.Gem then
+        return player.GamePlayerCS.gem - count
+    else
+        return player.GamePlayerCS.recruit - count
     end
 end
 

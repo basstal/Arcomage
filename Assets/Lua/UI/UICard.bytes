@@ -1,4 +1,5 @@
 local m_cardData
+local U = require("Utils")
 
 function Awake()
     BindButtonEvent(REF.UseCardButton, UseCard)
@@ -36,34 +37,13 @@ function OnData(cardData)
     end
     local extentImage = REF.CardExtent:GetComponent(typeof(CS.UnityEngine.UI.Image))
     local player = DB.GetData(string.format("Player%s", cardData.owner))
-    local left = HandleCost(player, costData)
+    local left = U.HandleCost(player, costData.type, costData.count)
     REF.UseCardButton:SetGraphicRaycastTarget(left >= 0)
     if left >= 0 then
         extentImage.color = CS.UnityEngine.Color.white
     else
         extentImage.color = CS.UnityEngine.Color.red
     end
-end
-
-function HandleCost(player, costData, pay)
-    local left
-    if costData.type == CS.CostType.Brick then
-        left = player.GamePlayerCS.brick - costData.count
-        if pay then
-            player.GamePlayerCS.brick = left
-        end
-    elseif costData.type == CS.CostType.Gem then
-        left = player.GamePlayerCS.gem - costData.count
-        if pay then
-            player.GamePlayerCS.gem = left
-        end
-    else
-        left = player.GamePlayerCS.recruit - costData.count
-        if pay then
-            player.GamePlayerCS.recruit = left
-        end
-    end
-    return left
 end
 
 function UseCard()
@@ -74,7 +54,7 @@ function UseCard()
     local costData = m_cardData.cost
     local currentPlayer = DB.GetData("CurrentPlayer")
     local player = DB.GetData(string.format("Player%s", currentPlayer))
-    HandleCost(player, costData, true)
+    U.ResChange(player, costData.type, - costData.count)
     local result = m_cardData.func(player)
     DB.TriggerEvent("Main/ShowUseCard", this)
     player.RemoveFromHandCards(m_cardData)
