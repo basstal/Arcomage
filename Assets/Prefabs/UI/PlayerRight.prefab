@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: playerID
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 380772696799261141, guid: cdf7ecf7cd777494da4775690418b727,
+        type: 3}
+      propertyPath: playerName
+      value: enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 1421991814508312543, guid: cdf7ecf7cd777494da4775690418b727,
         type: 3}
       propertyPath: m_AnchoredPosition.x

@@ -26,11 +26,9 @@ local U = require("Utils")
 ]]
 function Awake()
     BindButtonEvent(REF.UseCardButton, UseCard)
-    local instanceId = this:GetInstanceID()
-    DB.Bind(string.format("Card/Data/%s", instanceId), OnData)
 end
 
-function OnData(cardData)
+function SetData(cardData)
     if cardData == nil then
         return
     end
@@ -68,9 +66,9 @@ function OnData(cardData)
     else
         extentImage.color = CS.UnityEngine.Color.red
     end
-    local rectTransform = REF.Disappear.transform
-    rectTransform.anchoredPosition = CS.UnityEngine.Vector2(0, 0)
-    rectTransform.localScale = CS.UnityEngine.Vector3(1, 1, 1)
+    local rectTransform = REF.Disappear:GetComponent(typeof(CS.UnityEngine.RectTransform))
+    rectTransform.localPosition = CS.UnityEngine.Vector3.zero
+    rectTransform.localScale = CS.UnityEngine.Vector3.one
     cardData.this = this
     cardData.REF = REF
 end
@@ -98,7 +96,7 @@ function UseCardComplete()
         local enemy = currentPlayer == 1 and 2 or 1
         DB.TriggerEvent(string.format("Player%s/Refresh", enemy))
     end
-    DB.TriggerEvent("Main/PlayerSwitch", result)
+    DB.TriggerEvent("Main/PlayerSwitch", result, m_cardData)
     m_cardData.using = false
 end
 

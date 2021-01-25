@@ -106,11 +106,12 @@ function GameStart()
     GameData.playerSwitched = false
 end
 
-function OnPlayerSwitch(result)
+function OnPlayerSwitch(result, prevCardData)
     -- ** 再次出牌直接不改变当前玩家进入PlayerRound
     if result ~= nil and result.playAgain then
         local player = DB.GetData("Player{CurrentPlayer}")
-        player.OnGenHandCards(1)
+        local removedIndex = player.RemoveFromHandCards(prevCardData)
+        player.OnGenHandCards(1, removedIndex)
         CurrentStage = PlayerRound
         return
     end
@@ -131,14 +132,24 @@ function PlayerRound()
     local playerId = DB.GetData("CurrentPlayer")
     local handCards = DB.GetData(string.format("Player%s/HandCards", playerId))
     local parentTrans = REF.HandCardsLayout.transform
+    local cardObjCacheRoot = GameMainCS.CardObjCacheRoot
     for _, cardData in pairs(handCards) do
-        local trans = cardData.transform
-        trans:SetParent(parentTrans, false)
-
-        local ref = cardData.REF
-        local id = playerId == 1 and "left2right" or "right2left"
-        ref.DrawCard:DORestartById(id)
-        ref.DrawCard:DORestartById("alpha")
+        -- ** 此卡已在手牌中
+        if cardData.transform == nil then
+            local trans = cardObjCacheRoot:GetChild(0)
+            cardData.transform = trans
+            trans:SetParent(parentTrans, false)
+            trans:GetComponent(typeof(CS.LuaBehaviour)).Sandbox.SetData(cardData)
+            local ref = cardData.REF
+            local id = playerId == 1 and "left2right" or "right2left"
+            ref.DrawCard:DORestartById(id)
+            ref.DrawCard:DORestartById("alpha")
+        else
+            local ref = cardData.REF
+            local rectTransform = ref.DrawCard:GetComponent(typeof(CS.UnityEngine.RectTransform))
+            rectTransform.localPosition = CS.UnityEngine.Vector3.zero
+            ref.DrawCard:GetComponent(typeof(CS.UnityEngine.CanvasGroup)).alpha = 1
+        end
     end
 
     CS.UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(parentTrans)

@@ -1242,7 +1242,7 @@ MonoBehaviour:
     width: 0
     height: 0
   endValueTransform: {fileID: 0}
-  fromCurrent: 1
+  fromCurrent: 0
   fromValueFloat: 0
   fromValueV3: {x: 0, y: 0, z: 0}
   fromValueV2: {x: 0, y: 0}
@@ -1369,7 +1369,7 @@ MonoBehaviour:
     width: 0
     height: 0
   endValueTransform: {fileID: 0}
-  fromCurrent: 1
+  fromCurrent: 0
   fromValueFloat: 0
   fromValueV3: {x: 0, y: 0, z: 0}
   fromValueV2: {x: 0, y: 0}
@@ -1487,8 +1487,8 @@ MonoBehaviour:
     width: 0
     height: 0
   endValueTransform: {fileID: 0}
-  fromCurrent: 1
-  fromValueFloat: 0
+  fromCurrent: 0
+  fromValueFloat: 1
   fromValueV3: {x: 0, y: 0, z: 0}
   fromValueV2: {x: 0, y: 0}
   fromValueColor: {r: 1, g: 1, b: 1, a: 1}

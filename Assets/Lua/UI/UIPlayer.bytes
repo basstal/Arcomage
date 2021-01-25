@@ -105,10 +105,17 @@ function OnRecycleAll()
 end
 
 function RemoveFromHandCards(cardData)
+    local gameMain = DB.GetData("Main")
+    local gameMainCS = gameMain.GameMainCS
+    local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
     for i = #m_handCards, 1, -1 do
         if m_handCards[i] == cardData then
             table.remove(m_handCards, i)
-            break
+            if cardData.transform ~= nil then
+                cardData.transform:SetParent(cardObjCacheRoot, false)
+                cardData.transform = nil
+            end
+            return i
         end
     end
 end
@@ -118,37 +125,36 @@ function OnRecycleHandCards()
     local gameMainCS = gameMain.GameMainCS
     local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
     for i = #m_handCards, 1, -1 do
-        m_handCards[i].transform:SetParent(cardObjCacheRoot, false)
+        local handCard = m_handCards[i]
         table.remove(m_handCards, i)
+        if handCard.transform ~= nil then
+            handCard.transform:SetParent(cardObjCacheRoot, false)
+            handCard.transform = nil
+        end
     end
 end
 
-function OnGenHandCards(cardCount)
-    local used = {}
-    info("GamePlay", string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, cardCount))
+function OnGenHandCards(genCount, fromIndex)
+    info("GamePlay", string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, genCount))
     local dataSize = #Data
     local gameMain = DB.GetData("Main")
     local gameMainCS = gameMain.GameMainCS
-    local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
     local ID2Sprite = gameMainCS.ID2Sprite
-    local parentTrans = REF.HandCards.transform
-    for _ = 1, cardCount do
+    while genCount > 0 do
         local index = math.random(1, dataSize)
-        if used[index] == nil then
-            if cardObjCacheRoot.childCount > 0 then
-                local trans = cardObjCacheRoot:GetChild(0)
-                trans:SetParent(parentTrans, false)
-                local cardData = Data[index]
-                cardData.sprite = ID2Sprite[cardData.id]
-                cardData.transform = trans
-                cardData.owner = GamePlayerCS.playerID
-                local instanceId = trans.gameObject:GetInstanceID()
-                DB.SetData(string.format("Card/Data/%s", instanceId), cardData)
-                used[index] = true
-                table.insert(m_handCards, cardData)
-            else
-                return
+        local cardData = Data[index]
+        local contains = false
+        for _, handCard in pairs(m_handCards) do
+            contains = handCard == cardData
+            if contains then
+                break
             end
+        end
+        if not contains then
+            cardData.sprite = ID2Sprite[cardData.id]
+            cardData.owner = GamePlayerCS.playerID
+            table.insert(m_handCards, fromIndex or #m_handCards + 1, cardData)
+            genCount = genCount - 1
         end
     end
     info("GamePlay", string.format("当前玩家%s手牌%s => \n%s", GamePlayerCS.playerID, #m_handCards, vardump(m_handCards)))
