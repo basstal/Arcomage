@@ -27,6 +27,7 @@ public static class CommonUtility
         return result * 0x89ABCDEFu;
     }
 #if UNITY_EDITOR
+    [BlackList]
     public static void WriteToFile(string path, string content)
     {
         if (string.IsNullOrWhiteSpace(path))

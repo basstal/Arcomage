@@ -56,6 +56,7 @@ public static class XLuaGenConfig
         "ClusterInput", "Motion",
         "UnityEngine.UI.ReflectionMethodsCache", "NativeLeakDetection",
         "NativeLeakDetectionMode", "WWWAudioExtensions", "UnityEngine.Experimental",
+        "UnityEngine.CanvasRenderer"
     };
 
     static bool isExcluded(Type type)
@@ -109,7 +110,6 @@ public static class XLuaGenConfig
     #endif
                 new List<string>(){"UnityEngine.Texture2D", "alphaIsTransparency"},
                 new List<string>(){"UnityEngine.Security", "GetChainOfTrustValue"},
-                new List<string>(){"UnityEngine.CanvasRenderer", "onRequestRebuild"},
                 new List<string>(){"UnityEngine.Light", "areaSize"},
                 new List<string>(){"UnityEngine.Light", "lightmapBakeType"},
                 new List<string>(){"UnityEngine.WWW", "MovieTexture"},
@@ -139,17 +139,20 @@ public static class XLuaGenConfig
                 new List<string>(){ "UnityEngine.LightProbeGroup", "dering"},
                 new List<string>(){ "UnityEngine.LightProbeGroup", "probePositions"},
                 new List<string>(){ "UnityEngine.Light", "SetLightDirty"},
-                new List<string>(){ "UnityEngine.MeshRenderer", "receiveGI"},
-                new List<string>(){ "UnityEngine.Input", "IsJoystickPreconfigured", "System.String"},
-                new List<string>(){ "UnityEngine.ParticleSystemForceField", "FindAll"},
                 new List<string>(){ "UnityEngine.Light", "shadowRadius"},
                 new List<string>(){ "UnityEngine.Light", "shadowAngle"},
+                new List<string>(){ "UnityEngine.MeshRenderer", "receiveGI"},
+                new List<string>(){ "UnityEngine.MeshRenderer","scaleInLightmap"},
+                new List<string>(){ "UnityEngine.MeshRenderer","stitchLightmapSeams"},
+
+                new List<string>(){ "UnityEngine.Input", "IsJoystickPreconfigured", "System.String"},
+                new List<string>(){ "UnityEngine.ParticleSystemForceField", "FindAll"},
+                new List<string>(){ "UnityEngine.ParticleSystemRenderer", "supportsMeshInstancing"},
                 new List<string>(){ "UnityEngine.QualitySettings", "streamingMipmapsRenderersPerFrame"},
                 new List<string>(){ "UnityEngine.Texture", "imageContentsHash"},
                 new List<string>(){ "UnityEngine.UI.DefaultControls", "factory"},
                 new List<string>(){ "UnityEngine.UI.Graphic", "OnRebuildRequested"},
                 new List<string>(){ "UnityEngine.UI.Text", "OnRebuildRequested"},
-
             };
     //自动把LuaCallCSharp涉及到的delegate加到CSharpCallLua列表，后续可以直接用lua函数做callback
     [CSharpCallLua]
@@ -297,5 +300,5 @@ public static class XLuaGenConfig
     //}
     //--------------end 热补丁自动化配置-------------------------
 
-   
+
 }
