@@ -7,10 +7,10 @@ using XLua;
 
 public class LuaManager : Singleton<LuaManager>
 {
-    [CSharpCallLua]private delegate void DelegateCSCollectGarbage();
-    [CSharpCallLua]private delegate LuaTable DelegateCSCreateSandbox(GameObject go);
-    [CSharpCallLua]private delegate void DelegateCSDestroySandbox(LuaTable sandbox);
-    [CSharpCallLua]private delegate void DelegateCSDoChunk(LuaTable sandbox, string path, bool forceReload);
+    [CSharpCallLua] private delegate void DelegateCSCollectGarbage();
+    [CSharpCallLua] private delegate LuaTable DelegateCSCreateSandbox(GameObject go);
+    [CSharpCallLua] private delegate void DelegateCSDestroySandbox(LuaTable sandbox);
+    [CSharpCallLua] private delegate void DelegateCSDoChunk(LuaTable sandbox, string path, bool forceReload);
 #pragma warning disable 649
     private DelegateCSCollectGarbage m_luaCollectGarbage;
     private DelegateCSCreateSandbox m_luaCreateSandbox;
@@ -154,10 +154,13 @@ public class LuaManager : Singleton<LuaManager>
         m_luaCreateSandbox = null;
         m_luaDestroySandbox = null;
         m_luaDoChunk = null;
-        LuaEnv.Dispose();
+        if (LuaEnv != null)
+        {
+            LuaEnv.Dispose();
+        }
         LuaEnv = null;
 #if UNITY_EDITOR
-        Debug.Log($"LuaManager Uninit");
+        // Debug.Log($"LuaManager Uninit");
 #endif
     }
 }

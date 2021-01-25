@@ -19,7 +19,7 @@ TextureImporter:
     second: others_4
   - first:
       213: 8623480070183277494
-    second: others_5
+    second: brick
   - first:
       213: 5461193036522156848
     second: others_6
@@ -28,7 +28,7 @@ TextureImporter:
     second: others_7
   - first:
       213: -2894753371609388677
-    second: others_8
+    second: recruit
   - first:
       213: 2431537658412764469
     second: others_0
@@ -46,7 +46,7 @@ TextureImporter:
     second: others_4
   - first:
       213: -7983146454993739588
-    second: others_5
+    second: brick
   - first:
       213: -1755320283402217399
     second: others_6
@@ -55,10 +55,10 @@ TextureImporter:
     second: others_7
   - first:
       213: 4354178127371773424
-    second: others_8
+    second: recruit
   - first:
       213: 6947778657242568740
-    second: others_9
+    second: gem
   - first:
       213: 3047664517545086076
     second: others_10
@@ -67,7 +67,7 @@ TextureImporter:
     second: others_11
   - first:
       213: 7793137622666670696
-    second: others_9
+    second: gem
   - first:
       213: 6384552212707551517
     second: others_10
@@ -294,11 +294,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: others_5
+      name: brick
       rect:
         serializedVersion: 2
         x: 334
-        y: 131
+        y: 130
         width: 96
         height: 128
       alignment: 0
@@ -357,7 +357,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: others_8
+      name: recruit
       rect:
         serializedVersion: 2
         x: 235
@@ -378,7 +378,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: others_9
+      name: gem
       rect:
         serializedVersion: 2
         x: 335

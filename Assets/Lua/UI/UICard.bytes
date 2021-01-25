@@ -1,6 +1,29 @@
+--[[
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+---------------------------------------------local--------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+]]
 local m_cardData
+local m_isTweenDisappearCreated
 local U = require("Utils")
 
+--[[
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+---------------------------------------------function-----------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+]]
 function Awake()
     BindButtonEvent(REF.UseCardButton, UseCard)
     local instanceId = this:GetInstanceID()
@@ -36,7 +59,8 @@ function OnData(cardData)
         gameCardCS.cost = costData.count
     end
     local extentImage = REF.CardExtent:GetComponent(typeof(CS.UnityEngine.UI.Image))
-    local player = DB.GetData(string.format("Player%s", cardData.owner))
+    local playerId = cardData.owner
+    local player = DB.GetData(string.format("Player%s", playerId))
     local left = U.HandleCost(player, costData.type, costData.count)
     REF.UseCardButton:SetGraphicRaycastTarget(left >= 0)
     if left >= 0 then
@@ -44,6 +68,11 @@ function OnData(cardData)
     else
         extentImage.color = CS.UnityEngine.Color.red
     end
+    local rectTransform = REF.Disappear.transform
+    rectTransform.anchoredPosition = CS.UnityEngine.Vector2(0, 0)
+    rectTransform.localScale = CS.UnityEngine.Vector3(1, 1, 1)
+    cardData.this = this
+    cardData.REF = REF
 end
 
 function UseCard()
@@ -54,14 +83,34 @@ function UseCard()
     local costData = m_cardData.cost
     local currentPlayer = DB.GetData("CurrentPlayer")
     local player = DB.GetData(string.format("Player%s", currentPlayer))
-    U.ResChange(player, costData.type, - costData.count)
-    local result = m_cardData.func(player)
-    DB.TriggerEvent("Main/ShowUseCard", this)
-    player.RemoveFromHandCards(m_cardData)
+    U.ResChange(player, costData.type, -costData.count)
+    m_cardData.using = true
+    OnShowUseCard(currentPlayer)
+end
+
+-- ** TODO:try to dispose a LuaEnv with C# callback!
+function UseCardComplete()
+    local currentPlayer = DB.GetData("CurrentPlayer")
+    local player = DB.GetData(string.format("Player%s", currentPlayer))
     DB.TriggerEvent(string.format("Player%s/Refresh", currentPlayer))
+    local result = m_cardData.func(player)
     if result ~= nil and result.enemyInfoRefresh then
         local enemy = currentPlayer == 1 and 2 or 1
         DB.TriggerEvent(string.format("Player%s/Refresh", enemy))
     end
     DB.TriggerEvent("Main/PlayerSwitch", result)
+    m_cardData.using = false
+end
+
+function OnShowUseCard(currentPlayer)
+    local gameMain = DB.GetData("Main")
+    if not m_isTweenDisappearCreated then
+        m_isTweenDisappearCreated = true
+        REF.Disappear.useTargetAsV3 = true
+        REF.Disappear.endValueTransform = gameMain.REF.Center
+        REF.Disappear:CreateTween()
+    end
+    REF.DisappearEnd.onComplete:AddListener(UseCardComplete)
+    REF.Disappear:DORestart()
+    DB.TriggerEvent(string.format("Player%s/RecycleAll", currentPlayer))
 end

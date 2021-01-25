@@ -30,7 +30,7 @@ public class LocaleManager : Singleton<LocaleManager>
                     uint hashKey = CommonUtility.CalculateHash(k);
                     m_localeMap.Add(hashKey, v);
 #if UNITY_EDITOR
-                    Debug.Log($"hashKey :{hashKey}, v : {Regex.Replace(v, @"<[^>]*>", "")}");
+                    // Debug.Log($"hashKey :{hashKey}, v : {Regex.Replace(v, @"<[^>]*>", "")}");
 #endif
                 });
                 englishMapT?.Dispose();
@@ -52,7 +52,7 @@ public class LocaleManager : Singleton<LocaleManager>
     {
         await base.Uninit();
 #if UNITY_EDITOR
-        Debug.Log("LocaleManager Uninit");
+        // Debug.Log("LocaleManager Uninit");
 #endif
     }
     private static int CopyStrToBuffer(IntPtr L, int idx, ref char[] buffer)

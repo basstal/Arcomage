@@ -50,13 +50,13 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
             luaManager.DoChunk(Sandbox, script, false);
 
             Sandbox.Get("REF", out LuaTable injectionTable);
-            for (int i = 0; i < injections.Length; ++ i)
+            for (int i = 0; i < injections.Length; ++i)
             {
                 var injection = injections[i];
                 injectionTable.Set(injection.name, injection.value);
             }
             injectionTable.Dispose();
-            
+
             Sandbox.Get("Awake", out m_luaAwake);
             Sandbox.Get("Start", out m_luaStart);
             Sandbox.Get("LateUpdate", out m_luaLateUpdate);
@@ -190,20 +190,20 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
         if (m_bindButtonCache != null)
         {
             var count = m_bindButtonCache.Count;
-            for (var i = 0; i < count; ++ i)
+            for (var i = 0; i < count; ++i)
             {
                 var button = m_bindButtonCache[i];
                 if (button == null)
                     continue;
-    #if UNITY_EDITOR
-                Debug.Log($" release button {button}");
-    #endif
+#if UNITY_EDITOR
+                // Debug.Log($" release button {button}");
+#endif
                 button.onClick?.RemoveAllListeners();
                 button.onClick = null;
             }
         }
 #if UNITY_EDITOR
-        Debug.Log($"LuaBehaviour {this} disposed");
+        // Debug.Log($"LuaBehaviour {this} disposed");
 #endif
     }
     private void OnDestroy()
@@ -217,7 +217,7 @@ public class LuaBehaviour : MonoBehaviour, IDisposable
     {
         var searchPath = LuaManager.UniqueLuaScriptsPath;
         var p = from path in Directory.GetFiles(searchPath, "*.bytes", SearchOption.AllDirectories)
-            select path.Substring(0, path.LastIndexOf('.')).Replace(searchPath, "").Replace(@"\", "/");
+                select path.Substring(0, path.LastIndexOf('.')).Replace(searchPath, "").Replace(@"\", "/");
         var result = p.ToList();
         result.Add(script);
         return result;

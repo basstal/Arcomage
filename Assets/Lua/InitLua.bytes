@@ -19,7 +19,7 @@ local injectedLuaFunctions = {
     CollectGarbage = GC.collect,
     CreateSandbox = Sandbox.CreateSandbox,
     DestroySandbox = Sandbox.DestroySandbox,
-    DoChunk = Sandbox.DoChunk,
+    DoChunk = Sandbox.DoChunk
 }
 
 strict(_G)
