@@ -57,6 +57,7 @@ function SetData(cardData)
         gameCardCS.costType = costData.type
         gameCardCS.cost = costData.count
     end
+    REF.Debug:SetActive(__UNITY_EDITOR)
     local extentImage = REF.CardExtent:GetComponent(typeof(CS.UnityEngine.UI.Image))
     local playerId = cardData.owner
     local player = DB.GetData(string.format("Player%s", playerId))
@@ -84,12 +85,14 @@ function UseCard()
     local player = DB.GetData(string.format("Player%s", currentPlayer))
     U.ResChange(player, costData.type, -costData.count)
     m_cardData.using = true
-    m_useCardResult = m_cardData.func(player)
-    info("GamePlay", vardump(m_cardData, m_useCardResult))
     OnShowUseCard(currentPlayer)
 end
 
 function UseCardComplete()
+    local currentPlayer = DB.GetData("CurrentPlayer")
+    local player = DB.GetData(string.format("Player%s", currentPlayer))
+    m_useCardResult = m_cardData.func(player)
+    info("GamePlay", vardump(m_cardData, m_useCardResult))
     DB.TriggerEvent("Main/PlayerSwitch", m_useCardResult, m_cardData)
     m_cardData.using = false
 end

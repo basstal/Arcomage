@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using XLua;
 
 public enum CostType
 {
@@ -13,6 +14,7 @@ public enum CostType
 public class GameCard : MonoBehaviour
 {
 #if UNITY_EDITOR            
+    [BlackList]
     public TextMeshProUGUI debug;
 #endif
     private int m_id;
