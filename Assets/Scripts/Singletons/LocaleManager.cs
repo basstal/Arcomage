@@ -10,6 +10,12 @@ using XLua.LuaDLL;
 [LuaCallCSharp]
 public class LocaleManager : Singleton<LocaleManager>
 {
+    public enum LocaleType
+    {
+        EN,
+        CN
+    }
+    public LocaleType localeType = LocaleType.EN;
     private Dictionary<uint, string> m_localeMap = new Dictionary<uint, string>();
     private static char[] _cbuffer = new char[128];
 
@@ -24,7 +30,7 @@ public class LocaleManager : Singleton<LocaleManager>
             var objs = envGlobal.DoString(@"return require('Data/LocaleMap')");
             if (objs != null && objs[0] is LuaTable localeMapT)
             {
-                localeMapT.Get("EN", out LuaTable englishMapT);
+                localeMapT.Get(localeType.ToString(), out LuaTable englishMapT);
                 englishMapT?.ForEach((string k, string v) =>
                 {
                     uint hashKey = CommonUtility.CalculateHash(k);

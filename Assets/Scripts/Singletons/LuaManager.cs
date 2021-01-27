@@ -21,6 +21,7 @@ public class LuaManager : Singleton<LuaManager>
     private readonly Dictionary<string, byte[]> m_scriptName2Content = new Dictionary<string, byte[]>();
     private float m_lastGCTime;
     public event Action OnInitFinished;
+    public HashSet<LuaFunction> disposableCallbacks = new HashSet<LuaFunction>();
     public static string LuaScriptsLabel = "Lua";
     public static string UniqueLuaScriptsPath = "Assets/Lua/";
     public LuaEnv LuaEnv { get; private set; }
@@ -146,10 +147,18 @@ public class LuaManager : Singleton<LuaManager>
         }
         m_luaBehaviours.Clear();
     }
+    void ClearAllDisposableCallbacks()
+    {
+        foreach (var callback in disposableCallbacks)
+        {
+            callback.Dispose(true);
+        }
+    }
     public override async Task Uninit()
     {
         await base.Uninit();
         ClearAllLuaBehaviours();
+        ClearAllDisposableCallbacks();
         m_luaCollectGarbage = null;
         m_luaCreateSandbox = null;
         m_luaDestroySandbox = null;

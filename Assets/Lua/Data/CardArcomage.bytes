@@ -12,9 +12,7 @@ local Data = {
             U.ResChange(player, ResourceType.Brick, -8)
             local target = U.GetEnemyPlayer(player)
             U.ResChange(target, ResourceType.Brick, -8)
-            return {enemyInfoRefresh = true}
         end,
-        note = "双方砖块(B) -8"
     },
     {
         cost = {
@@ -28,7 +26,6 @@ local Data = {
             U.ResChange(player, ResourceType.Gem, 2)
             return {playAgain = true}
         end,
-        note = "B +2 J + 2 再次出牌"
     },
     {
         cost = {
@@ -41,7 +38,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 1)
             return {playAgain = true}
         end,
-        note = "城墙+1 再次出牌"
     },
     {
         cost = {
@@ -53,7 +49,6 @@ local Data = {
         func = function(player)
             U.GrowthChange(player, ResourceType.Brick, 1)
         end,
-        note = "砖块（B）产量 +1"
     },
     {
         cost = {
@@ -72,7 +67,6 @@ local Data = {
                 U.GrowthChange(player, ResourceType.Brick, 1)
             end
         end,
-        note = "砖块（B）产量小于对手则+2，否则+1"
     },
     {
         cost = {
@@ -85,7 +79,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 4)
             U.GrowthChange(player, ResourceType.Brick, 1)
         end,
-        note = "城墙+4 砖块（B）产量+1"
     },
     {
         cost = {
@@ -98,7 +91,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 5)
             U.ResChange(player, ResourceType.Gem, -6)
         end,
-        note = "城墙+5 J-6"
     },
     {
         cost = {
@@ -115,7 +107,6 @@ local Data = {
                 U.GrowthChange(player, ResourceType.Brick, p2g - p1g)
             end
         end,
-        note = "砖块产量小于对手则砖块产量等于对手"
     },
     {
         cost = {
@@ -127,7 +118,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Wall", 3)
         end,
-        note = "城墙+3"
     },
     {
         cost = {
@@ -139,7 +129,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Wall", 4)
         end,
-        note = "城墙+4"
     },
     {
         cost = {
@@ -153,9 +142,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.GrowthChange(target, ResourceType.Brick, 1)
             U.ResChange(player, ResourceType.Gem, 4)
-            return {enemyInfoRefresh = true}
         end,
-        note = "双方砖块（B）产量+1，我方J+4"
     },
     {
         cost = {
@@ -171,7 +158,6 @@ local Data = {
                 U.BuildingChange(player, "Wall", 3)
             end
         end,
-        note = "城墙为0则+6，否则+3"
     },
     {
         cost = {
@@ -184,9 +170,8 @@ local Data = {
             U.CauseDamage(player, 5)
             local target = U.GetEnemyPlayer(player)
             U.CauseDamage(target, 5)
-            return {playAgain = true, enemyInfoRefresh = true}
+            return {playAgain = true}
         end,
-        note = "双方Damage+5，再次出牌"
     },
     {
         cost = {
@@ -198,7 +183,6 @@ local Data = {
         func = function(player)
             U.GrowthChange(player, ResourceType.Gem, 1)
         end,
-        note = "珠宝（J）产量+1"
     },
     {
         cost = {
@@ -213,9 +197,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
 
             U.GrowthChange(target, ResourceType.Brick, -1)
-            return {enemyInfoRefresh = true}
         end,
-        note = "双方砖块产量-1"
     },
     {
         cost = {
@@ -227,7 +209,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Wall", 6)
         end,
-        note = "城墙+6"
     },
     {
         cost = {
@@ -240,7 +221,6 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.GrowthChange(target, ResourceType.Brick, -1)
         end,
-        note = "对手砖块（B）产量-1"
     },
     {
         cost = {
@@ -252,7 +232,6 @@ local Data = {
         func = function(player)
             U.GrowthChange(player, ResourceType.Brick, 2)
         end,
-        note = "砖块产量+2"
     },
     {
         cost = {
@@ -266,7 +245,6 @@ local Data = {
             U.ResChange(player, ResourceType.Gem, 5)
             U.BuildingChange(player, "Wall", -10)
         end,
-        note = "砖块产量-1 J+5 城墙 - 10"
     },
     {
         cost = {
@@ -278,7 +256,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Wall", 8)
         end,
-        note = "城墙+8"
     },
     {
         cost = {
@@ -291,7 +268,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 5)
             U.ResChange(player, ResourceType.Recruit, 1)
         end,
-        note = "城墙+5 怪兽（M）产量+1"
     },
     {
         cost = {
@@ -304,7 +280,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 7)
             U.ResChange(player, ResourceType.Gem, 7)
         end,
-        note = "城墙+7 J+7"
     },
     {
         cost = {
@@ -317,7 +292,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 6)
             U.BuildingChange(player, "Castle", 3)
         end,
-        note = "城墙+6 城堡+3"
     },
     {
         cost = {
@@ -329,7 +303,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Wall", 12)
         end,
-        note = "城墙+12"
     },
     {
         cost = {
@@ -342,7 +315,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 8)
             U.BuildingChange(player, "Castle", 5)
         end,
-        note = "城墙+8 城堡+5"
     },
     {
         cost = {
@@ -354,7 +326,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Wall", 15)
         end,
-        note = "城墙+15"
     },
     {
         cost = {
@@ -367,7 +338,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 6)
             U.CauseDamage(player, 10)
         end,
-        note = "城墙+6 Damage+10"
     },
     {
         cost = {
@@ -380,7 +350,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 20)
             U.BuildingChange(player, "Castle", 8)
         end,
-        note = "城墙+20 城堡+8"
     },
     {
         cost = {
@@ -393,7 +362,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 9)
             U.ResChange(player, ResourceType.Recruit, -5)
         end,
-        note = "城墙+9 M-5"
     },
     {
         cost = {
@@ -407,7 +375,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 1)
             U.ResChange(player, ResourceType.Recruit, 2)
         end,
-        note = "城墙+1 城堡+1 M+2"
     },
     {
         cost = {
@@ -427,10 +394,8 @@ local Data = {
             if w2 == 0 then
                 U.CauseDamage(enemy, 2)
                 U.GrowthChange(enemy, ResourceType.Recruit, -1)
-                return {enemyInfoRefresh = true}
             end
         end,
-        note = "城墙小的一方Damage+2 怪兽产量-1"
     },
     {
         cost = {
@@ -449,7 +414,6 @@ local Data = {
                 U.GrowthChange(player, ResourceType.Recruit, 1)
             end
         end,
-        note = "M+6 城墙+6 我方怪兽产量小于对手则怪兽产量+1"
     },
     {
         cost = {
@@ -462,7 +426,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 7)
             U.CauseDamage(player, 6)
         end,
-        note = "城墙+7 Damage+6"
     },
     {
         cost = {
@@ -477,9 +440,7 @@ local Data = {
             local w1 = player.GamePlayerCS.wall
             U.BuildingChange(player, "Wall", w2 - w1)
             U.BuildingChange(target, "Wall", w1 - w2)
-            return {enemyInfoRefresh = true}
         end,
-        note = "与对手调换城墙"
     },
     {
         cost = {
@@ -492,7 +453,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 1)
             return {playAgain = true}
         end,
-        note = "城堡+1，再次出牌"
     },
     {
         cost = {
@@ -505,7 +465,6 @@ local Data = {
             U.CauseDamage(player, 1)
             return {playAgain = true}
         end,
-        note = "Damage+1，再次出牌"
     },
     {
         cost = {
@@ -517,7 +476,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 3)
         end,
-        note = "城堡+3"
     },
     {
         cost = {
@@ -529,7 +487,6 @@ local Data = {
         func = function(player)
             U.GrowthChange(player, ResourceType.Gem, 1)
         end,
-        note = "珠宝（J）产量+1"
     },
     {
         cost = {
@@ -541,7 +498,6 @@ local Data = {
         func = function(player)
             return {playAgain = true}
         end,
-        note = "置换一张卡（暂未实现），再次出牌"
     },
     {
         cost = {
@@ -553,7 +509,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 3)
         end,
-        note = "城堡+3，这张牌不能被置换（暂未实现）"
     },
     {
         cost = {
@@ -566,7 +521,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 2)
             U.CauseDamage(player, 2)
         end,
-        note = "城堡+2，Damage+2"
     },
     {
         cost = {
@@ -581,9 +535,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
 
             U.BuildingChange(target, "Castle", 1)
-            return {enemyInfoRefresh = true}
         end,
-        note = "珠宝（J）+1，城堡+3，对手城堡+1"
     },
     {
         cost = {
@@ -595,7 +547,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 3)
         end,
-        note = "Damage+3"
     },
     {
         cost = {
@@ -607,7 +558,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 5)
         end,
-        note = "城堡+5"
     },
     {
         cost = {
@@ -619,7 +569,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 5)
         end,
-        note = "Damage+5"
     },
     {
         cost = {
@@ -632,7 +581,6 @@ local Data = {
             U.GrowthChange(player, ResourceType.Gem, 2)
             U.CauseDamage(player, 5)
         end,
-        note = "珠宝（J）产量+2，Damage+5"
     },
     {
         cost = {
@@ -646,7 +594,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 3)
             U.BuildingChange(player, "Wall", 3)
         end,
-        note = "珠宝（J）产量+1，城堡+3，城墙+3"
     },
     {
         cost = {
@@ -663,10 +610,8 @@ local Data = {
                 U.GrowthChange(player, ResourceType.Gem, j2g - j1g)
             elseif j2g < j1g then
                 U.GrowthChange(target, ResourceType.Gem, j1g - j2g)
-                return {enemyInfoRefresh = true}
             end
         end,
-        note = "双方珠宝（J）产量等于高的一方产量"
     },
     {
         cost = {
@@ -678,7 +623,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 8)
         end,
-        note = "城堡+8"
     },
     {
         cost = {
@@ -691,7 +635,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 5)
             U.GrowthChange(player, ResourceType.Gem, 1)
         end,
-        note = "城堡+5 珠宝（J）产量+1"
     },
     {
         cost = {
@@ -704,7 +647,6 @@ local Data = {
             U.GrowthChange(player, ResourceType.Gem, -1)
             U.CauseDamage(player, 9)
         end,
-        note = "珠宝产量-1 Damage+9"
     },
     {
         cost = {
@@ -717,9 +659,7 @@ local Data = {
             U.BuildingChange(player, "Castle", 5)
             local target = U.GetEnemyPlayer(player)
             U.ResChange(target, ResourceType.Brick, -6)
-            return {enemyInfoRefresh = true}
         end,
-        note = "城堡+5 对手砖块（B）-6"
     },
     {
         cost = {
@@ -731,7 +671,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 11)
         end,
-        note = "城堡+11"
     },
     {
         cost = {
@@ -746,9 +685,7 @@ local Data = {
             U.GrowthChange(target, ResourceType.Gem, -1)
             U.CauseDamage(player, 7)
             U.CauseDamage(target, 7)
-            return {enemyInfoRefresh = true}
         end,
-        note = "双方宝石产量-1，Damage+7"
     },
     {
         cost = {
@@ -761,7 +698,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 6)
             U.CauseDamage(player, 4)
         end,
-        note = "城堡+6，Damage+4"
     },
     {
         cost = {
@@ -774,7 +710,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 7)
             U.ResChange(player, ResourceType.Brick, -10)
         end,
-        note = "城堡+7，砖块（B）-10"
     },
     {
         cost = {
@@ -787,7 +722,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 8)
             U.BuildingChange(player, "Wall", 3)
         end,
-        note = "城堡+8，城墙+3"
     },
     {
         cost = {
@@ -800,7 +734,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 8)
             U.GrowthChange(player, ResourceType.Recruit, 1)
         end,
-        note = "城堡+8，怪兽（M）产量+1"
     },
     {
         cost = {
@@ -812,7 +745,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 15)
         end,
-        note = "城堡+15"
     },
     {
         cost = {
@@ -826,7 +758,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 10)
             U.ResChange(player, ResourceType.Recruit, 5)
         end,
-        note = "城堡+10 城墙+5 怪兽+5"
     },
     {
         cost = {
@@ -839,7 +770,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 12)
             U.CauseDamage(player, 6)
         end,
-        note = "城堡+12 Damage+6"
     },
     {
         cost = {
@@ -851,7 +781,6 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 20)
         end,
-        note = "城堡+20"
     },
     {
         cost = {
@@ -864,7 +793,6 @@ local Data = {
             U.BuildingChange(player, "Castle", 11)
             U.BuildingChange(player, "Wall", -6)
         end,
-        note = "城堡+11 城墙-6"
     },
     {
         cost = {
@@ -881,7 +809,6 @@ local Data = {
                 U.BuildingChange(player, "Castle", 1)
             end
         end,
-        note = "城堡小于对手时+2，否则+1"
     },
     {
         cost = {
@@ -895,9 +822,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.BuildingChange(target, "Castle", 1)
             U.ResChange(player, ResourceType.Recruit, 3)
-            return {enemyInfoRefresh = true}
         end,
-        note = "双方城堡+1，我方怪兽（M）+3"
     },
     {
         cost = {
@@ -911,7 +836,6 @@ local Data = {
             U.ResChange(player, ResourceType.Recruit, -2)
             U.CauseDamage(player, 2)
         end,
-        note = "城堡+4，怪兽（M）-2，Damage+2"
     },
     {
         cost = {
@@ -930,7 +854,6 @@ local Data = {
                 U.CauseDamage(player, 8)
             end
         end,
-        note = "城堡大于对手城墙Damage+16，否则Damage+8"
     },
     {
         cost = {
@@ -944,7 +867,6 @@ local Data = {
             U.ResChange(player, ResourceType.Recruit, 6)
             U.ResChange(player, ResourceType.Brick, 6)
         end,
-        note = "城堡+13 怪兽+6 砖块+6"
     },
     {
         cost = {
@@ -957,9 +879,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.ResChange(target, ResourceType.Recruit, -6)
             U.ResChange(player, ResourceType.Recruit, -6)
-            return {enemyInfoRefresh = true}
         end,
-        note = "所有选手怪兽（M） -6"
     },
     {
         cost = {
@@ -972,7 +892,6 @@ local Data = {
             U.CauseDamage(player, 2)
             return {playAgain = true}
         end,
-        note = "Damage+2，再次出牌"
     },
     {
         cost = {
@@ -985,7 +904,6 @@ local Data = {
             U.CauseDamage(player, 4)
             U.ResChange(player, ResourceType.Gem, -3)
         end,
-        note = "Damage+4，珠宝（J）-3"
     },
     {
         cost = {
@@ -997,7 +915,6 @@ local Data = {
         func = function(player)
             U.GrowthChange(player, ResourceType.Recruit, 1)
         end,
-        note = "怪兽（M）产量+1"
     },
     {
         cost = {
@@ -1009,7 +926,6 @@ local Data = {
         func = function(player)
             return {playAgain = true}
         end,
-        note = "抽一张牌，丢弃一张牌（暂未实现），再次出牌"
     },
     {
         cost = {
@@ -1022,9 +938,7 @@ local Data = {
             U.CauseDamage(player, 6)
             local target = U.GetEnemyPlayer(player)
             U.CauseDamage(target, 3)
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+6，对方Damage+3"
     },
     {
         cost = {
@@ -1037,9 +951,7 @@ local Data = {
             U.CauseDamage(player, 3)
             local target = U.GetEnemyPlayer(player)
             U.CauseDamage(target, 1)
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+3 对方Damage+1"
     },
     {
         cost = {
@@ -1052,7 +964,6 @@ local Data = {
             U.CauseDamage(player, 2)
             return {playAgain = true}
         end,
-        note = "Damage+2，再次出牌"
     },
     {
         cost = {
@@ -1064,7 +975,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 5)
         end,
-        note = "Damage+5"
     },
     {
         cost = {
@@ -1077,7 +987,6 @@ local Data = {
             U.CauseDamage(player, 4)
             U.BuildingChange(player, "Wall", 3)
         end,
-        note = "Damage+4，城墙+3"
     },
     {
         cost = {
@@ -1089,7 +998,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 4)
         end,
-        note = "Damage+4"
     },
     {
         cost = {
@@ -1101,7 +1009,6 @@ local Data = {
         func = function(player)
             U.GrowthChange(player, ResourceType.Recruit, 2)
         end,
-        note = "怪兽（M）产量+2"
     },
     {
         cost = {
@@ -1115,7 +1022,6 @@ local Data = {
             U.BuildingChange(player, "Wall", 4)
             U.BuildingChange(player, "Castle", 2)
         end,
-        note = "Damage+2 城墙+4 城堡+2"
     },
     {
         cost = {
@@ -1130,9 +1036,7 @@ local Data = {
             U.GrowthChange(target, ResourceType.Recruit, 1)
             U.ResChange(player, ResourceType.Recruit, 3)
             U.ResChange(target, ResourceType.Recruit, 3)
-            return {enemyInfoRefresh = true}
         end,
-        note = "所有玩家 怪兽（M）产量+1 怪兽（M）+3"
     },
     {
         cost = {
@@ -1144,7 +1048,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 6)
         end,
-        note = "Damage+6"
     },
     {
         cost = {
@@ -1156,7 +1059,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 7)
         end,
-        note = "Damage+7"
     },
     {
         cost = {
@@ -1169,9 +1071,7 @@ local Data = {
             U.CauseDamage(player, 6)
             local target = U.GetEnemyPlayer(player)
             U.ResChange(target, ResourceType.Recruit, -3)
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+6 对方 怪兽（M）-3"
     },
     {
         cost = {
@@ -1190,9 +1090,7 @@ local Data = {
             U.ResChange(target, ResourceType.Gem, -5)
             U.ResChange(target, ResourceType.Recruit, -5)
 
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+6 所有玩家 砖块（B）-5 珠宝（J）-5 怪兽（M）-5"
     },
     {
         cost = {
@@ -1209,7 +1107,6 @@ local Data = {
                 U.CauseDamage(player, 6)
             end
         end,
-        note = "对方城墙为0 damage+10，否则damege+6"
     },
     {
         cost = {
@@ -1221,7 +1118,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 9)
         end,
-        note = "damage+9"
     },
     {
         cost = {
@@ -1238,7 +1134,6 @@ local Data = {
                 U.CauseDamage(player, 7)
             end
         end,
-        note = "对方城墙大于0 damage+10, 否则damage+7"
     },
     {
         cost = {
@@ -1257,7 +1152,6 @@ local Data = {
                 U.CauseDamage(player, 8)
             end
         end,
-        note = "我方珠宝（J）产量大于对方珠宝（J）产量 damage+12，否则damage+8"
     },
     {
         cost = {
@@ -1276,7 +1170,6 @@ local Data = {
                 U.CauseDamage(player, 6)
             end
         end,
-        note = "我方城墙 > 敌方城墙，Damage+12，否则damage+6"
     },
     {
         cost = {
@@ -1286,12 +1179,10 @@ local Data = {
         id = 92,
         name = "Succubus",
         func = function(player)
-            U.CauseDamage(player, 5)
             local target = U.GetEnemyPlayer(player)
-            U.ResChange(target, ResourceType.Recruit, -5)
-            return {enemyInfoRefresh = true}
+            U.ResChange(target, ResourceType.Recruit, -8)
+            U.CauseDamage(player, 5, true)
         end,
-        note = "Damage+5，对方怪兽（M）-5"
     },
     {
         cost = {
@@ -1304,9 +1195,7 @@ local Data = {
             U.CauseDamage(player, 8)
             local target = U.GetEnemyPlayer(player)
             U.GrowthChange(target, ResourceType.Brick, -1)
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+8，对方砖块（B）产量-1"
     },
     {
         cost = {
@@ -1322,9 +1211,7 @@ local Data = {
 
             U.ResChange(player, ResourceType.Brick, 3)
             U.ResChange(player, ResourceType.Gem, 5)
-            return {enemyInfoRefresh = true}
         end,
-        note = "对方 砖块（B）-5 珠宝（J）-10，我方砖块（B）+3 珠宝（J）+5"
     },
     {
         cost = {
@@ -1337,7 +1224,6 @@ local Data = {
             U.CauseDamage(player, 10)
             U.BuildingChange(player, "Wall", 4)
         end,
-        note = "Damage+10 城墙+4"
     },
     {
         cost = {
@@ -1351,9 +1237,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.ResChange(target, ResourceType.Recruit, -5)
             U.GrowthChange(target, ResourceType.Recruit, -1)
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+10 对方怪兽（M）-5，对方怪兽（M）产量-1"
     },
     {
         cost = {
@@ -1367,9 +1251,7 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.ResChange(target, ResourceType.Gem, -10)
             U.GrowthChange(target, ResourceType.Recruit, -1)
-            return {enemyInfoRefresh = true}
         end,
-        note = "Damage+20，对方珠宝（J）-10，对方怪兽（M）产量-1"
     },
     {
         cost = {
@@ -1388,7 +1270,6 @@ local Data = {
                 U.CauseDamage(player, 2)
             end
         end,
-        note = "我方城墙 > 敌方城墙，Damage+3，否则Damage+2"
     },
     {
         cost = {
@@ -1401,7 +1282,6 @@ local Data = {
             U.CauseDamage(player, 3)
             U.ResChange(player, ResourceType.Gem, 1)
         end,
-        note = "Damage+3，珠宝（J）+1"
     },
     {
         cost = {
@@ -1415,7 +1295,6 @@ local Data = {
             U.CauseDamage(player, 8)
             U.CauseDamage(target, 3)
         end,
-        note = "Damage+8，对方Damage+3"
     },
     {
         cost = {
@@ -1428,7 +1307,6 @@ local Data = {
             U.CauseDamage(player, 13)
             U.ResChange(player, ResourceType.Gem, -3)
         end,
-        note = "Damage+13，珠宝（J）-3"
     },
     {
         cost = {
@@ -1440,7 +1318,6 @@ local Data = {
         func = function(player)
             U.CauseDamage(player, 12)
         end,
-        note = "Damage+12"
     }
 }
 

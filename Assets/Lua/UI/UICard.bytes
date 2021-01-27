@@ -9,6 +9,7 @@
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 ]]
+local m_useCardResult
 local m_cardData
 local m_isTweenDisappearCreated
 local U = require("Utils")
@@ -83,20 +84,13 @@ function UseCard()
     local player = DB.GetData(string.format("Player%s", currentPlayer))
     U.ResChange(player, costData.type, -costData.count)
     m_cardData.using = true
+    m_useCardResult = m_cardData.func(player)
+    info("GamePlay", vardump(m_cardData, m_useCardResult))
     OnShowUseCard(currentPlayer)
 end
 
--- ** TODO:try to dispose a LuaEnv with C# callback!
 function UseCardComplete()
-    local currentPlayer = DB.GetData("CurrentPlayer")
-    local player = DB.GetData(string.format("Player%s", currentPlayer))
-    DB.TriggerEvent(string.format("Player%s/Refresh", currentPlayer))
-    local result = m_cardData.func(player)
-    if result ~= nil and result.enemyInfoRefresh then
-        local enemy = currentPlayer == 1 and 2 or 1
-        DB.TriggerEvent(string.format("Player%s/Refresh", enemy))
-    end
-    DB.TriggerEvent("Main/PlayerSwitch", result, m_cardData)
+    DB.TriggerEvent("Main/PlayerSwitch", m_useCardResult, m_cardData)
     m_cardData.using = false
 end
 
@@ -107,8 +101,8 @@ function OnShowUseCard(currentPlayer)
         REF.Disappear.useTargetAsV3 = true
         REF.Disappear.endValueTransform = gameMain.REF.Center
         REF.Disappear:CreateTween()
+        CS.CommonUtility.SetTweenOnComplete(REF.DisappearEnd, UseCardComplete)
     end
-    REF.DisappearEnd.onComplete:AddListener(UseCardComplete)
     REF.Disappear:DORestart()
     DB.TriggerEvent(string.format("Player%s/RecycleAll", currentPlayer))
 end

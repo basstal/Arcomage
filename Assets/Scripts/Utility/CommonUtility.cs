@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 using XLua;
+using DG.Tweening;
 
 [LuaCallCSharp]
 public static class CommonUtility
@@ -15,7 +16,7 @@ public static class CommonUtility
             result = (result ^ ((uint)str[i] & 0xFF)) * 0x89ABCDEFu;
         return result * 0x89ABCDEFu;
     }
-    public static uint CalculateHash(char[] chars,int length)
+    public static uint CalculateHash(char[] chars, int length)
     {
         uint result = 0x01234567u;
         for (int i = 0; i < length; ++i)
@@ -44,7 +45,7 @@ public static class CommonUtility
             var dir = Path.GetDirectoryName(path);
             if (!string.IsNullOrWhiteSpace(dir))
             {
-                if (!Directory.Exists(dir)) 
+                if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
                 File.WriteAllText(path, content);
             }
@@ -55,6 +56,17 @@ public static class CommonUtility
     {
         @event.RemoveAllListeners();
         @event.AddListener(callback);
+    }
+
+    public static void SetTweenOnComplete(DOTweenAnimation animation, LuaFunction callback)
+    {
+        if (LuaManager.Instance == null) return;
+        LuaManager.Instance.disposableCallbacks.Add(callback);
+        animation.onComplete.RemoveAllListeners();
+        animation.onComplete.AddListener(() =>
+        {
+            callback.Call();
+        });
     }
     static int HexToInt(char hex)
     {

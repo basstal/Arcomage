@@ -27,6 +27,7 @@ function U.ResChange(player, type, change)
             player.REF.RecruitsDropEffect:Play()
         end
     end
+    DB.TriggerEvent(string.format("Player%s/Refresh", gamePlayerCS.playerID))
 end
 
 function U.BuildingChange(player, building, change)
@@ -49,6 +50,7 @@ function U.BuildingChange(player, building, change)
             player.REF.TowerDropEffect:Play()
         end
     end
+    DB.TriggerEvent(string.format("Player%s/Refresh", gamePlayerCS.playerID))
 end
 
 function U.GrowthChange(player, type, change)
@@ -56,7 +58,6 @@ function U.GrowthChange(player, type, change)
         return
     end
     local gamePlayerCS = player.GamePlayerCS
-    change = math.ceil(change)
     if type == CS.CostType.Brick then
         gamePlayerCS.brickIncRate = gamePlayerCS.brickIncRate + change
         if change > 0 then
@@ -79,18 +80,25 @@ function U.GrowthChange(player, type, change)
             player.REF.RecruitsDecRateAnimation:DORestartById("startDec")
         end
     end
+    DB.TriggerEvent(string.format("Player%s/Refresh", gamePlayerCS.playerID))
 end
 
-function U.CauseDamage(player, damage)
+function U.CauseDamage(player, damage, direct)
     local target = U.GetEnemyPlayer(player)
     local gamePlayerCS = target.GamePlayerCS
     local wall = gamePlayerCS.wall
-    if damage > wall then
-        local tower = gamePlayerCS.tower
-        U.BuildingChange(target, "wall", -wall)
-        U.BuildingChange(target, "tower", -math.max(tower, damage - wall))
+    -- ** 直接对塔楼的伤害
+    if direct then
+        U.BuildingChange(target, "Tower", -damage)
     else
-        U.BuildingChange(target, "wall", -damage)
+        if damage > wall then
+            -- ** 如果伤害大于城墙，溢出的伤害由塔楼承受
+            U.BuildingChange(target, "Wall", -wall)
+            U.BuildingChange(target, "Tower", -(damage - wall))
+        else
+            -- ** 若干伤害小于等于城墙，则城墙承受全部伤害
+            U.BuildingChange(target, "Wall", -damage)
+        end
     end
     DB.TriggerEvent(string.format("Player%s/Refresh", gamePlayerCS.playerID))
 end

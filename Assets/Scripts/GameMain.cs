@@ -28,7 +28,7 @@ public class GameMain : MonoBehaviour
     [HideInInspector]public Sprite brick;
     [HideInInspector]public Sprite gem;
     [HideInInspector]public Sprite recruit;
-    public async void Init(Action callback)
+    public async void Init(LuaFunction callback)
     {
         round = 0;
         if (m_player1Obj == null)
@@ -82,6 +82,7 @@ public class GameMain : MonoBehaviour
         {
             recruit = await recruitAssetRef.LoadAssetAsync<Sprite>().Task;
         }
-        callback.SafeInvoke();
+        callback.Call();
+        callback.Dispose(true);
     }
 }

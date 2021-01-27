@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SingletonLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 6385036606427934689, guid: ecb8814ef50c4f5409c4f49beacc982b,
+        type: 3}
+      propertyPath: localeType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7729064587871761429, guid: ecb8814ef50c4f5409c4f49beacc982b,
         type: 3}
       propertyPath: m_RootOrder

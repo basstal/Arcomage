@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public enum CostType
@@ -10,7 +12,25 @@ public enum CostType
 }
 public class GameCard : MonoBehaviour
 {
-    public int id = 0;
+#if UNITY_EDITOR            
+    public TextMeshProUGUI debug;
+#endif
+    private int m_id;
+    [ShowInInspector]
+    public int id
+    {
+        get => m_id;
+        set
+        {
+            m_id = value;
+#if UNITY_EDITOR            
+            if (debug != null)
+            {
+                debug.text = value.ToString();
+            }
+#endif
+        }
+    }
     public CostType costType = CostType.None;
     public int cost = 0;
 }
