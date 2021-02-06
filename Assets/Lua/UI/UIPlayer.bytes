@@ -135,7 +135,7 @@ function OnRecycleHandCards()
 end
 
 function OnGenHandCards(genCount, fromIndex)
-    info("GamePlay", string.format("生成玩家%s 手牌张数%d ", GamePlayerCS.playerName, genCount))
+    info("生成玩家手牌", string.format("玩家：%s\n预定生成：%d张手牌\n玩家详情:%s", GamePlayerCS.playerName, genCount, vardump(_ENV)))
     local dataSize = #Data
     local gameMain = DB.GetData("Main")
     local gameMainCS = gameMain.GameMainCS
@@ -157,6 +157,6 @@ function OnGenHandCards(genCount, fromIndex)
             genCount = genCount - 1
         end
     end
-    info("GamePlay", string.format("当前玩家%s手牌%s => \n%s", GamePlayerCS.playerID, #m_handCards, vardump(m_handCards)))
+    info("玩家手牌", string.format("玩家：%s\n总手牌：%s\n详情：%s", GamePlayerCS.playerID, #m_handCards, vardump(m_handCards)))
     DB.SetData(string.format("Player%s/HandCards", GamePlayerCS.playerID), m_handCards)
 end

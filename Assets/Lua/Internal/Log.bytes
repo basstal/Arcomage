@@ -4,7 +4,7 @@ local function logMessage(level, tag, message, context)
     if __UNITY_EDITOR then
         stack = CS.LogUtility.GetCallStack(debug.traceback)
     else
-        -- ** todo 真机调试的log
+        -- ** TODO:真机调试的log
         -- stack = table.join(table.slice(debug.traceback():split("\n"), 4), "\n")
     end
 

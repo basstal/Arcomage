@@ -8,7 +8,7 @@ local function AddAll(data)
             DataAllDict[res.id] = res
             table.insert(DataAllArr, res)
         else
-            warning("GamePlay", string.format("卡数据中添加了重复的id:%s", res.id))
+            warning("逻辑问题", string.format("卡数据中添加了重复的id:%s", res.id))
         end
     end
 end

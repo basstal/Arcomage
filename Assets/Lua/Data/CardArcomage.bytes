@@ -386,13 +386,13 @@ local Data = {
         func = function(player)
             local w1 = player.GamePlayerCS.wall
             if w1 == 0 then
-                U.CauseDamage(player, 2)
+                U.CauseDamage(player, 2, true)
                 U.GrowthChange(player, ResourceType.Recruit, -1)
             end
             local enemy = U.GetEnemyPlayer(player)
             local w2 = enemy.GamePlayerCS.wall
             if w2 == 0 then
-                U.CauseDamage(enemy, 2)
+                U.CauseDamage(enemy, 2, true)
                 U.GrowthChange(enemy, ResourceType.Recruit, -1)
             end
         end,
@@ -462,7 +462,7 @@ local Data = {
         id = 36,
         name = "SmokyQuartz",
         func = function(player)
-            U.CauseDamage(player, 1)
+            U.CauseDamage(player, 1, true)
             return {playAgain = true}
         end,
     },
@@ -519,7 +519,7 @@ local Data = {
         name = "SolarFlare",
         func = function(player)
             U.BuildingChange(player, "Castle", 2)
-            U.CauseDamage(player, 2)
+            U.CauseDamage(player, 2, true)
         end,
     },
     {
@@ -545,7 +545,7 @@ local Data = {
         id = 43,
         name = "GemstoneFlaw",
         func = function(player)
-            U.CauseDamage(player, 3)
+            U.CauseDamage(player, 3, true)
         end,
     },
     {
@@ -567,7 +567,7 @@ local Data = {
         id = 45,
         name = "GemSpear",
         func = function(player)
-            U.CauseDamage(player, 5)
+            U.CauseDamage(player, 5, true)
         end,
     },
     {
@@ -579,7 +579,7 @@ local Data = {
         name = "PowerBurn",
         func = function(player)
             U.GrowthChange(player, ResourceType.Gem, 2)
-            U.CauseDamage(player, 5)
+            U.CauseDamage(player, 5, true)
         end,
     },
     {
@@ -645,7 +645,7 @@ local Data = {
         name = "Shatterer",
         func = function(player)
             U.GrowthChange(player, ResourceType.Gem, -1)
-            U.CauseDamage(player, 9)
+            U.CauseDamage(player, 9, true)
         end,
     },
     {
@@ -683,8 +683,8 @@ local Data = {
             local target = U.GetEnemyPlayer(player)
             U.GrowthChange(player, ResourceType.Gem, -1)
             U.GrowthChange(target, ResourceType.Gem, -1)
-            U.CauseDamage(player, 7)
-            U.CauseDamage(target, 7)
+            U.CauseDamage(player, 7, true)
+            U.CauseDamage(target, 7, true)
         end,
     },
     {
@@ -696,7 +696,7 @@ local Data = {
         name = "FireRuby",
         func = function(player)
             U.BuildingChange(player, "Castle", 6)
-            U.CauseDamage(player, 4)
+            U.CauseDamage(player, 4, true)
         end,
     },
     {
@@ -834,7 +834,7 @@ local Data = {
         func = function(player)
             U.BuildingChange(player, "Castle", 4)
             U.ResChange(player, ResourceType.Recruit, -2)
-            U.CauseDamage(player, 2)
+            U.CauseDamage(player, 2, true)
         end,
     },
     {
@@ -851,7 +851,7 @@ local Data = {
             if p1c > p2w then
                 U.CauseDamage(player, 16)
             else
-                U.CauseDamage(player, 8)
+                U.CauseDamage(player, 8, true)
             end
         end,
     },
@@ -948,7 +948,7 @@ local Data = {
         id = 75,
         name = "GoblinArchers",
         func = function(player)
-            U.CauseDamage(player, 3)
+            U.CauseDamage(player, 3, true)
             local target = U.GetEnemyPlayer(player)
             U.CauseDamage(target, 1)
         end,
@@ -996,7 +996,7 @@ local Data = {
         id = 79,
         name = "LittleSnakes",
         func = function(player)
-            U.CauseDamage(player, 4)
+            U.CauseDamage(player, 4, true)
         end,
     },
     {
@@ -1167,7 +1167,7 @@ local Data = {
             if p1w > p2w then
                 U.CauseDamage(player, 12)
             else
-                U.CauseDamage(player, 6)
+                U.CauseDamage(player, 6, true)
             end
         end,
     },
@@ -1293,7 +1293,7 @@ local Data = {
         func = function(player)
             local target = U.GetEnemyPlayer(player)
             U.CauseDamage(player, 8)
-            U.CauseDamage(target, 3)
+            U.CauseDamage(target, 3, true)
         end,
     },
     {
@@ -1316,7 +1316,7 @@ local Data = {
         id = 102,
         name = "PegasusLancer",
         func = function(player)
-            U.CauseDamage(player, 12)
+            U.CauseDamage(player, 12, true)
         end,
     }
 }

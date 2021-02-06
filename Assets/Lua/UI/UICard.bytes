@@ -92,7 +92,7 @@ function UseCardComplete()
     local currentPlayer = DB.GetData("CurrentPlayer")
     local player = DB.GetData(string.format("Player%s", currentPlayer))
     m_useCardResult = m_cardData.func(player)
-    info("GamePlay", vardump(m_cardData, m_useCardResult))
+    info("卡牌使用完成", vardump(m_cardData, m_useCardResult))
     DB.TriggerEvent("Main/PlayerSwitch", m_useCardResult, m_cardData)
     m_cardData.using = false
 end

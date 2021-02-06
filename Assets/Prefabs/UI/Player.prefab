@@ -2873,6 +2873,8 @@ MonoBehaviour:
     value: {fileID: 5673948018333640508}
   - name: TowerDropEffect
     value: {fileID: 4779487911403330468}
+  - name: AI
+    value: {fileID: 0}
 --- !u!114 &380772696799261141
 MonoBehaviour:
   m_ObjectHideFlags: 0

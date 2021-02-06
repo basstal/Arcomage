@@ -1,0 +1,19 @@
+local ActionUseCardRandomly = {}
+
+function ActionUseCardRandomly.OnExecute()
+    local U = require("Utils")
+    local success = false
+    local playerId = DB.GetData("CurrentPlayer")
+    local player = DB.GetData("Player" .. playerId)
+    local handCards = DB.GetData(string.format("Player%s/HandCards", playerId))
+
+    local r = math.random(1, #handCards)
+    local card = handCards[r]
+    if U.ValidCardCost(player, card) then
+        card.UseCard()
+        success = true
+    end
+    return success
+end
+
+return ActionUseCardRandomly

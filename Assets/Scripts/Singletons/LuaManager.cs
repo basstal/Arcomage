@@ -89,12 +89,12 @@ public class LuaManager : Singleton<LuaManager>
         }
         return true;
     }
-    public void DoChunk(LuaTable sandbox, string chunkName, byte[] content)
+    public object[] DoChunk(LuaTable sandbox, string chunkName, byte[] content)
     {
         if (sandbox == null || content == null || !CheckInitiated())
-            return;
+            return null;
 
-        LuaEnv.DoString(content, chunkName, sandbox);
+        return LuaEnv.DoString(content, chunkName, sandbox);
     }
     public void DoChunk(LuaTable sandbox, string path, bool forceReload)
     {

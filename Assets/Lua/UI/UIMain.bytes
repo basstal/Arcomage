@@ -25,7 +25,6 @@ GameData = {
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 ]]
-local ResourceType = CS.CostType
 local CurrentStage = nil
 
 local function SetCurrentPlayer(n)
@@ -66,17 +65,6 @@ function UpdateDebugInputKeys()
     end
 end
 
-function PlayerResourceGrowth(player, type)
-    local gamePlayerCS = player.GamePlayerCS
-    if type == ResourceType.Brick then
-        gamePlayerCS.brick = gamePlayerCS.brick + gamePlayerCS.brickIncRate
-    elseif type == ResourceType.Recruit then
-        gamePlayerCS.recruit = gamePlayerCS.recruit + gamePlayerCS.recruitIncRate
-    else
-        gamePlayerCS.gem = gamePlayerCS.gem + gamePlayerCS.gemIncRate
-    end
-end
-
 function TurnRound()
     GameMainCS.round = GameMainCS.round + 1
     if GameMainCS.round == 1 then
@@ -87,9 +75,9 @@ function TurnRound()
         DB.TriggerEvent("Player/GenHandCards", 5)
         SetCurrentPlayer(GameData.currentPlayer % 2 + 1)
         local player = DB.GetData("Player{CurrentPlayer}")
-        PlayerResourceGrowth(player, ResourceType.Recruit)
-        PlayerResourceGrowth(player, ResourceType.Gem)
-        PlayerResourceGrowth(player, ResourceType.Brick)
+        local U = require("Utils")
+        info("玩家资源增长", vardump(player))
+        U.PlayerResourceGrowthAll(player)
     end
     CurrentStage = PlayerRound
 end
@@ -154,6 +142,10 @@ function PlayerRound()
 
     CS.UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(parentTrans)
     CurrentStage = nil
+    local player = DB.GetData("Player{CurrentPlayer}")
+    if player.GamePlayerCS.useAI then
+        player.REF.AI:StartBehaviourForLua()
+    end
 end
 
 function OnReload()
