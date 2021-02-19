@@ -72,13 +72,13 @@ namespace CodeEditor
         protected override bool ValidCopy(CodeEditorTreeViewItem item)
         {
             // ** 根节点不允许复制
-            return ((BevTreeViewItem) item).data.NodeType != BevNodeType.None;
+            return ((BevTreeViewItem)item).data.NodeType != BevNodeType.None;
         }
 
         protected override bool ValidInsert(CodeEditorTreeViewItem t, CodeEditorTreeViewItem v)
         {
-            var target = (BevTreeViewItem) t;
-            var validate = (BevTreeViewItem) v;
+            var target = (BevTreeViewItem)t;
+            var validate = (BevTreeViewItem)v;
             var result = true;
             string[] value = null;
             // ** todo 这里也许可以继续简化
@@ -169,8 +169,8 @@ namespace CodeEditor
 
         void InsertDelegate(object userData)
         {
-            var type = (string) userData;
-            var newCodeNode = new CodeNode() {Type = type};
+            var type = (string)userData;
+            var newCodeNode = new CodeNode() { Type = type };
             switch (type)
             {
                 // ** 如果有新增的待插入的节点 需要在这里新增switch case
@@ -181,14 +181,14 @@ namespace CodeEditor
                     break;
                 case "RandomSelector":
                     newCodeNode.NodeType = BevNodeType.RandomSelector;
-                    newCodeNode.RandomSelector = new RandomSelector();
+                    // newCodeNode.RandomSelector = new RandomSelector();
                     break;
                 default:
                     if (type.StartsWith("Condition"))
                     {
                         newCodeNode.NodeType = BevNodeType.Condition;
                     }
-                    else if(type.StartsWith("Action"))
+                    else if (type.StartsWith("Action"))
                     {
                         newCodeNode.NodeType = BevNodeType.Action;
                     }

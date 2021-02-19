@@ -1,4 +1,3 @@
-#define ACT91
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,14 +16,15 @@ using UnityEngine;
 
 namespace CodeEditor
 {
-    public enum BevTreeDisplayType{
+    public enum BevTreeDisplayType
+    {
         FIELD_NAME = 0,
         FIELD_NAME_AND_EXPLANATION = 2,
         EXPLANATION = 1,
     }
     public class BevTreeWindow : EditorWindow, IHasCustomMenu
     {
-        private string[] DisplayTypeNames = {"英文", "中文", "中文+英文"};
+        private string[] DisplayTypeNames = { "英文", "中文", "中文+英文" };
         public static BevTreeDisplayType DISPLAY_TYPE = BevTreeDisplayType.FIELD_NAME_AND_EXPLANATION;
         private BevTreeView m_bevTreeView;
         private Texture2D m_conditionTex;
@@ -38,7 +38,7 @@ namespace CodeEditor
         private Vector2 m_scrollView3;
 
         private string m_filterPattern = "";
-        
+
         private bool m_isBevTreeDisplayDebugId;
         public static BevTreeWindow instance { get; private set; }
         public Texture2D conditionTex
@@ -69,7 +69,7 @@ namespace CodeEditor
 #if ACT91
         [MenuItem("⛵NOAH/Window/Code Editor/BevTree")]
 #else
-        [MenuItem("Window/CodeEditor/BevTree", false, 1)]
+        [MenuItem("Tools/CodeEditor/BevTree", false)]
 #endif
         public static void ShowWindow()
         {
@@ -93,7 +93,7 @@ namespace CodeEditor
             // ** 节点图标加载
             m_conditionTex = Resources.Load<Texture2D>("Condition");
             m_actionTex = Resources.Load<Texture2D>("Action");
-            
+
             // ** 节点合法性判断的配置文件读取
             var textAsset = Resources.Load<TextAsset>("BevTreeProperty");
             if (textAsset == null)
@@ -103,10 +103,10 @@ namespace CodeEditor
                 return;
             }
             m_bevTreeProperties = JToken.Parse(textAsset.text);
-            
+
             var insertion = m_bevTreeProperties["insertion"];
             m_bevTreeInsertion = new Dictionary<string, string[]>();
-            foreach(JProperty property  in insertion)
+            foreach (JProperty property in insertion)
             {
                 switch (property.Name)
                 {
@@ -121,33 +121,33 @@ namespace CodeEditor
                             continue;
                         }
 
-                        var ext = (string) m_bevTreeProperties["AIExt"];
-                        string [] files = Directory.GetFiles(dir, $"*.{ext}", SearchOption.AllDirectories);
+                        var ext = (string)m_bevTreeProperties["AIExt"];
+                        string[] files = Directory.GetFiles(dir, $"*.{ext}", SearchOption.AllDirectories);
                         m_bevTreeInsertion[property.Name] = files.Select(Path.GetFileNameWithoutExtension).ToArray();
                         break;
                     default:
                         if (property.Value is JArray arr)
                         {
-                            m_bevTreeInsertion[property.Name] = arr.Values<string>().ToArray(); 
+                            m_bevTreeInsertion[property.Name] = arr.Values<string>().ToArray();
                         }
                         break;
                 }
             }
-            
+
             // ** 节点解释文本的读取
             m_explanations = new Dictionary<string, string>();
             var protoDirs = m_bevTreeProperties["BevTreeProto"];
             List<string> contents = new List<string>();
             foreach (string dir in protoDirs)
             {
-                if(File.Exists(dir))
+                if (File.Exists(dir))
                 {
                     contents.AddRange(File.ReadAllLines(dir));
                 }
             }
 
             string classType = null;
-            foreach(var line in contents)
+            foreach (var line in contents)
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
@@ -181,7 +181,7 @@ namespace CodeEditor
                 }
             }
         }
-        
+
         // private void ShowNodeExplanation()
         // {
         //     if (m_bevTreeView == null)
@@ -220,37 +220,37 @@ namespace CodeEditor
         //         EditorUtility.DisplayDialog("非法操作", "请先选中一个待说明的节点", "确认");
         //     }
         // }
-        
+
         private void OnGUI()
         {
             GUILayout.BeginHorizontal();
-            if(GUILayout.Button("新建", EditorStyles.toolbarButton, GUILayout.Width(30f)))
+            if (GUILayout.Button("新建", EditorStyles.toolbarButton, GUILayout.Width(30f)))
             {
                 var newFile = GetWindow<NewFileWindow>("新建BevTree脚本");
                 newFile.Open(NewFileOption.BevTree, this);
             }
-            if (m_bevTreeView != null && m_bevTreeView.changed && GUILayout.Button("保存", EditorStyles.toolbarButton,GUILayout.Width(30f)))
+            if (m_bevTreeView != null && m_bevTreeView.changed && GUILayout.Button("保存", EditorStyles.toolbarButton, GUILayout.Width(30f)))
             {
                 Save();
                 ListReload(m_bevTreeView.name);
             }
-            DISPLAY_TYPE = (BevTreeDisplayType)EditorGUILayout.Popup((int)DISPLAY_TYPE, DisplayTypeNames, EditorStyles.toolbarButton,GUILayout.Width(80));
+            DISPLAY_TYPE = (BevTreeDisplayType)EditorGUILayout.Popup((int)DISPLAY_TYPE, DisplayTypeNames, EditorStyles.toolbarButton, GUILayout.Width(80));
             m_isBevTreeDisplayDebugId =
                 GUILayout.Toggle(m_isBevTreeDisplayDebugId, "显示节点ID", EditorStyles.toolbarButton, GUILayout.MaxWidth(105f));
             Action<CodeEditorTreeViewItem> handler = item =>
             {
-                var bevTreeViewItem = (BevTreeViewItem) item;
+                var bevTreeViewItem = (BevTreeViewItem)item;
                 bevTreeViewItem.displayName = m_isBevTreeDisplayDebugId
                     ? bevTreeViewItem.nameWithDebugId
                     : bevTreeViewItem.nameNoId;
             };
             m_bevTreeView?.buildRoot.Traverse(handler);
             GUILayout.EndHorizontal();
-            
+
             // ** TreeView 以及节点详细信息
             GUILayout.BeginHorizontal();
             {
-                
+
                 GUILayout.BeginVertical(GUILayout.Width(position.width / 6));
                 GUILayout.BeginHorizontal();
                 // ** todo 搜索框和下面的列表中间有间隙
@@ -270,16 +270,16 @@ namespace CodeEditor
                 GUILayout.EndScrollView();
                 // ** todo 有时候这里有GUI报错 EndLayoutGroup: BeginLayoutGroup must be called first.
                 GUILayout.EndVertical();
-                
+
                 GUILayout.BeginVertical();
                 m_scrollView2 = GUILayout.BeginScrollView(m_scrollView2, GUILayout.Width(position.width * 5 / 8));
                 {
-                    
+
                     m_bevTreeView?.OnGUI(new Rect(0, 0, position.width, position.height - 30));
                 }
                 GUILayout.EndScrollView();
                 GUILayout.EndVertical();
-                
+
                 GUILayout.BeginVertical();
                 m_scrollView3 = GUILayout.BeginScrollView(m_scrollView3, GUILayout.Width(position.width * 5 / 24));
                 {
@@ -313,7 +313,7 @@ namespace CodeEditor
                 Debug.LogError($"保存失败：所选的文件[{fileName}]不存在？");
             }
         }
-        
+
         public bool FocusChangedConfirm()
         {
             bool? changed = m_bevTreeView?.changed;
@@ -323,7 +323,7 @@ namespace CodeEditor
                 return true;
             }
             int option = EditorUtility.DisplayDialogComplex("未保存的修改", $"文件[{m_bevTreeView?.name}]有未保存的修改，在继续之前是否保存这些修改？", "保存并继续", "取消", "不保存并继续");
-            switch(option)
+            switch (option)
             {
                 case 0:
                     Save();
@@ -334,7 +334,7 @@ namespace CodeEditor
                     return false;
             }
         }
-        
+
         public void ListReload(string selectedFile = "", bool clearExist = false)
         {
             if (m_bevTreeProperties == null)
@@ -342,9 +342,9 @@ namespace CodeEditor
                 return;
             }
             m_fileList = clearExist ? null : m_fileList;
-            var searchPattern = $"*.{(string) m_bevTreeProperties["AIExt"]}";
-            var dir = (string) m_bevTreeProperties["AIDir"];
-            var snippetDir = (string) m_bevTreeProperties["AISnippetDir"];
+            var searchPattern = $"*.{(string)m_bevTreeProperties["AIExt"]}";
+            var dir = (string)m_bevTreeProperties["AIDir"];
+            var snippetDir = (string)m_bevTreeProperties["AISnippetDir"];
             if (!Directory.Exists(dir))
             {
                 Debug.LogWarning($"未找到AI脚本所在目录 : {dir} ， 可在BevTreeProperty.json中修改该目录。修改后请重启Window。");
@@ -367,17 +367,19 @@ namespace CodeEditor
             if (m_fileList == null)
             {
                 m_fileList = new ReorderableList(filterFiles, typeof(string), false, false, false, true);
-                m_fileList.drawElementCallback += (rect, index, isActive, isFocused) => {
-                    
+                m_fileList.drawElementCallback += (rect, index, isActive, isFocused) =>
+                {
+
                     var file = filterFiles[index];
                     var fileNameNoExtension = Path.GetFileNameWithoutExtension(file);
                     if (file != null && file.Contains(snippetDir))
                     {
                         fileNameNoExtension = "[S]" + fileNameNoExtension;
                     }
-                    EditorGUI.LabelField(rect, fileNameNoExtension + (isActive && m_bevTreeView != null && m_bevTreeView.changed? " *" : ""));
+                    EditorGUI.LabelField(rect, fileNameNoExtension + (isActive && m_bevTreeView != null && m_bevTreeView.changed ? " *" : ""));
                 };
-                m_fileList.onSelectCallback += list => {
+                m_fileList.onSelectCallback += list =>
+                {
                     var focusFile = (string)list.list[list.index];
                     if (m_bevTreeView != null && focusFile == m_bevTreeView.name)
                     {
@@ -386,7 +388,7 @@ namespace CodeEditor
                     if (FocusChangedConfirm() && File.Exists(focusFile))
                     {
 #if ACT91
-                        CodeNode codeNode = BevTreeExtension.TableFile2CodeNode(focusFile, snippetDir);
+                        BevNode codeNode = BevTreeExtension.TableFile2CodeNode(focusFile, snippetDir);
 #else
                         var parser = new MessageParser<CodeNode>(() => new CodeNode());
                         var codeNode = parser.ParseFrom(File.ReadAllBytes(focusFile));
@@ -439,7 +441,8 @@ namespace CodeEditor
         }
         public void AddItemsToMenu(GenericMenu menu)
         {
-            menu.AddItem(new GUIContent("重启"), false, () => {
+            menu.AddItem(new GUIContent("重启"), false, () =>
+            {
                 Close();
                 ShowWindow();
             });

@@ -1,0 +1,30 @@
+local BevConst = require("BevTree/BevConst")
+local BevNode = require("BevTree/BevNode")
+
+local ActionWait = {__index = BevNode}
+setmetatable(ActionWait, ActionWait)
+
+function ActionWait.ctor(data)
+    local node = BevNode.ctor(ActionWait, data)
+    local property = data.actionWait
+    node.prop = property
+    node.timeCounter = 0
+    node.debugInfo = {}
+    return node
+end
+
+function ActionWait:Reset()
+    self.timeCounter = 0
+end
+
+function ActionWait:Run()
+    if self.timeCounter < self.prop.waitTime then
+        local deltaTime = self.root.context.deltaTime
+        self.timeCounter = self.timeCounter + deltaTime
+        return BevConst.RunState.Running
+    else
+        return BevConst.RunState.Finished
+    end
+end
+
+return ActionWait

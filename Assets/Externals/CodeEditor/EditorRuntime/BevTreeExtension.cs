@@ -6,7 +6,7 @@
 
 // public static class BevTreeExtension
 // {
-//     public static CodeNode TableFile2CodeNode(string dir, string snippet)
+//     public static Node TableFile2CodeNode(string dir, string snippet)
 //     {
 //         var luaBridge = EditorRuntimeUtility.GetEditorLuaBridge();
 //         var path = dir.Contains(snippet) ? "AI/Snippet" : "AI"; 
@@ -17,19 +17,19 @@
 //             var fromLuaTable = pe.GetMethod("FromLuaTable");
 //             if (fromLuaTable != null)
 //             {
-//                 var gFromLuaTable = fromLuaTable.MakeGenericMethod(typeof(CodeNode));
-//                 var result = (CodeNode)gFromLuaTable.Invoke(pe, new object[]{luaValues[0] as LuaTable, luaBridge});
+//                 var gFromLuaTable = fromLuaTable.MakeGenericMethod(typeof(Node));
+//                 var result = (Node)gFromLuaTable.Invoke(pe, new object[]{luaValues[0] as LuaTable, luaBridge});
 //                 return result;
 //             }
 //         }
 //         return null;
 //     }
 
-//     public static void WriteCodeNode(string dir, CodeNode data)
+//     public static void WriteCodeNode(string dir, Node data)
 //     {
 //         var luaBridge = EditorRuntimeUtility.GetEditorLuaBridge();
 //         var luaTable = data.ToLuaTable(luaBridge);
-//         var content = luaBridge.ProtobufDump("CodeNode", luaTable);
+//         var content = luaBridge.ProtobufDump("Node", luaTable);
 //         content = "return\n" + content;
 //         File.WriteAllText(dir, content);
 //     }

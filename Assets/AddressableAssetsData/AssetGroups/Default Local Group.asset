@@ -22,8 +22,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Lua
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+    m_MainAsset: {fileID: 102900000, guid: d319a4305a4cc0243914b7427faac355, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: d319a4305a4cc0243914b7427faac355, type: 3}
   - m_GUID: 7c9d90b48a6294e42a5ed1874e48bd5f
     m_Address: Assets/Prefabs/PlayerLeft.prefab
     m_ReadOnly: 0
@@ -66,6 +66,13 @@ MonoBehaviour:
     - prefab
     m_MainAsset: {fileID: 0}
     m_TargetAsset: {fileID: 0}
+  - m_GUID: b39ddb3809325c54a951de91f1bfdb2e
+    m_Address: Assets/Externals/CodeEditor/Lua
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Lua
+    m_MainAsset: {fileID: 102900000, guid: b39ddb3809325c54a951de91f1bfdb2e, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: b39ddb3809325c54a951de91f1bfdb2e, type: 3}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5f7785964b4347244b983c2818026cc7, type: 2}
   m_SchemaSet:

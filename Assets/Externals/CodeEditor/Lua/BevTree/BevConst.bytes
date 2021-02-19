@@ -1,0 +1,21 @@
+local BevConst = {}
+
+BevConst.ColorRichText = {
+    "orange",
+    "yellow",
+    "cyan",
+}
+
+BevConst.RunState = {
+    Finished = 0,
+    Running  = 1,
+    Failed   = -1,
+}
+
+BevConst.RunStateN = {
+    [0] = "成功",
+    [1] = "进行中",
+    [-1] = "失败",
+}
+
+return BevConst

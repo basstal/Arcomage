@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+message Vector2Proto {
+    float x = 1;
+    float y = 2;
+}
+
+message BevTree {
+    string                 name         = 1;
+    string                 category     = 2;
+    string                 comments     = 3;
+    float                  zoomFactor   = 4;
+    string                 primeNodeUid = 5;
+    Vector2Proto           translation  = 21;
+    repeated BevNode       nodes        = 22;
+    repeated BevConnection connections  = 23;
+}
+
+message BevNode {
+    string          uid               = 1;
+    int32           id                = 2;
+    string          name              = 3;
+    string          tag               = 4;
+    string          comment           = 5;
+    string          type              = 6;
+    repeated string inConnectionsUid  = 7;
+    repeated string outConnectionsUid = 8;
+    Vector2Proto    position          = 9;
+    bytes           task              = 10;
+    string          taskType          = 11;
+}
+
+message BevConnection {
+    string uid           = 1;
+    string sourceNodeUid = 2;
+    string targetNodeUid = 3;
+    bool   isActive      = 4;
+}

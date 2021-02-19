@@ -12,15 +12,15 @@ namespace CodeEditor
     public abstract class CodeEditorTreeView<T> : TreeView
     {
         public virtual CodeEditorTreeViewItem buildRoot { get; }
-        public enum InsertOption{ Up, Down };
-        public enum MoveOption { Up, Down};
+        public enum InsertOption { Up, Down };
+        public enum MoveOption { Up, Down };
 
         // 当前已选中的Items
         private List<CodeEditorTreeViewItem> m_selectedItems = new List<CodeEditorTreeViewItem>();
         // 当前正在处理的Item
         private CodeEditorTreeViewItem m_drawItem;
         private List<CodeEditorTreeViewItem> m_copyItems = new List<CodeEditorTreeViewItem>();
-    
+
         public List<CodeEditorTreeViewItem> selectedItems
         {
             get => m_selectedItems;
@@ -96,9 +96,9 @@ namespace CodeEditor
             }
 
             List<int> ids = new List<int>();
-            foreach(var item in m_copyItems)
+            foreach (var item in m_copyItems)
             {
-                if(ValidInsert(itemClicked, item))
+                if (ValidInsert(itemClicked, item))
                 {
                     var realInsertion = item.Clone();
                     InsertOperation(itemClicked, realInsertion, option);
@@ -115,7 +115,7 @@ namespace CodeEditor
         }
         public virtual void Delete()
         {
-            foreach(var item in m_selectedItems)
+            foreach (var item in m_selectedItems)
             {
                 item.parent.children.Remove(item);
                 item.parent = null;
@@ -176,9 +176,9 @@ namespace CodeEditor
             {
                 var itemLeft = a;
                 var itemRight = b;
-                return option == MoveOption.Up ? itemLeft.moveId - itemRight.moveId : itemRight.moveId - itemLeft.moveId; 
+                return option == MoveOption.Up ? itemLeft.moveId - itemRight.moveId : itemRight.moveId - itemLeft.moveId;
             });
-            foreach(TreeViewItem item in m_selectedItems)
+            foreach (TreeViewItem item in m_selectedItems)
             {
                 var parent = item.parent;
                 var index = parent.children.IndexOf(item);

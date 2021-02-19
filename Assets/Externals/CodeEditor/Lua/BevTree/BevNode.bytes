@@ -1,0 +1,298 @@
+local BevConst = require("BevTree/BevConst")
+
+-- local NodeIdSequence = 1
+local BevNode = {}
+
+-- ** 非编辑器下Debug信息不重要 都放到同一个table里面
+local debugInfo = {}
+
+function BevNode.ctor(nodeType, data)
+    if nodeType == nil or not nodeType.IsDerivedFromBevNode() then
+        error("BevTree", "Init BevNode Failed! 上层必须传入一个有效的nodeType")
+        return
+    end
+    local node = setmetatable({}, {__index = nodeType})
+    node.parent = nil
+    if __UNITY_EDITOR then
+        node.debugInfo = {}
+    else
+        node.debugInfo = debugInfo
+    end
+    node.children = {}
+    -- node.decorates = {}
+    node.currentRunning = 0
+    -- node.id = NodeIdSequence + 1
+    -- NodeIdSequence = node.id
+    node.name = "BevNode"
+    node.nodeType = PBEnum["CodeEditor.BevNodeType"].None
+    if data ~= nil then
+        -- if data.decorates ~= nil then
+        --     for _, decorate in pairs(data.decorates) do
+        --         table.insert(node.decorates, decorate)
+        --     end
+        -- end
+        node.remark = data.name
+        node.name = data.type
+        -- node.nodeType = data.nodeType
+        node.uid = data.uid
+        node.id = data.id
+        node.data = data
+    end
+    return node
+end
+
+function BevNode.IsDerivedFromBevNode()
+    return true
+end
+
+function BevNode:Reset()
+    -- ** 调用node自己的Reset，如果node自己的Reset没有调用BevNode的Reset也就不会children的Reset（目前来说所有非Composite的节点都不会有子节点，所以这样不存在任何问题）
+    for i = 1, #self.children do
+        local childnode = self.children[i]
+        childnode:Reset()
+    end
+end
+
+function BevNode:Init()
+    -- ** 调用node自己的Init，如果node自己的Init没有调用BevNode的Init也就不会children的Init（目前来说所有非Composite的节点都不会有子节点，所以这样不存在任何问题）
+    for i = 1, #self.children do
+        local childnode = self.children[i]
+        childnode:Init()
+    end
+end
+
+function BevNode:Uninit()
+    -- ** 调用node自己的Uninit，如果node自己的Uninit没有调用BevNode的Uninit也就不会children的Uninit（目前来说所有非Composite的节点都不会有子节点，所以这样不存在任何问题）
+    for i = 1, #self.children do
+        local childnode = self.children[i]
+        childnode:Uninit()
+    end
+end
+
+function BevNode:Run()
+    return BevConst.RunState.Finished
+end
+
+function BevNode:AddChild(child)
+    self.children[#self.children + 1] = child
+    child.parent = self
+end
+
+function BevNode:Root()
+    if self.root == nil then
+        local p = self.parent
+        if p ~= nil then
+            self.root = p:Root()
+        else
+            self.root = self
+        end
+    end
+    return self.root
+end
+
+local subCache = {}
+
+--[[
+    ** BevRuntime信息输出时使用
+    function:
+        - LogRecordSub
+        - LogRecord
+]]
+function BevNode:LogRecordSub(ret)
+    if __UNITY_EDITOR then
+        local root = self:Root()
+        local id = self.id - root.id + 1
+        local content =
+            string.format(
+            "<color=%s>[%d](%s)(%s)%s : %s </color>",
+            BevConst.ColorRichText[root.colorIndex],
+            root.frameInfo,
+            BevConst.RunStateN[ret],
+            self.remark,
+            self.name,
+            id
+        )
+        table.insert(subCache, content)
+    end
+end
+
+function BevNode:LogRecord(ret)
+    if __UNITY_EDITOR and not self.skipLog then
+        local root = self:Root()
+        local topNode = root.historyLogCache[#root.historyLogCache]
+        if topNode == nil or topNode.id ~= self.id then
+            local id = self.id - root.id + 1
+            if root.changeColor then
+                root.colorIndex = root.colorIndex % #BevConst.ColorRichText + 1
+                root.changeColor = false
+            end
+            local content =
+                string.format(
+                "<color=%s>[%d](%s)(%s)%s : %s  </color>",
+                BevConst.ColorRichText[root.colorIndex],
+                root.frameInfo,
+                BevConst.RunStateN[ret],
+                self.remark,
+                self.name,
+                id
+            )
+            local debugInfo = {}
+            if self.debugInfo ~= nil then
+                table.copy(self.debugInfo, debugInfo, true)
+            end
+            local cache = {
+                id = id,
+                content = content,
+                subContent = subCache,
+                debugInfo = debugInfo
+            }
+            subCache = {}
+            table.insert(root.historyLogCache, 1, cache)
+            if #root.historyLogCache >= 100 then
+                root.historyLog = root.historyLogCache
+                root.historyLogCache = {}
+            end
+        end
+    end
+end
+
+local DecorateRun = {
+    [PBEnum["CodeEditor.DecorateType"].None] = function(ret)
+        return ret
+    end,
+    [PBEnum["CodeEditor.DecorateType"].Not] = function(ret)
+        if ret == BevConst.RunState.Finished then
+            return BevConst.RunState.Failed
+        elseif ret == BevConst.RunState.Failed then
+            return BevConst.RunState.Finished
+        end
+    end
+}
+
+-- function BevNode:RunDecorate(ret)
+--     for _, decorate in pairs(self.decorates) do
+--         -- warning("decorate.decorateType :  " .. tostring(decorate.decorateType))
+--         -- warning("ret : " .. tostring(ret))
+--         ret = DecorateRun[decorate.decorateType](ret)
+--         -- warning("ret handled : " .. tostring(ret))
+
+--     end
+--     return ret
+-- end
+
+--[[
+    ** https://www.jianshu.com/p/998f665cb616
+    funciton:
+        - AbortMode
+        - RunConditionCheck
+        - LowerPriorityCheck
+]]
+function BevNode:AbortMode()
+    local currentRunning = self.currentRunning
+    local runningNode = self.children[currentRunning]
+    if self.nodeType == PBEnum["CodeEditor.BevNodeType"].Composite and currentRunning > 1 then
+        if self.abortMode == PBEnum["CodeEditor.BevAbortMode"].None then
+            local ret = self:LowerPriorityCheck()
+            if ret ~= currentRunning then
+                runningNode:Reset()
+            end
+            return ret
+        elseif
+            (self.abortMode == PBEnum["CodeEditor.BevAbortMode"].Self or
+                self.abortMode == PBEnum["CodeEditor.BevAbortMode"].Both)
+         then
+            local ret = BevConst.RunState.Running
+            -- ** 如果正在跑其他节点 并且这个节点是Action 那么回过头来重新做检查
+            if runningNode.nodeType == PBEnum["CodeEditor.BevNodeType"].Action then
+                ret = self:RunConditionCheck(currentRunning, ret)
+            end
+            if ret ~= BevConst.RunState.Failed then
+                return self.currentRunning
+            else
+                runningNode:Reset()
+                return 1
+            end
+        end
+    end
+    return self.currentRunning
+end
+
+function BevNode:RunConditionCheck(endIndex, defaultRunState)
+    local result = defaultRunState
+    if self.name == "BevSelector" then
+        for i = 1, endIndex do
+            local childNode = self.children[i]
+            if
+                childNode.nodeType == PBEnum["CodeEditor.BevNodeType"].Condition or
+                    childNode.abortMode == PBEnum["CodeEditor.BevAbortMode"].LowerPriority or
+                    childNode.abortMode == PBEnum["CodeEditor.BevAbortMode"].Both
+             then
+                -- ** 只要有一个成功就算成功
+                if childNode.nodeType == PBEnum["CodeEditor.BevNodeType"].Condition then
+                    result = childNode:Run()
+                    -- result = childNode:RunDecorate(result)
+
+                    childNode:LogRecordSub(result)
+                    if result == BevConst.RunState.Finished then
+                        return result
+                    end
+                else
+                    result = childNode:RunConditionCheck(#childNode.children, result)
+                    if result == BevConst.RunState.Finished then
+                        return result
+                    end
+                end
+            end
+        end
+    elseif self.name == "BevSequencer" then
+        for i = 1, endIndex do
+            local childNode = self.children[i]
+            if
+                childNode.nodeType == PBEnum["CodeEditor.BevNodeType"].Condition or
+                    childNode.abortMode == PBEnum["CodeEditor.BevAbortMode"].LowerPriority or
+                    childNode.abortMode == PBEnum["CodeEditor.BevAbortMode"].Both
+             then
+                -- ** 所有的都成功才算成功
+                if childNode.nodeType == PBEnum["CodeEditor.BevNodeType"].Condition then
+                    result = childNode:Run()
+                    -- result = childNode:RunDecorate(result)
+
+                    childNode:LogRecordSub(result)
+                    if result == BevConst.RunState.Failed then
+                        return result
+                    end
+                else
+                    result = childNode:RunConditionCheck(#childNode.children, result)
+                    if result == BevConst.RunState.Failed then
+                        return result
+                    end
+                end
+            end
+        end
+    end
+    return result
+end
+
+function BevNode:LowerPriorityCheck()
+    local runningNode = self.children[self.currentRunning]
+    if runningNode.nodeType == PBEnum["CodeEditor.BevNodeType"].Composite then
+        for i = 1, #self.children do
+            local node = self.children[i]
+            if
+                node.nodeType == PBEnum["CodeEditor.BevNodeType"].Composite and
+                    (node.abortMode == PBEnum["CodeEditor.BevAbortMode"].LowerPriority or
+                        node.abortMode == PBEnum["CodeEditor.BevAbortMode"].Both)
+             then
+                -- ** 一定得有condition节点才能够满足LowerPriority的判断需求, 所以默认状态为Failed
+                local result = BevConst.RunState.Failed
+                result = node:RunConditionCheck(#node.children, result)
+                if result == BevConst.RunState.Finished then
+                    return i
+                end
+            end
+        end
+    end
+    return self.currentRunning
+end
+
+return BevNode

@@ -66,7 +66,7 @@ namespace CodeEditor
             else
                 return m_str[pos++];
         }
-        
+
     }
     [Serializable]
     public abstract class Token : ICloneable
@@ -129,10 +129,10 @@ namespace CodeEditor
         {
             tokenType = literal;
         }
-        
+
         public override string ToString()
         {
-            return $"LiteralToken : {(char) tokenType}";
+            return $"LiteralToken : {(char)tokenType}";
         }
 
         public override string Original()
@@ -176,12 +176,12 @@ namespace CodeEditor
         }
         public override string ToString()
         {
-            return $"TypedToken : {(TK) tokenType}";
+            return $"TypedToken : {(TK)tokenType}";
         }
 
         public override string Original()
         {
-            FCodeLLex.typedToken2String.TryGetValue((TK) tokenType, out string str);
+            FCodeLLex.typedToken2String.TryGetValue((TK)tokenType, out string str);
             return string.IsNullOrEmpty(str) ? "??" : str;
         }
 
@@ -342,7 +342,7 @@ namespace CodeEditor
                     number = d;
                     isFixed = true;
                 }
-                else if(double.TryParse(vStr, out double d1))
+                else if (double.TryParse(vStr, out double d1))
                 {
                     number = d1;
                     isFixed = false;
@@ -350,7 +350,7 @@ namespace CodeEditor
             }
             else
             {
-                number = (double) value;
+                number = (double)value;
                 isFixed = false;
             }
         }
@@ -389,7 +389,7 @@ namespace CodeEditor
             {TK.TRUE, "true"},
             {TK.UNTIL, "until"},
             {TK.WHILE, "while"},
-            
+
         };
         const char EOZ = Char.MaxValue;
 
@@ -403,7 +403,7 @@ namespace CodeEditor
         public int lineNumber { get; set; }
         public int lastLine { get; set; }
         public Token token { get; set; }
-        
+
         private int m_current;
         private bool m_isHexDigit;
         private StringBuilder m_saved = new StringBuilder();
@@ -504,7 +504,7 @@ namespace CodeEditor
                 SaveAndNext();
                 count++;
             }
-            return m_current == boundary ? count : (- count - 1);
+            return m_current == boundary ? count : (-count - 1);
         }
         string GetSaved()
         {
@@ -518,17 +518,17 @@ namespace CodeEditor
             {
                 Warning("大写的F不能用来作为16进制数字的解析，因为其被'误用'为定点数的转型表示");
             }
-            return Char.IsDigit((char) m_current) || ('A' <= m_current && m_current <= 'E') || ('a' <= m_current && m_current <= 'f');
+            return Char.IsDigit((char)m_current) || ('A' <= m_current && m_current <= 'E') || ('a' <= m_current && m_current <= 'f');
         }
 
         byte ReadHexEscape()
         {
             byte result = 0;
-            char[] c = new []{'\\', 'x', '0', '0'};
+            char[] c = new[] { '\\', 'x', '0', '0' };
             for (int i = 2; i < 4; ++i)
             {
                 Next();
-                c[i] = (char) m_current;
+                c[i] = (char)m_current;
                 if (!CurrentIsXDigit())
                 {
                     Error($"{new string(c, 0, i + 1)} : hexadecimal digit expected");
@@ -545,9 +545,9 @@ namespace CodeEditor
             var c = new char[3];
 
             int i;
-            for (i = 0; i < 3 && Char.IsDigit((char) m_current); ++i)
+            for (i = 0; i < 3 && Char.IsDigit((char)m_current); ++i)
             {
-                c[i] = (char) m_current;
+                c[i] = (char)m_current;
                 result *= 10;
                 result += m_current - '0';
                 Next();
@@ -558,7 +558,7 @@ namespace CodeEditor
                 Error($"{new string(c, 0, i)} : decimal escape too large");
             }
 
-            return (byte) result;
+            return (byte)result;
         }
 
         bool Str2Decimal(string str, out double d)
@@ -581,13 +581,13 @@ namespace CodeEditor
 
         NumberToken ReadNumber()
         {
-            var exponentSign = new[] {'E', 'e'};
+            var exponentSign = new[] { 'E', 'e' };
             var firstNumber = m_current;
             var numberToken = new NumberToken(0);
             SaveAndNext();
             if (firstNumber == '0' && (m_current == 'X' || m_current == 'x'))
             {
-                exponentSign = new[] {'P', 'p'};
+                exponentSign = new[] { 'P', 'p' };
                 SaveAndNext();
             }
 
@@ -618,7 +618,7 @@ namespace CodeEditor
                     break;
                 }
             }
-            
+
             // ** 解析number内容
             var numberContent = GetSaved();
             if (Str2Decimal(numberContent, out var d))
@@ -652,8 +652,8 @@ namespace CodeEditor
                         Next();
                         switch (m_current)
                         {
-                            case 'a': 
-                                c = (byte) '\a';
+                            case 'a':
+                                c = (byte)'\a';
                                 break;
                             case 'b': c = (byte)'\b'; break;
                             case 'f': c = (byte)'\f'; break;
@@ -661,7 +661,7 @@ namespace CodeEditor
                             case 'r': c = (byte)'\r'; break;
                             case 't': c = (byte)'\t'; break;
                             case 'v': c = (byte)'\v'; break;
-                            case 'x': 
+                            case 'x':
                                 c = ReadHexEscape();
                                 break;
                             case '\n':
@@ -675,7 +675,7 @@ namespace CodeEditor
                             case '\\':
                             case '\"':
                             case '\'':
-                                c = (byte) m_current;
+                                c = (byte)m_current;
                                 break;
                             case EOZ:
                                 continue;
@@ -694,7 +694,7 @@ namespace CodeEditor
                                 }
                                 continue;
                             default:
-                                if (!Char.IsDigit((char) m_current))
+                                if (!Char.IsDigit((char)m_current))
                                 {
                                     Error($"{m_current} : invalid escape sequence");
                                 }
@@ -776,7 +776,7 @@ namespace CodeEditor
                         {
                             return new LiteralToken('-');
                         }
-                        
+
                         Next();
                         // ** 是一个 长 注释
                         if (m_current == '[')
@@ -875,7 +875,7 @@ namespace CodeEditor
                                 return new TypedToken(TK.CONCAT);
                             }
                         }
-                        else if (!Char.IsDigit((char) m_current))
+                        else if (!Char.IsDigit((char)m_current))
                         {
                             return new LiteralToken('.');
                         }
@@ -886,17 +886,17 @@ namespace CodeEditor
                     case EOZ:
                         return new TypedToken(TK.EOS);
                     default:
-                        if (Char.IsWhiteSpace((char) m_current) || m_current == ';')
+                        if (Char.IsWhiteSpace((char)m_current) || m_current == ';')
                         {
                             var jTK = new JumpToken(pos);
                             Next();
                             return jTK;
                         }
-                        else if (Char.IsDigit((char) m_current))
+                        else if (Char.IsDigit((char)m_current))
                         {
                             return ReadNumber();
                         }
-                        else if (Char.IsLetter((char) m_current) || m_current == '_')
+                        else if (Char.IsLetter((char)m_current) || m_current == '_')
                         {
                             do
                             {
@@ -914,7 +914,7 @@ namespace CodeEditor
                             Next();
                             return new LiteralToken(c);
                         }
-                        
+
                 }
             }
         }

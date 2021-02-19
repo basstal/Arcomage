@@ -1,0 +1,35 @@
+local BevConst = require("BevTree/BevConst")
+local BevNode = require("BevTree/BevNode")
+
+local ActionUseCardRandomly = {__index = BevNode}
+setmetatable(ActionUseCardRandomly, ActionUseCardRandomly)
+
+function ActionUseCardRandomly.ctor(data)
+    local node = BevNode.ctor(ActionUseCardRandomly, data)
+    local property = data.actionUseCardRandomly
+    node.prop = property
+    node.debugInfo = {}
+    return node
+end
+
+function ActionUseCardRandomly:Reset()
+end
+
+function ActionUseCardRandomly:Run()
+    local U = require("Utils")
+    local success = false
+    local playerId = DB.GetData("CurrentPlayer")
+    local player = DB.GetData("Player" .. playerId)
+    local handCards = DB.GetData(string.format("Player%s/HandCards", playerId))
+
+    local r = math.random(1, #handCards)
+    local card = handCards[r]
+    if U.ValidCardCost(player, card) then
+        card.UseCard()
+        success = true
+    end
+
+    return success and BevConst.RunState.Finished or BevConst.RunState.Failed
+end
+
+return ActionUseCardRandomly
