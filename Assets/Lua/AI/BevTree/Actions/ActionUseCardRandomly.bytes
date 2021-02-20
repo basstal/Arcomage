@@ -27,7 +27,6 @@ function ActionUseCardRandomly:Run()
     if U.ValidCardCost(player, card) then
         card.REF.UseCardButton:InvokeButtonEvent()
         player.bevTreeEnabled = false
-        warning("player.bevTreeEnabled", vardump(player.bevTreeEnabled))
         success = true
     end
 

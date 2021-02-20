@@ -36,7 +36,6 @@ setmetatable(BevTree, BevTree)
 function BevTree.CreateBevTreeBytes(file, context)
     local bytes = CS.System.IO.File.ReadAllBytes(file)
     local data = PBDecode("BevTree", bytes)
-    warning("data", vardump(data))
     return BevTree.CreateBevTree(data, context)
 end
 
@@ -46,7 +45,6 @@ function BevTree.CreateBevTree(data, context)
     root.context = context or {}
     -- root.data = data
     -- CreateBevTreeChildren(root, root.children, root.context)
-    warning("root", vardump(root, {depth = -1}))
     return root
 end
 
@@ -84,7 +82,6 @@ function BevTree.ctor(data)
             allNodes[node.uid] = node
         end
     end
-    warning("allNodes", vardump(allNodes))
     -- ** 根据Connection连接所有的Node到children字段
     local connections = data.connections
     local allConnections = {}
