@@ -1,6 +1,6 @@
-local BevConst = require("BevTree/BevConst")
-local BevNode = require("BevTree/BevNode")
-local Calculator = require("GamePlay/BevTree/Calculator")
+local BevConst = require("AI/BevTree/BevConst")
+local BevNode = require("AI/BevTree/BevNode")
+local Calculator = require("AI/BevTree/Calculator")
 
 local BevRandomSelector = {__index = BevNode}
 setmetatable(BevRandomSelector, BevRandomSelector)
@@ -26,7 +26,7 @@ end
 
 function BevRandomSelector:Run()
     if #self.children == 0 then
-        return BevConst.RunState.Finished
+        return BevConst.RunState.Finished 
     end
 
     if self.currentRunning == 0 and #self.children > 0 then
@@ -66,18 +66,18 @@ function BevRandomSelector:Run()
         self.currentRunning = i
         local childnode = self.children[i]
         local ret = childnode:Run()
-        ret = childnode:RunDecorate(ret)
+        -- ret = childnode:RunDecorate(ret)
         childnode:LogRecord(ret)
 
         if ret == BevConst.RunState.Finished then
             self.currentRunning = 0
-            return BevConst.RunState.Finished
+            return BevConst.RunState.Finished 
         elseif ret == BevConst.RunState.Running then
-            return BevConst.RunState.Running
+            return BevConst.RunState.Running 
         elseif ret == BevConst.RunState.Failed then
             if self.currentRunning == #self.children then
                 self.currentRunning = 0
-                return BevConst.RunState.Failed
+                return BevConst.RunState.Failed 
             end
         end
     end

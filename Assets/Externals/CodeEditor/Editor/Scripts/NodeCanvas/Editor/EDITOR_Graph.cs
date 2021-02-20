@@ -208,6 +208,30 @@ partial class Graph
                 }
             });
 
+            menu.AddItem(new GUIContent("Import Data"), false, () =>
+            {
+                if (allNodes.Count > 0 && !EditorUtility.DisplayDialog("Import Graph", "All current graph information will be lost. Are you sure?", "YES", "NO"))
+                    return;
+
+                var path = EditorUtility.OpenFilePanel(string.Format("Import '{0}' Graph", this.GetType().Name), "Assets", "bytes");
+                if (!string.IsNullOrEmpty(path))
+                {
+                    if (this.Deserialize(System.IO.File.ReadAllBytes(path), true) == null)
+                    {
+                        EditorUtility.DisplayDialog("Import Failure", "Please read the logs for more information", "OK", "");
+                    }
+                }
+            });
+            menu.AddItem(new GUIContent("Export Data"), false, () =>
+            {
+                var path = EditorUtility.SaveFilePanelInProject(string.Format("Export '{0}' Graph", this.GetType().Name), "", "bytes", "");
+                if (!string.IsNullOrEmpty(path))
+                {
+                    System.IO.File.WriteAllBytes(path, Serialize());
+                    AssetDatabase.Refresh();
+                }
+            });
+
             menu.AddItem(new GUIContent("Show JSON"), false, () =>
             {
                 Debug.Log(ToBevTree().ToJson());

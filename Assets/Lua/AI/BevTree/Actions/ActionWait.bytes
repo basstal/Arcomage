@@ -1,12 +1,12 @@
-local BevConst = require("BevTree/BevConst")
-local BevNode = require("BevTree/BevNode")
+local BevConst = require("AI/BevTree/BevConst")
+local BevNode = require("AI/BevTree/BevNode")
 
 local ActionWait = {__index = BevNode}
 setmetatable(ActionWait, ActionWait)
 
 function ActionWait.ctor(data)
     local node = BevNode.ctor(ActionWait, data)
-    local property = data.actionWait
+    local property = PBDecode("ActionWait", data.task)
     node.prop = property
     node.timeCounter = 0
     node.debugInfo = {}
@@ -18,6 +18,7 @@ function ActionWait:Reset()
 end
 
 function ActionWait:Run()
+    -- warning("self", vardump(self))
     if self.timeCounter < self.prop.waitTime then
         local deltaTime = self.root.context.deltaTime
         self.timeCounter = self.timeCounter + deltaTime

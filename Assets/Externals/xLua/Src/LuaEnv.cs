@@ -71,7 +71,7 @@ namespace XLua
             }
 
 #if THREAD_SAFE || HOTFIX_ENABLE
-            lock(luaEnvLock)
+            lock (luaEnvLock)
 #endif
             {
                 LuaIndexes.LUA_REGISTRYINDEX = LuaAPI.xlua_get_registry_index();
@@ -110,10 +110,10 @@ namespace XLua
 
                 AddSearcher(StaticLuaCallbacks.LoadBuiltinLib, 2); // just after the preload searcher
                 AddSearcher(StaticLuaCallbacks.LoadFromCustomLoaders, 3);
-// #if !XLUA_GENERAL
-//                 AddSearcher(StaticLuaCallbacks.LoadFromResource, 4);
-//                 AddSearcher(StaticLuaCallbacks.LoadFromStreamingAssetsPath, -1);
-// #endif
+                // #if !XLUA_GENERAL
+                //                 AddSearcher(StaticLuaCallbacks.LoadFromResource, 4);
+                //                 AddSearcher(StaticLuaCallbacks.LoadFromStreamingAssetsPath, -1);
+                // #endif
                 DoString(init_xlua, "Init");
                 init_xlua = null;
 
@@ -123,6 +123,8 @@ namespace XLua
 #endif
 
                 AddBuildin("CS", StaticLuaCallbacks.LoadCS);
+                AddBuildin("rapidjson", LuaDLL.Lua.LoadRapidJson);
+                AddBuildin("pb", LuaDLL.Lua.LoadLuaProtobuf);
 
                 LuaAPI.lua_newtable(rawL); //metatable of indexs and newindexs functions
                 LuaAPI.xlua_pushasciistring(rawL, "__index");
@@ -334,7 +336,7 @@ namespace XLua
 
         static bool ObjectValidCheck(object obj)
         {
-            return (!(obj is UnityEngine.Object)) ||  ((obj as UnityEngine.Object) != null);
+            return (!(obj is UnityEngine.Object)) || ((obj as UnityEngine.Object) != null);
         }
 
         Func<object, bool> object_valid_checker = new Func<object, bool>(ObjectValidCheck);
@@ -403,7 +405,7 @@ namespace XLua
             System.GC.WaitForPendingFinalizers();
         }
 
-        public virtual void Dispose(bool dispose,bool force = false)
+        public virtual void Dispose(bool dispose, bool force = false)
         {
 #if THREAD_SAFE || HOTFIX_ENABLE
             lock (luaEnvLock)
@@ -415,9 +417,10 @@ namespace XLua
                 if (!force && !translator.AllDelegateBridgeReleased())
                 {
                     try { DoString("print_func_ref_by_csharp()"); }
-                    catch(Exception) {}                    throw new InvalidOperationException("try to dispose a LuaEnv with C# callback!");
+                    catch (Exception) { }
+                    throw new InvalidOperationException("try to dispose a LuaEnv with C# callback!");
                 }
-                
+
                 ObjectTranslatorPool.Instance.Remove(L);
 
                 LuaAPI.lua_close(L);

@@ -161,6 +161,15 @@ public static class CommonUtility
             target.SetGraphicRaycastTarget(true);
         }
     }
+
+    public static void InvokeButtonEvent(this GameObject target)
+    {
+        if (target != null)
+        {
+            var onClick = target.GetComponent<Button>()?.onClick;
+            onClick?.Invoke();
+        }
+    }
     public static void SetGraphicRaycastTarget(this GameObject target, bool value)
     {
         if (target.TryGetComponent(out Graphic graphic))

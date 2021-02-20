@@ -1,12 +1,12 @@
-local BevConst = require("BevTree/BevConst")
-local BevNode = require("BevTree/BevNode")
+local BevConst = require("AI/BevTree/BevConst")
+local BevNode = require("AI/BevTree/BevNode")
 
 local ActionUseCardRandomly = {__index = BevNode}
 setmetatable(ActionUseCardRandomly, ActionUseCardRandomly)
 
 function ActionUseCardRandomly.ctor(data)
     local node = BevNode.ctor(ActionUseCardRandomly, data)
-    local property = data.actionUseCardRandomly
+    local property = PBDecode("ActionUseCardRandomly", data.task)
     node.prop = property
     node.debugInfo = {}
     return node
@@ -25,7 +25,9 @@ function ActionUseCardRandomly:Run()
     local r = math.random(1, #handCards)
     local card = handCards[r]
     if U.ValidCardCost(player, card) then
-        card.UseCard()
+        card.REF.UseCardButton:InvokeButtonEvent()
+        player.bevTreeEnabled = false
+        warning("player.bevTreeEnabled", vardump(player.bevTreeEnabled))
         success = true
     end
 

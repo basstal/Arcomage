@@ -108,7 +108,7 @@ def do_compile():
     proj_csharp_out = u.get_res('Scripts/ProtoGenerated/')
     if not u.exists(proj_csharp_out):
         u.mkdir(proj_csharp_out)
-    # proj_pb_out = u.get_res('AssetBundle/Data/pbdef.bytes')
+    proj_pb_out = u.get_res('Proto/pbdef.bytes')
     # for python
     # python_out = u.get_script('res/pb')
 
@@ -125,7 +125,7 @@ def do_compile():
     # generate_csharp([noah_pb_path], noah_csharp_out, [noah_pb_path])
     
     # for project
-    # generate_descriptor([proj_pb_path], proj_pb_out, [proj_pb_path, noah_pb_path])
+    generate_descriptor([proj_pb_path], proj_pb_out, [proj_pb_path])
     generate_csharp([proj_pb_path], proj_csharp_out, [proj_pb_path])
 
     # for python

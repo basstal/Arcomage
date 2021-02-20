@@ -2,3 +2,7 @@ syntax = "proto3";
 
 message ActionUseCardRandomly {
 }
+
+message ActionWait {
+    float waitTime = 1;
+}

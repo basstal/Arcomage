@@ -22,11 +22,13 @@ public static partial class BevTreeExtReflection {
   static BevTreeExtReflection() {
     byte[] descriptorData = {
       0x0A, 0x10, 0x42, 0x65, 0x76, 0x54, 0x72, 0x65, 0x65, 0x45, 0x78, 0x74, 0x2E, 0x70, 0x72, 0x6F, 0x74, 0x6F, 0x22, 0x17, 0x0A, 0x15, 0x41, 0x63, 0x74, 0x69, 0x6F, 0x6E, 0x55, 0x73, 0x65, 0x43, 
-      0x61, 0x72, 0x64, 0x52, 0x61, 0x6E, 0x64, 0x6F, 0x6D, 0x6C, 0x79, 0x62, 0x06, 0x70, 0x72, 0x6F, 0x74, 0x6F, 0x33, };
+      0x61, 0x72, 0x64, 0x52, 0x61, 0x6E, 0x64, 0x6F, 0x6D, 0x6C, 0x79, 0x22, 0x1E, 0x0A, 0x0A, 0x41, 0x63, 0x74, 0x69, 0x6F, 0x6E, 0x57, 0x61, 0x69, 0x74, 0x12, 0x10, 0x0A, 0x08, 0x77, 0x61, 0x69, 
+      0x74, 0x54, 0x69, 0x6D, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x02, 0x62, 0x06, 0x70, 0x72, 0x6F, 0x74, 0x6F, 0x33, };
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::ActionUseCardRandomly), global::ActionUseCardRandomly.Parser, null, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::ActionUseCardRandomly), global::ActionUseCardRandomly.Parser, null, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ActionWait), global::ActionWait.Parser, new[]{ "WaitTime" }, null, null, null, null)
         }));
   }
   #endregion
@@ -128,6 +130,135 @@ public sealed partial class ActionUseCardRandomly : pb::IMessage<ActionUseCardRa
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
+      }
+    }
+  }
+
+}
+
+public sealed partial class ActionWait : pb::IMessage<ActionWait> {
+  private static readonly pb::MessageParser<ActionWait> _parser = new pb::MessageParser<ActionWait>(() => new ActionWait());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<ActionWait> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::BevTreeExtReflection.Descriptor.MessageTypes[1]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public ActionWait() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public ActionWait(ActionWait other) : this() {
+    waitTime_ = other.waitTime_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public ActionWait Clone() {
+    return new ActionWait(this);
+  }
+
+  /// <summary>Field number for the "waitTime" field.</summary>
+  public const int WaitTimeFieldNumber = 1;
+  private float waitTime_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public float WaitTime {
+    get { return waitTime_; }
+    set {
+      waitTime_ = value;
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as ActionWait);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(ActionWait other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(WaitTime, other.WaitTime)) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (WaitTime != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(WaitTime);
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (WaitTime != 0F) {
+      output.WriteRawTag(13);
+      output.WriteFloat(WaitTime);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (WaitTime != 0F) {
+      size += 1 + 4;
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(ActionWait other) {
+    if (other == null) {
+      return;
+    }
+    if (other.WaitTime != 0F) {
+      WaitTime = other.WaitTime;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 13: {
+          WaitTime = input.ReadFloat();
+          break;
+        }
       }
     }
   }

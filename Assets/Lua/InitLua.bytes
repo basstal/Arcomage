@@ -5,6 +5,8 @@ require("Internal/Extension")
 require("Internal/Log")
 -- strict 严格全局变量检查
 require("Internal/Strict")
+require("Internal/JSON")
+require("Internal/Protobuf")
 -- makeRef
 -- require("Internal/RefInject")
 -- DataBinding as DB

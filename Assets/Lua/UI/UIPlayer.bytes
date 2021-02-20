@@ -54,7 +54,20 @@ end
 function Start()
     OnRefresh()
     local key = string.format("Player%s", GamePlayerCS.playerID)
+    _ENV.bevTreeEnabled = false
+    if GamePlayerCS.useAI then
+        local BevTree = require("AI/BevTree/BevTree")
+        _ENV.bevTree = BevTree.CreateBevTreeBytes("Assets/Data/AI/UseCard.bytes", {})
+        _ENV.bevTree:Init()
+    end
     DB.SetData(key, _ENV)
+end
+
+function Update()
+    if _ENV.bevTreeEnabled then
+        local delta = CS.UnityEngine.Time.deltaTime
+        _ENV.bevTree:Run(delta)
+    end
 end
 
 function OnRefresh()

@@ -144,7 +144,8 @@ function PlayerRound()
     CurrentStage = nil
     local player = DB.GetData("Player{CurrentPlayer}")
     if player.GamePlayerCS.useAI then
-        player.REF.AI:StartBehaviourForLua()
+        player.bevTree:Reset()
+        player.bevTreeEnabled = true
     end
 end
 

@@ -1,0 +1,287 @@
+local pb = require("pb")
+
+local pbdef = CS.System.IO.File.ReadAllBytes("Assets/Proto/pbdef.bytes")
+pb.load(pbdef)
+
+pb.option("use_default_metatable")
+pb.option("enum_as_value")
+
+function PBEncode(protobuf_type_name, lua_table)
+    local ret, msg = pb.encode(protobuf_type_name, lua_table)
+    if ret == nil then
+        error("Protobuf", msg)
+    end
+    return ret
+end
+
+function PBDecode(protobuf_type_name, bytes)
+    local ret, msg = pb.decode(protobuf_type_name, bytes)
+    if ret == nil then
+        error("Protobuf", msg)
+    end
+    return ret
+end
+
+function PBMarkAs(protobuf_type_name, lua_table)
+    lua_table.__prototype = protobuf_type_name
+    return lua_table
+end
+
+function PBInherit(prototype, data, mutable)
+    local mt
+    local status, ret = pcall(pb.defaults, prototype)
+    if status == false then
+        error("protobuf.bytes", "prototype : " .. tostring(prototype))
+    end
+    if mutable then
+        mt = ret
+    else
+        mt = {
+            __index = ret,
+            __newindex = function()
+                error("Xlsx", "Attempt to modify read-only table")
+            end
+        }
+    end
+    data.__prototype = prototype
+    return setmetatable(data, mt)
+end
+
+function PBClone(data, pb_type)
+    if data ~= nil then
+        if pb_type == nil then
+            pb_type = data.__prototype
+        end
+
+        local cloned = {}
+
+        local isPrimitive = type(data) ~= "table"
+        if isPrimitive then -- if it's primitive(or enum), set value directly
+            cloned = data
+        else
+            if pb_type ~= nil then
+                cloned = PBInherit(pb_type, {}, true) or {}
+            end
+
+            for k, v in pairs(data) do
+                if type(v) ~= "table" then
+                    if k ~= "__prototype" then
+                        cloned[k] = v
+                    end
+                else
+                    local _, _, innertype, _, innerlabel = pb.field(pb_type, k)
+                    if innerlabel == "repeated" or innerlabel == "packed" then
+                        cloned[k] = {}
+                        for _k, _v in pairs(v) do
+                            cloned[k][_k] = PBClone(_v, innertype)
+                        end
+                    else
+                        cloned[k] = PBClone(v, innertype)
+                    end
+                end
+            end
+        end
+
+        return cloned
+    end
+end
+
+-- Format items for the purpose of restoring
+local writers = {
+    ["number"] = function(item)
+        local numbertype = math.type(item)
+        if numbertype == "integer" then
+            return string.format("%d", item)
+        end
+        if numbertype == "fixed" then
+            return string.format("%.3fF", item)
+        end
+        if numbertype == "float" then
+            return string.format("%.3f", item)
+        end
+    end,
+    ["string"] = function(item)
+        return string.format("%q", item)
+    end,
+    ["boolean"] = function(item)
+        if item then
+            return "true"
+        else
+            return "false"
+        end
+    end
+}
+
+-- ** 仅用来快速检查有效数据（不能在实际生产中用，因为逻辑代码中很多地方多message没有判空直接用了）
+-- ** 1 普通格式 输出所有空的messgae为空表
+-- ** 2 快速检查有效数据 滤过所有空表
+local DumpMessageOption = 1
+
+local function DumpMessage(dataType, data, result, isRepeated, level)
+    local isEmpty = true
+    level = level or 1
+    local indent = string.rep("\t", level)
+    local keys = {}
+    for k in pairs(data) do
+        table.insert(keys, k)
+    end
+    table.sort(keys)
+
+    local lastWords = result[#result]
+    local prototype = pb.type(dataType)
+
+    local startContent = string.format('PBInherit("%s", {', dataType)
+    if isRepeated then
+        startContent = "{"
+    end
+    if lastWords ~= nil and string.match(lastWords, "^.*=%s*$") ~= nil then
+        -- ** 没有indent  直接接在尾部 这样看起来更精简
+        result[#result] = lastWords .. startContent
+    else
+        table.insert(result, indent .. startContent)
+    end
+    level = level + 1
+    indent = string.rep("\t", level)
+    for index, k in ipairs(keys) do
+        local kStr = string.format('%s["%s"] = ', indent, k)
+        if isRepeated then
+            kStr = string.format("%s[%s] = ", indent, index)
+        end
+        local v = data[k]
+        if type(v) == "table" then
+            if not table.empty(v) or DumpMessageOption == 1 then
+                local tableResult = {}
+                table.insert(tableResult, kStr)
+                local isSubEmpty
+                if isRepeated then
+                    isSubEmpty = DumpMessage(dataType, v, tableResult, false, level)
+                else
+                    local _, innertype, innerlabel
+                    if prototype ~= nil then
+                        _, _, innertype, _, innerlabel = pb.field(prototype, k)
+                    end
+                    isSubEmpty =
+                        DumpMessage(
+                        innertype,
+                        v,
+                        tableResult,
+                        innerlabel == "repeated" or innerlabel == "packed",
+                        level
+                    )
+                end
+                if not isSubEmpty or DumpMessageOption == 1 then
+                    table.append(result, tableResult)
+                    result[#result] = result[#result] .. ","
+                    isEmpty = false
+                end
+            end
+        elseif writers[type(v)] ~= nil then
+            local vStr = writers[type(v)](v)
+            table.insert(result, kStr .. tostring(vStr))
+            result[#result] = result[#result] .. ","
+            isEmpty = false
+        else
+            error("PBDump", string.format("unhandled type : %s", type(v)))
+        end
+    end
+    level = level - 1
+    indent = string.rep("\t", level)
+    local seal = isRepeated and "}" or "})"
+    if not isEmpty then
+        table.insert(result, string.format("%s%s", indent, seal))
+    else
+        result[#result] = result[#result] .. seal
+    end
+    return isEmpty
+end
+
+function PBDump(dataType, data, option)
+    local result = {}
+    if option > 0 then
+        DumpMessageOption = option
+    end
+    DumpMessage(dataType, data, result)
+    return table.concat(result, "\n")
+end
+
+local function create_enum(enum_name)
+    local full_enum_name = nil
+    local candidates = {"." .. enum_name, "NOAH.Proto." .. enum_name}
+    for _, v in ipairs(candidates) do
+        if pb.type(v) ~= nil then
+            full_enum_name = v
+            break
+        end
+    end
+
+    local segs = string.split(enum_name, ".")
+    local enum_prefix = segs[#segs]
+    local prefixes = {enum_prefix .. "_", enum_prefix}
+
+    local enum_table =
+        setmetatable(
+        {},
+        {
+            __index = function(this, key)
+                local value = pb.enum(full_enum_name, key)
+                if value == nil then
+                    for i = 1, #prefixes do
+                        local prefix = prefixes[i]
+                        value = pb.enum(full_enum_name, prefix .. key)
+                        if value ~= nil then
+                            break
+                        end
+                    end
+                end
+                rawset(this, key, value)
+                return value
+            end,
+            __pairs = function(this)
+                local fields = rawget(this, "__enum_fields")
+                if fields == nil then
+                    fields = {}
+                    for key, value, _ in pb.fields(full_enum_name) do
+                        fields[key] = value
+                    end
+                    rawset(this, "__enum_fields", fields)
+                end
+                return next, fields, nil
+            end
+        }
+    )
+
+    enum_table.__keys =
+        setmetatable(
+        {},
+        {
+            __index = function(this, value)
+                local key = pb.enum(full_enum_name, value)
+                if key ~= nil then
+                    for i = 1, #prefixes do
+                        local prefix = prefixes[i]
+                        if key:starts(prefix) then
+                            key = key:sub(prefix:len() + 1)
+                            break
+                        end
+                    end
+                end
+                rawset(this, value, key)
+                return key
+            end
+        }
+    )
+
+    return enum_table
+end
+
+PBEnum =
+    setmetatable(
+    {},
+    {
+        __index = function(this, enum_name)
+            local enum_table = create_enum(enum_name)
+            rawset(this, enum_name, enum_table)
+            return enum_table
+        end
+    }
+)

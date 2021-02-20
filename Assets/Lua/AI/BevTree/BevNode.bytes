@@ -1,4 +1,4 @@
-local BevConst = require("BevTree/BevConst")
+local BevConst = require("AI/BevTree/BevConst")
 
 -- local NodeIdSequence = 1
 local BevNode = {}
@@ -24,7 +24,7 @@ function BevNode.ctor(nodeType, data)
     -- node.id = NodeIdSequence + 1
     -- NodeIdSequence = node.id
     node.name = "BevNode"
-    node.nodeType = PBEnum["CodeEditor.BevNodeType"].None
+    -- node.nodeType = PBEnum["CodeEditor.BevNodeType"].None
     if data ~= nil then
         -- if data.decorates ~= nil then
         --     for _, decorate in pairs(data.decorates) do
@@ -73,9 +73,19 @@ function BevNode:Run()
     return BevConst.RunState.Finished
 end
 
-function BevNode:AddChild(child)
-    self.children[#self.children + 1] = child
-    child.parent = self
+function BevNode:AddOrReplaceChild(c)
+    local replaced = false
+    for k, child in pairs(self.children) do
+        if child.uid == c.uid then
+            self.children[k] = c
+            replaced = true
+            break
+        end
+    end
+    if not replaced then
+        self.children[#self.children + 1] = c
+    end
+    c.parent = self
 end
 
 function BevNode:Root()
@@ -117,57 +127,57 @@ function BevNode:LogRecordSub(ret)
 end
 
 function BevNode:LogRecord(ret)
-    if __UNITY_EDITOR and not self.skipLog then
-        local root = self:Root()
-        local topNode = root.historyLogCache[#root.historyLogCache]
-        if topNode == nil or topNode.id ~= self.id then
-            local id = self.id - root.id + 1
-            if root.changeColor then
-                root.colorIndex = root.colorIndex % #BevConst.ColorRichText + 1
-                root.changeColor = false
-            end
-            local content =
-                string.format(
-                "<color=%s>[%d](%s)(%s)%s : %s  </color>",
-                BevConst.ColorRichText[root.colorIndex],
-                root.frameInfo,
-                BevConst.RunStateN[ret],
-                self.remark,
-                self.name,
-                id
-            )
-            local debugInfo = {}
-            if self.debugInfo ~= nil then
-                table.copy(self.debugInfo, debugInfo, true)
-            end
-            local cache = {
-                id = id,
-                content = content,
-                subContent = subCache,
-                debugInfo = debugInfo
-            }
-            subCache = {}
-            table.insert(root.historyLogCache, 1, cache)
-            if #root.historyLogCache >= 100 then
-                root.historyLog = root.historyLogCache
-                root.historyLogCache = {}
-            end
-        end
-    end
+    -- if __UNITY_EDITOR and not self.skipLog then
+    --     local root = self:Root()
+    --     local topNode = root.historyLogCache[#root.historyLogCache]
+    --     if topNode == nil or topNode.id ~= self.id then
+    --         local id = self.id - root.id + 1
+    --         if root.changeColor then
+    --             root.colorIndex = root.colorIndex % #BevConst.ColorRichText + 1
+    --             root.changeColor = false
+    --         end
+    --         local content =
+    --             string.format(
+    --             "<color=%s>[%d](%s)(%s)%s : %s  </color>",
+    --             BevConst.ColorRichText[root.colorIndex],
+    --             root.frameInfo,
+    --             BevConst.RunStateN[ret],
+    --             self.remark,
+    --             self.name,
+    --             id
+    --         )
+    --         local debugInfo = {}
+    --         if self.debugInfo ~= nil then
+    --             table.copy(self.debugInfo, debugInfo, true)
+    --         end
+    --         local cache = {
+    --             id = id,
+    --             content = content,
+    --             subContent = subCache,
+    --             debugInfo = debugInfo
+    --         }
+    --         subCache = {}
+    --         table.insert(root.historyLogCache, 1, cache)
+    --         if #root.historyLogCache >= 100 then
+    --             root.historyLog = root.historyLogCache
+    --             root.historyLogCache = {}
+    --         end
+    --     end
+    -- end
 end
 
-local DecorateRun = {
-    [PBEnum["CodeEditor.DecorateType"].None] = function(ret)
-        return ret
-    end,
-    [PBEnum["CodeEditor.DecorateType"].Not] = function(ret)
-        if ret == BevConst.RunState.Finished then
-            return BevConst.RunState.Failed
-        elseif ret == BevConst.RunState.Failed then
-            return BevConst.RunState.Finished
-        end
-    end
-}
+-- local DecorateRun = {
+--     [PBEnum["CodeEditor.DecorateType"].None] = function(ret)
+--         return ret
+--     end,
+--     [PBEnum["CodeEditor.DecorateType"].Not] = function(ret)
+--         if ret == BevConst.RunState.Finished then
+--             return BevConst.RunState.Failed
+--         elseif ret == BevConst.RunState.Failed then
+--             return BevConst.RunState.Finished
+--         end
+--     end
+-- }
 
 -- function BevNode:RunDecorate(ret)
 --     for _, decorate in pairs(self.decorates) do

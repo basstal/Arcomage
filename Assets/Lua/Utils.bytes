@@ -143,8 +143,9 @@ function U.PlayerResourceGrowthAll(player)
 end
 
 function U.ValidCardCost(player, card)
-    warning("player, card", vardump(player, card))
-    return false
+    local costData = card.cost
+    local left = U.HandleCost(player, costData.type, costData.count)
+    return left >= 0
 end
 
 return U
