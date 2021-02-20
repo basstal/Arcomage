@@ -247,7 +247,7 @@ function table:dump(depth, indentStr)
                     if type(v) == "table" then
                         if not visited[v] then
                             visited[v] = true
-                            if table.empty(v) then
+                            if next(v) == nil then
                                 table.insert(segs, "{}")
                             else
                                 print_table_impl(v, indentCount + 1)
@@ -360,13 +360,6 @@ end
 --     end
 --     return result
 -- end
-
-function table.empty(t)
-    for _ in pairs(t) do
-        return false
-    end
-    return true
-end
 
 -- function table:mergefrom(...)
 --     for v, targetTable in pairs({...}) do

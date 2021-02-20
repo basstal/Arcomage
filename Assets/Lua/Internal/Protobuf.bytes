@@ -149,7 +149,7 @@ local function DumpMessage(dataType, data, result, isRepeated, level)
         end
         local v = data[k]
         if type(v) == "table" then
-            if not table.empty(v) or DumpMessageOption == 1 then
+            if next(v) ~= nil or DumpMessageOption == 1 then
                 local tableResult = {}
                 table.insert(tableResult, kStr)
                 local isSubEmpty
