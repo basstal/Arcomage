@@ -87,3 +87,4 @@ Assets/Externals/xLua/Generated/
 Assets/Externals/xLua/Generated.meta
 
 *.pyc
+.vscode
