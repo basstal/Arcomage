@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Prism
+  m_EditorClassIdentifier: 
+  cardName: Prism
+  cardName_cn: "\u68F1\u955C"
+  id: 39
+  costType: 3
+  cost: 2
+  logic: {fileID: 11400000, guid: 00afc5c09954797489636e7ec0c84c5f, type: 2}
+  luaSource: "function(player)\nreturn {playAgain = true}\n        end"
+  describe_en: Draw 1 card Discard 1 card Play again
+  describe_cn: "\u62BD\u4E00\u5F20\u5361\n\u6254\u4E00\u5F20\u5361\n\u518D\u6765\u4E00\u6B21"
+  sprite: {fileID: 836262810560953326, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

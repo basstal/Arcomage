@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Discord
+  m_EditorClassIdentifier: 
+  cardName: Discord
+  cardName_cn: "\u4E0D\u548C\u8C10"
+  id: 54
+  costType: 3
+  cost: 5
+  logic: {fileID: 11400000, guid: 77216e041d653224cac2ddf7e10d5bf5, type: 2}
+  luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nU.GrowthChange(player,
+    ResourceType.Gem, -1)\nU.GrowthChange(target, ResourceType.Gem, -1)\nU.CauseDamage(player,
+    7, true)\nU.CauseDamage(target, 7, true)\n        end"
+  describe_en: 7 Damage to all towers, all player's magic -1
+  describe_cn: "\u53CC\u65B9\u5854\u697C -7\n\u53CC\u65B9\u5B9D\u77F3 -1"
+  sprite: {fileID: -7012814685275929695, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

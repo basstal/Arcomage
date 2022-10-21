@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: GoblinArchers
+  m_EditorClassIdentifier: 
+  cardName: GoblinArchers
+  cardName_cn: "\u5730\u7CBE\u5C04\u624B"
+  id: 75
+  costType: 2
+  cost: 4
+  logic: {fileID: 11400000, guid: b50962967f1d0174ba894006e59da377, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 3, true)\nlocal target = U.GetEnemyPlayer(player)\nU.CauseDamage(target,
+    1)\n        end"
+  describe_en: 3 Damage to enemy tower You take 1 damage
+  describe_cn: "\u5BF9\u65B9\u5854\u697C -3\n\u53D7\u5230 1 \u4F24\u5BB3"
+  sprite: {fileID: 3059883469999438828, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

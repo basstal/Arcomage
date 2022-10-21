@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: ElvenScout
+  m_EditorClassIdentifier: 
+  cardName: ElvenScout
+  cardName_cn: "\u7CBE\u7075\u4FA6\u5BDF\u5175"
+  id: 73
+  costType: 2
+  cost: 2
+  logic: {fileID: 11400000, guid: 6ee52063ed4c9ef458490c5d78c6e426, type: 2}
+  luaSource: "function(player)\nreturn {playAgain = true}\n        end"
+  describe_en: Draw 1 card Discard 1 card Play again
+  describe_cn: "\u62BD\u4E00\u5F20\u5361\n\u6254\u4E00\u5F20\u5361\n\u518D\u6765\u4E00\u6B21"
+  sprite: {fileID: -6971321840773335811, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Innovations
+  m_EditorClassIdentifier: 
+  cardName: Innovations
+  cardName_cn: "\u77FF\u5DE5\u5347\u7EA7"
+  id: 11
+  costType: 1
+  cost: 2
+  logic: {fileID: 11400000, guid: 6de219ff878c44147bcc4c9c5f6dcabd, type: 2}
+  luaSource: "function(player)\nU.GrowthChange(player, ResourceType.Brick, 1)\nlocal
+    target = U.GetEnemyPlayer(player)\nU.GrowthChange(target, ResourceType.Brick,
+    1)\nU.ResChange(player, ResourceType.Gem, 4)\n        end"
+  describe_en: +1 To all player's quarrys, you gain 4 gems
+  describe_cn: "+1 \u53CC\u65B9\u7816\u5757\u4EA7\u91CF\n+4 \u5B9D\u77F3"
+  sprite: {fileID: 2975849240591541955, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

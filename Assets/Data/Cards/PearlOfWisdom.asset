@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: PearlOfWisdom
+  m_EditorClassIdentifier: 
+  cardName: PearlOfWisdom
+  cardName_cn: "\u667A\u6167\u660E\u73E0"
+  id: 50
+  costType: 3
+  cost: 9
+  logic: {fileID: 11400000, guid: eab885a015b5ad647b401069072dc6d0, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 5)\nU.GrowthChange(player,
+    ResourceType.Gem, 1)\n        end"
+  describe_en: +5 Tower +1 Magic
+  describe_cn: "+5 \u5854\u697C\n+1 \u5B9D\u77F3"
+  sprite: {fileID: 5125170831202582444, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

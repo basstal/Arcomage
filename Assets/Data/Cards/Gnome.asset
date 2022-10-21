@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Gnome
+  m_EditorClassIdentifier: 
+  cardName: Gnome
+  cardName_cn: "\u4F8F\u5112"
+  id: 99
+  costType: 2
+  cost: 2
+  logic: {fileID: 11400000, guid: 135906a6d299ae74d8880644487d2f43, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 3)\nU.ResChange(player, ResourceType.Gem,
+    1)\n        end"
+  describe_en: 3 Damage +1 gem
+  describe_cn: "3 \u4F24\u5BB3\n+1 \u5B9D\u77F3\u4EA7\u91CF"
+  sprite: {fileID: 2117089487733031850, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

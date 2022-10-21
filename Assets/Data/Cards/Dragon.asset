@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Dragon
+  m_EditorClassIdentifier: 
+  cardName: Dragon
+  cardName_cn: "\u9F99"
+  id: 97
+  costType: 2
+  cost: 25
+  logic: {fileID: 11400000, guid: b37815d95f84b614fa62528a7795830c, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 20)\nlocal target = U.GetEnemyPlayer(player)\nU.ResChange(target,
+    ResourceType.Gem, -10)\nU.GrowthChange(target, ResourceType.Recruit, -1)\n       
+    end"
+  describe_en: 20 Damage Enemy loses 10 gems,-1 enemy Dungeon
+  describe_cn: "\u5BF9\u65B9\u602A\u517D\u4EA7\u91CF -1\n\u5BF9\u65B9\u5B9D\u77F3
+    -10\n20 \u4F24\u5BB3"
+  sprite: {fileID: -8900979821859890144, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

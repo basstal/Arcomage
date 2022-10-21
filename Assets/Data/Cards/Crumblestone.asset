@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Crumblestone
+  m_EditorClassIdentifier: 
+  cardName: Crumblestone
+  cardName_cn: "\u788E\u77F3"
+  id: 52
+  costType: 3
+  cost: 7
+  logic: {fileID: 11400000, guid: f94aa644e533d514f83344987dd3fb35, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 5)\nlocal target
+    = U.GetEnemyPlayer(player)\nU.ResChange(target, ResourceType.Brick, -6)\n       
+    end"
+  describe_en: +5 Tower Enemy loses 6 bricks
+  describe_cn: "+5 \u5854\u697C\n\u5BF9\u65B9\u7816\u5757 -6"
+  sprite: {fileID: -1304566618446825538, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

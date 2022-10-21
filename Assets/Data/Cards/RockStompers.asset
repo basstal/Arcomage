@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: RockStompers
+  m_EditorClassIdentifier: 
+  cardName: RockStompers
+  cardName_cn: "\u6447\u6EDA\u8DF5\u8E0F\u8005"
+  id: 93
+  costType: 2
+  cost: 11
+  logic: {fileID: 11400000, guid: 4cd8f2c3935621348b016f3455e8ca73, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 8)\nlocal target = U.GetEnemyPlayer(player)\nU.GrowthChange(target,
+    ResourceType.Brick, -1)\n        end"
+  describe_en: 8 Damage -1 Enemy quarry
+  describe_cn: "8 \u4F24\u5BB3\n\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF -1"
+  sprite: {fileID: 7328442257296911904, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

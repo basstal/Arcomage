@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Succubus
+  m_EditorClassIdentifier: 
+  cardName: Succubus
+  cardName_cn: "\u9B45\u9B54"
+  id: 92
+  costType: 2
+  cost: 14
+  logic: {fileID: 11400000, guid: 8d2a0a94f1b3ccd4d9697ff869655fd0, type: 2}
+  luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nU.ResChange(target,
+    ResourceType.Recruit, -8)\nU.CauseDamage(player, 5, true)\n        end"
+  describe_en: 5 Damage to enemy tower enemy loses 8 recruits
+  describe_cn: "\u5BF9\u65B9\u5854\u697C -5\n\u5BF9\u65B9\u602A\u517D -8"
+  sprite: {fileID: -3496864229965075763, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

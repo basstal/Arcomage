@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: MoodyGoblins
+  m_EditorClassIdentifier: 
+  cardName: MoodyGoblins
+  cardName_cn: "\u7A46\u8FEA\xB7\u54E5\u5E03\u6797"
+  id: 71
+  costType: 2
+  cost: 1
+  logic: {fileID: 11400000, guid: 72af028a0189b474796df647fac6a0aa, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 4)\nU.ResChange(player, ResourceType.Gem,
+    -3)\n        end"
+  describe_en: 4 Damage You lose 3 gems
+  describe_cn: "4 \u4F24\u5BB3\n\u5B9D\u77F3 -3"
+  sprite: {fileID: -5638288592208543861, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

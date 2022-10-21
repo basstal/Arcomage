@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: TowerGremlin
+  m_EditorClassIdentifier: 
+  cardName: TowerGremlin
+  cardName_cn: "\u5854\u514B\u91CC\u59C6\u6797\u5BAB"
+  id: 81
+  costType: 2
+  cost: 8
+  logic: {fileID: 11400000, guid: 512d9f7992a446c4fb8662056470c570, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 2)\nU.BuildingChange(player,
+    \"Wall\", 4)\nU.BuildingChange(player, \"Castle\", 2)\n        end"
+  describe_en: 2 Damage +4 Wall +2 Tower
+  describe_cn: "2 \u4F24\u5BB3\n+4 \u57CE\u5899\n+2 \u5854\u697C"
+  sprite: {fileID: 6076032202238646306, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

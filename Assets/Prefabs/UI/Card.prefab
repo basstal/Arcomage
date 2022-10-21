@@ -30,6 +30,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8848157475479896559}
   m_Father: {fileID: 4349518190728411049}
@@ -119,6 +120,7 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 0
+  autoGenerate: 1
   isActive: 1
   isValid: 1
   target: {fileID: 913006144690914212}
@@ -153,6 +155,7 @@ MonoBehaviour:
     height: 0
   fromValueTransform: {fileID: 0}
   optionalBool0: 0
+  optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0
   optionalRotationMode: 0
@@ -237,6 +240,7 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 0
+  autoGenerate: 1
   isActive: 1
   isValid: 1
   target: {fileID: 913006144690914212}
@@ -271,6 +275,7 @@ MonoBehaviour:
     height: 0
   fromValueTransform: {fileID: 0}
   optionalBool0: 0
+  optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0
   optionalRotationMode: 0
@@ -355,6 +360,7 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 0
+  autoGenerate: 1
   isActive: 1
   isValid: 1
   target: {fileID: 7352376329461993687}
@@ -389,6 +395,7 @@ MonoBehaviour:
     height: 0
   fromValueTransform: {fileID: 0}
   optionalBool0: 0
+  optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0
   optionalRotationMode: 0
@@ -434,6 +441,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 5
@@ -466,14 +474,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0a368502f5d94914da35fa116f1802ab, type: 2}
-  m_sharedMaterial: {fileID: 3635368420925104073, guid: 0a368502f5d94914da35fa116f1802ab,
+  m_fontAsset: {fileID: 11400000, guid: 8a449af15ada169419d4d4443dbf2e7b, type: 2}
+  m_sharedMaterial: {fileID: 6995025655321820519, guid: 8a449af15ada169419d4d4443dbf2e7b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -495,9 +504,9 @@ MonoBehaviour:
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
+  m_faceColor: {r: 1, g: 1, b: 1, a: 1}
+  m_typeWriterPosition: 0
+  m_typeWriterRange: 0
   m_fontSize: 12
   m_fontSizeBase: 12
   m_fontWeight: 400
@@ -568,6 +577,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 6
@@ -600,14 +610,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: 999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0a368502f5d94914da35fa116f1802ab, type: 2}
-  m_sharedMaterial: {fileID: 3635368420925104073, guid: 0a368502f5d94914da35fa116f1802ab,
+  m_fontAsset: {fileID: 11400000, guid: 8a449af15ada169419d4d4443dbf2e7b, type: 2}
+  m_sharedMaterial: {fileID: 6995025655321820519, guid: 8a449af15ada169419d4d4443dbf2e7b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -629,9 +640,9 @@ MonoBehaviour:
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
+  m_faceColor: {r: 1, g: 1, b: 1, a: 1}
+  m_typeWriterPosition: 0
+  m_typeWriterRange: 0
   m_fontSize: 30
   m_fontSizeBase: 30
   m_fontWeight: 400
@@ -702,6 +713,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 3
@@ -734,14 +746,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: Reinforced Wall
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0a368502f5d94914da35fa116f1802ab, type: 2}
-  m_sharedMaterial: {fileID: 3635368420925104073, guid: 0a368502f5d94914da35fa116f1802ab,
+  m_fontAsset: {fileID: 11400000, guid: 8a449af15ada169419d4d4443dbf2e7b, type: 2}
+  m_sharedMaterial: {fileID: 6995025655321820519, guid: 8a449af15ada169419d4d4443dbf2e7b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -763,9 +776,9 @@ MonoBehaviour:
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
+  m_faceColor: {r: 1, g: 1, b: 1, a: 1}
+  m_typeWriterPosition: 0
+  m_typeWriterRange: 0
   m_fontSize: 12
   m_fontSizeBase: 12
   m_fontWeight: 400
@@ -837,6 +850,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 1
@@ -860,6 +874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -912,6 +927,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -955,6 +971,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 2
@@ -987,6 +1004,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1030,6 +1048,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 4
@@ -1062,6 +1081,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1074,8 +1094,8 @@ MonoBehaviour:
 
     lose 8 bricks'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0a368502f5d94914da35fa116f1802ab, type: 2}
-  m_sharedMaterial: {fileID: 3635368420925104073, guid: 0a368502f5d94914da35fa116f1802ab,
+  m_fontAsset: {fileID: 11400000, guid: 8a449af15ada169419d4d4443dbf2e7b, type: 2}
+  m_sharedMaterial: {fileID: 6995025655321820519, guid: 8a449af15ada169419d4d4443dbf2e7b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1097,9 +1117,9 @@ MonoBehaviour:
   m_StyleSheet: {fileID: 0}
   m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
+  m_faceColor: {r: 1, g: 1, b: 1, a: 1}
+  m_typeWriterPosition: 0
+  m_typeWriterRange: 0
   m_fontSize: 12
   m_fontSizeBase: 12
   m_fontWeight: 400
@@ -1151,9 +1171,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4349518190728411049}
-  - component: {fileID: 1340067990066555513}
   - component: {fileID: 6951659503514104550}
   - component: {fileID: 5314714062505722121}
+  - component: {fileID: 1318166746207226524}
+  - component: {fileID: 1875801536180677014}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -1171,6 +1192,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 913006144690914212}
   m_Father: {fileID: 0}
@@ -1181,42 +1203,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 134}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1340067990066555513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6407823995055015468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e9a980c7e01587438079795ea9a5aa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  script: UI/UICard
-  injections:
-  - name: UseCardButton
-    value: {fileID: 4027142120998796341}
-  - name: CardImage
-    value: {fileID: 805074011728617513}
-  - name: CardExtent
-    value: {fileID: 7208522586949556454}
-  - name: CardNameTMP
-    value: {fileID: 8160283328278567151}
-  - name: CardDescribeTMP
-    value: {fileID: 4442772478350931463}
-  - name: CardCostTMP
-    value: {fileID: 3888378973330498820}
-  - name: UseCardButtonImage
-    value: {fileID: 7444108209312319179}
-  - name: Disappear
-    value: {fileID: 8339419201928358634}
-  - name: DrawCard
-    value: {fileID: 256921124482028745}
-  - name: DisappearEnd
-    value: {fileID: 5146243337515554481}
-  - name: Debug
-    value: {fileID: 1120891740823498365}
 --- !u!114 &6951659503514104550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,8 +1216,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: {fileID: 5678986542203090707}
-  costType: 0
-  cost: 0
+  useCardButton: {fileID: 8542265455488608028}
+  cardImage: {fileID: 805074011728617513}
+  costTypeImage: {fileID: 7444108209312319179}
+  cardNameText: {fileID: 8160283328278567151}
+  cardDescribeText: {fileID: 4442772478350931463}
+  cardCostText: {fileID: 3888378973330498820}
+  cardExtentImage: {fileID: 2458767164919460986}
+  disappearTweenAnimation: {fileID: 8339419201928358634}
 --- !u!222 &5314714062505722121
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1240,6 +1232,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6407823995055015468}
   m_CullTransparentMesh: 0
+--- !u!114 &1318166746207226524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6407823995055015468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
+--- !u!114 &1875801536180677014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6407823995055015468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fe5546f775c47d2820aa5e8a715f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"nest":{"source":"Macro","macro":null,"embed":null}}'
+    _objectReferences: []
 --- !u!1 &6435942477923279000
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,6 +1291,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8087806060019154859}
   - {fileID: 2184098024542808600}
@@ -1322,6 +1345,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8339419201928358634}
+        m_TargetAssemblyTypeName: 
         m_MethodName: DOPlayById
         m_Mode: 5
         m_Arguments:
@@ -1375,6 +1399,7 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 0
+  autoGenerate: 1
   isActive: 1
   isValid: 1
   target: {fileID: 8848157475479896559}
@@ -1409,6 +1434,7 @@ MonoBehaviour:
     height: 0
   fromValueTransform: {fileID: 0}
   optionalBool0: 0
+  optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0
   optionalRotationMode: 0
@@ -1502,6 +1528,7 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 0
+  autoGenerate: 1
   isActive: 1
   isValid: 1
   target: {fileID: 8848157475479896559}
@@ -1536,6 +1563,7 @@ MonoBehaviour:
     height: 0
   fromValueTransform: {fileID: 0}
   optionalBool0: 0
+  optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0
   optionalRotationMode: 1
@@ -1620,6 +1648,7 @@ MonoBehaviour:
   isFrom: 0
   isIndependentUpdate: 0
   autoKill: 0
+  autoGenerate: 1
   isActive: 1
   isValid: 1
   target: {fileID: 8848157475479896559}
@@ -1654,6 +1683,7 @@ MonoBehaviour:
     height: 0
   fromValueTransform: {fileID: 0}
   optionalBool0: 1
+  optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0
   optionalRotationMode: 0
@@ -1687,6 +1717,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8848157475479896559}
   m_RootOrder: 0
@@ -1719,6 +1750,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

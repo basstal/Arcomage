@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Barracks
+  m_EditorClassIdentifier: 
+  cardName: Barracks
+  cardName_cn: "\u519B\u8425"
+  id: 32
+  costType: 1
+  cost: 10
+  logic: {fileID: 11400000, guid: c9fd52eb0a7c1e64fa0ab5b6bb30e95f, type: 2}
+  luaSource: "function(player)\nU.ResChange(player, ResourceType.Recruit, 6)\nU.BuildingChange(player,
+    \"Wall\", 6)\nlocal target = U.GetEnemyPlayer(player)\nlocal m1g = player.GamePlayerCS.recruitIncRate\nlocal
+    m2g = target.GamePlayerCS.recruitIncRate\nif m1g < m2g then\nU.GrowthChange(player,
+    ResourceType.Recruit, 1)\nend\n        end"
+  describe_en: +6 recruits, +6 Wall, If dungeon < enemy dungeon, +1 dungeon
+  describe_cn: "+6 \u602A\u517D +6 \u57CE\u5899\n\u602A\u517D\u4EA7\u91CF<\u5BF9\u65B9\u602A\u517D\u4EA7\u91CF\n+1
+    \u602A\u517D\u4EA7\u91CF"
+  sprite: {fileID: -2824835690293362544, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

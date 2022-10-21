@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: FocusedDesgns
+  m_EditorClassIdentifier: 
+  cardName: FocusedDesgns
+  cardName_cn: "\u805A\u7126\u8BBE\u8BA1"
+  id: 25
+  costType: 1
+  cost: 15
+  logic: {fileID: 11400000, guid: 24b194422f8156944aa4175e3ae695f9, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Wall\", 8)\nU.BuildingChange(player,
+    \"Castle\", 5)\n        end"
+  describe_en: '+8 Wall
+
+    +5 Tower'
+  describe_cn: "+8 \u57CE\u5899\n+5 \u5854\u697C"
+  sprite: {fileID: 6063370347128411930, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

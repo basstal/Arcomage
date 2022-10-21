@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: FullMoon
+  m_EditorClassIdentifier: 
+  cardName: FullMoon
+  cardName_cn: "\u6EE1\u6708"
+  id: 82
+  costType: 2
+  cost: 0
+  logic: {fileID: 11400000, guid: 63845b0e30a50e844b4c86b7ecb89dbb, type: 2}
+  luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nU.GrowthChange(player,
+    ResourceType.Recruit, 1)\nU.GrowthChange(target, ResourceType.Recruit, 1)\nU.ResChange(player,
+    ResourceType.Recruit, 3)\nU.ResChange(target, ResourceType.Recruit, 3)\n       
+    end"
+  describe_en: +1 to all player's Dungeon You gain 3 recruits
+  describe_cn: "+1 \u53CC\u65B9\u602A\u517D\u4EA7\u91CF\n+3 \u602A\u517D"
+  sprite: {fileID: 4137838327716255550, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

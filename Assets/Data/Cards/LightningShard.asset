@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: LightningShard
+  m_EditorClassIdentifier: 
+  cardName: LightningShard
+  cardName_cn: "\u95EA\u7535\u788E\u7247"
+  id: 67
+  costType: 3
+  cost: 11
+  logic: {fileID: 11400000, guid: be6d6db5b81b28f449d23f53283bb771, type: 2}
+  luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nlocal p2w
+    = target.GamePlayerCS.wall\nlocal p1c = player.GamePlayerCS.tower\nif p1c > p2w
+    then\nU.CauseDamage(player, 16)\nelse\nU.CauseDamage(player, 8, true)\nend\n       
+    end"
+  describe_en: If Tower > enemy Wall, 8 damage to enemy Tower else 8 damage
+  describe_cn: "\u5854\u697C>\u5BF9\u65B9\u57CE\u5899\n\u5BF9\u65B9\u5854\u697C -8\n\u5426\u5219\n8
+    \u4F24\u5BB3"
+  sprite: {fileID: 4925889629097389547, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

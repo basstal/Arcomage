@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: CrystalMatrix
+  m_EditorClassIdentifier: 
+  cardName: CrystalMatrix
+  cardName_cn: "\u6C34\u6676\u77E9\u9635"
+  id: 42
+  costType: 3
+  cost: 6
+  logic: {fileID: 11400000, guid: 52d8ca43f34e48c4ea7c4ac8aedd30df, type: 2}
+  luaSource: "function(player)\nU.ResChange(player, ResourceType.Gem, 1)\nU.BuildingChange(player,
+    \"Castle\", 3)\nlocal target = U.GetEnemyPlayer(player)\n\nU.BuildingChange(target,
+    \"Castle\", 1)\n        end"
+  describe_en: +1 Magic +3 Tower +1 Enemy tower
+  describe_cn: "+1 \u5B9D\u77F3\n+3 \u5854\u697C\n+1 \u5BF9\u65B9\u5854\u697C"
+  sprite: {fileID: 6301238216690363317, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

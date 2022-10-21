@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: FloodWater
+  m_EditorClassIdentifier: 
+  cardName: FloodWater
+  cardName_cn: "\u6D2A\u6C34"
+  id: 31
+  costType: 1
+  cost: 6
+  logic: {fileID: 11400000, guid: c8eda4e86c17cb74882d714e5cc07702, type: 2}
+  luaSource: "function(player)\nlocal w1 = player.GamePlayerCS.wall\nif w1 == 0 then\nU.CauseDamage(player,
+    2, true)\nU.GrowthChange(player, ResourceType.Recruit, -1)\nend\nlocal enemy
+    = U.GetEnemyPlayer(player)\nlocal w2 = enemy.GamePlayerCS.wall\nif w2 == 0 then\nU.CauseDamage(enemy,
+    2, true)\nU.GrowthChange(enemy, ResourceType.Recruit, -1)\nend\n        end"
+  describe_en: Player without Wall are -1 Dungeon and 2 Damage to Tower
+  describe_cn: "\u6CA1\u6709\u57CE\u5899\u7684\u73A9\u5BB6\n\u602A\u517D\u4EA7\u91CF
+    -1\n\u5854\u697C -2"
+  sprite: {fileID: -2655269575169651152, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

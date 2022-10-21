@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Quartz
+  m_EditorClassIdentifier: 
+  cardName: Quartz
+  cardName_cn: "\u77F3\u82F1"
+  id: 35
+  costType: 3
+  cost: 1
+  logic: {fileID: 11400000, guid: cd1b25c43633c0e4285a9307abbd04e3, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 1)\nreturn {playAgain
+    = true}\n        end"
+  describe_en: +1 Tower play again
+  describe_cn: "+1 \u5854\u697C\n\u518D\u6765\u4E00\u6B21"
+  sprite: {fileID: 4455764603347038000, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

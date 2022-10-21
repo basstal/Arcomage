@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Warlord
+  m_EditorClassIdentifier: 
+  cardName: Warlord
+  cardName_cn: "\u519B\u9600"
+  id: 101
+  costType: 2
+  cost: 13
+  logic: {fileID: 11400000, guid: 1feb6379d0bd1eb4fa2a5df659172883, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 13)\nU.ResChange(player, ResourceType.Gem,
+    -3)\n        end"
+  describe_en: 13 Damage you lose 3 gems
+  describe_cn: "13 \u4F24\u5BB3\n\u5B9D\u77F3 -3"
+  sprite: {fileID: -1098599210946049078, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: CrystalShield
+  m_EditorClassIdentifier: 
+  cardName: CrystalShield
+  cardName_cn: "\u6C34\u6676\u76FE"
+  id: 57
+  costType: 3
+  cost: 12
+  logic: {fileID: 11400000, guid: 31f2f4308ff098946b84c5cad6eaa729, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 8)\nU.BuildingChange(player,
+    \"Wall\", 3)\n        end"
+  describe_en: +8 Tower +3 Wall
+  describe_cn: "+8 \u5854\u697C\n+3 \u57CE\u5899"
+  sprite: {fileID: 6695866666733809117, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

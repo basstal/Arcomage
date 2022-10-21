@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Werewolf
+  m_EditorClassIdentifier: 
+  cardName: Werewolf
+  cardName_cn: "\u72FC\u4EBA"
+  id: 88
+  costType: 2
+  cost: 9
+  logic: {fileID: 11400000, guid: 4af9e57389b34a54eac62e03149c6c9b, type: 2}
+  luaSource: "function(player)\nU.CauseDamage(player, 9)\n        end"
+  describe_en: 9 Damage
+  describe_cn: "9 \u4F24\u5BB3"
+  sprite: {fileID: -3184867388090352021, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

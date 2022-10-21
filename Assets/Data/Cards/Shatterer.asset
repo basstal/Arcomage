@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Shatterer
+  m_EditorClassIdentifier: 
+  cardName: Shatterer
+  cardName_cn: "\u7C89\u788E\u8005"
+  id: 51
+  costType: 3
+  cost: 8
+  logic: {fileID: 11400000, guid: 0bd40e4d77e572e44af1b3bbc09a206e, type: 2}
+  luaSource: "function(player)\nU.GrowthChange(player, ResourceType.Gem, -1)\nU.CauseDamage(player,
+    9, true)\n        end"
+  describe_en: -1 Magic. 9 Damage to enemy tower
+  describe_cn: "\u5B9D\u77F3\u4EA7\u91CF -1\n\u5BF9\u65B9\u5854\u697C -9"
+  sprite: {fileID: 7632975744399105376, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

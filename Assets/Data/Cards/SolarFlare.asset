@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: SolarFlare
+  m_EditorClassIdentifier: 
+  cardName: SolarFlare
+  cardName_cn: "\u592A\u9633\u8000\u6591"
+  id: 41
+  costType: 3
+  cost: 4
+  logic: {fileID: 11400000, guid: 6d5d49c6fc6f4804f9e7cd61a7696c18, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 2)\nU.CauseDamage(player,
+    2, true)\n        end"
+  describe_en: +2 Tower 2 Damage to enemy tower
+  describe_cn: "+2 \u5854\u697C\n\u5BF9\u65B9\u5854\u697C -2"
+  sprite: {fileID: 5428176494171219322, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

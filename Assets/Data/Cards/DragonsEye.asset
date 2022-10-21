@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: DragonsEye
+  m_EditorClassIdentifier: 
+  cardName: DragonsEye
+  cardName_cn: "\u9F99\u773C"
+  id: 62
+  costType: 3
+  cost: 21
+  logic: {fileID: 11400000, guid: 67ceda73403d25c4fb7c2b5b96d38000, type: 2}
+  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 20)\n       
+    end"
+  describe_en: +20 Tower
+  describe_cn: "+20 \u5854\u697C"
+  sprite: {fileID: -8862755165969654474, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

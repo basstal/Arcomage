@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f970800d583400e82b16f3679eca78e, type: 3}
+  m_Name: Thief
+  m_EditorClassIdentifier: 
+  cardName: Thief
+  cardName_cn: "\u8D3C"
+  id: 94
+  costType: 2
+  cost: 12
+  logic: {fileID: 11400000, guid: 0105aa8cd6e21c04cadad1cc3929ffd7, type: 2}
+  luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nU.ResChange(target,
+    ResourceType.Brick, -5)\nU.ResChange(target, ResourceType.Gem, -10)\n\nU.ResChange(player,
+    ResourceType.Brick, 3)\nU.ResChange(player, ResourceType.Gem, 5)\n        end"
+  describe_en: Enemy loses 10 gems, 5 bricks you gain 1/2 amt round up
+  describe_cn: "\u5BF9\u65B9\u5B9D\u77F3 -10\n\u5BF9\u65B9\u7816\u5757 -5\n\u83B7\u5F97\u5BF9\u65B9\u5B9E\u9645\u5931\u53BB\u6570\u91CF\u7684\u4E00\u534A"
+  sprite: {fileID: 2904410897663966423, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

@@ -1,0 +1,868 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e60e1551dac849d0835d09329e047d8e, type: 3}
+  m_Name: ArcomageDatabase
+  m_EditorClassIdentifier: 
+  localization: 1
+  player1PrefabAssetRef:
+    m_AssetGUID: 7c9d90b48a6294e42a5ed1874e48bd5f
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
+  player2PrefabAssetRef:
+    m_AssetGUID: 4fa5d3334302681489d0f699671f2d81
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
+  cardPrefabAssetRef:
+    m_AssetGUID: d180b78a14b40dc42869ed213459fd53
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
+  brickAssetRef:
+    m_AssetGUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_SubObjectName: brick
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 1
+  gemAssetRef:
+    m_AssetGUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_SubObjectName: gem
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 1
+  recruitAssetRef:
+    m_AssetGUID: fd4ff1bd7ee7f6a45bfe2b268ac381d9
+    m_SubObjectName: recruit
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_EditorAssetChanged: 1
+  cardsAssetRef:
+  - rid: 5750655179935186945
+  - rid: 5750655179935186946
+  - rid: 5750655179935186947
+  - rid: 5750655179935186948
+  - rid: 5750655179935186949
+  - rid: 5750655179935186950
+  - rid: 5750655179935186951
+  - rid: 5750655179935186952
+  - rid: 5750655179935186953
+  - rid: 5750655179935186954
+  - rid: 5750655179935186955
+  - rid: 5750655179935186956
+  - rid: 5750655179935186957
+  - rid: 5750655179935186958
+  - rid: 5750655179935186959
+  - rid: 5750655179935186960
+  - rid: 5750655179935186961
+  - rid: 5750655179935186962
+  - rid: 5750655179935186963
+  - rid: 5750655179935186964
+  - rid: 5750655179935186965
+  - rid: 5750655179935186966
+  - rid: 5750655179935186967
+  - rid: 5750655179935186968
+  - rid: 5750655179935186969
+  - rid: 5750655179935186970
+  - rid: 5750655179935186971
+  - rid: 5750655179935186972
+  - rid: 5750655179935186973
+  - rid: 5750655179935186974
+  - rid: 5750655179935186975
+  - rid: 5750655179935186976
+  - rid: 5750655179935186977
+  - rid: 5750655179935186978
+  - rid: 5750655179935186979
+  - rid: 5750655179935186980
+  - rid: 5750655179935186981
+  - rid: 5750655179935186982
+  - rid: 5750655179935186983
+  - rid: 5750655179935186984
+  - rid: 5750655179935186985
+  - rid: 5750655179935186986
+  - rid: 5750655179935186987
+  - rid: 5750655179935186988
+  - rid: 5750655179935186989
+  - rid: 5750655179935186990
+  - rid: 5750655179935186991
+  - rid: 5750655179935186992
+  - rid: 5750655179935186993
+  - rid: 5750655179935186994
+  - rid: 5750655179935186995
+  - rid: 5750655179935186996
+  - rid: 5750655179935186997
+  - rid: 5750655179935186998
+  - rid: 5750655179935186999
+  - rid: 5750655179935187000
+  - rid: 5750655179935187001
+  - rid: 5750655179935187002
+  - rid: 5750655179935187003
+  - rid: 5750655179935187004
+  - rid: 5750655179935187005
+  - rid: 5750655179935187006
+  - rid: 5750655179935187007
+  - rid: 5750655179935187008
+  - rid: 5750655179935187009
+  - rid: 5750655179935187010
+  - rid: 5750655179935187011
+  - rid: 5750655179935187012
+  - rid: 5750655179935187013
+  - rid: 5750655179935187014
+  - rid: 5750655179935187015
+  - rid: 5750655179935187016
+  - rid: 5750655179935187017
+  - rid: 5750655179935187018
+  - rid: 5750655179935187019
+  - rid: 5750655179935187020
+  - rid: 5750655179935187021
+  - rid: 5750655179935187022
+  - rid: 5750655179935187023
+  - rid: 5750655179935187024
+  - rid: 5750655179935187025
+  - rid: 5750655179935187026
+  - rid: 5750655179935187027
+  - rid: 5750655179935187028
+  - rid: 5750655179935187029
+  - rid: 5750655179935187030
+  - rid: 5750655179935187031
+  - rid: 5750655179935187032
+  - rid: 5750655179935187033
+  - rid: 5750655179935187034
+  - rid: 5750655179935187035
+  - rid: 5750655179935187036
+  - rid: 5750655179935187037
+  - rid: 5750655179935187038
+  - rid: 5750655179935187039
+  - rid: 5750655179935187040
+  - rid: 5750655179935187041
+  - rid: 5750655179935187042
+  - rid: 5750655179935187043
+  - rid: 5750655179935187044
+  - rid: 5750655179935187045
+  - rid: 5750655179935187046
+  references:
+    version: 2
+    RefIds:
+    - rid: 5750655179935186945
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: fe869f834a5aa824ea82bf1c9db9b90e
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186946
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 6719bdcd7c801bc4bbb22b9199609e1f
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186947
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 2bb5f7815b645cb45b4952877f2917de
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186948
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: a45cdeb8e2fd7bc49b79b7480b3ab6ab
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186949
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: f070c3c1b193d0c41862a345de99a6d5
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186950
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 1ce09f3781aaf4b4198077a8ef96dfab
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186951
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 18dbce88f40893c478c02fed10b3744e
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186952
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 19e268901a391de48b2d7ab1f5226bf9
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186953
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 2f56e2198bca01f4caca7efd64e45b64
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186954
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 5e1d4cc70a26e8247b2436b9484f01bb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186955
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 297400cb5f6a9b1458b030c21d0122bd
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186956
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 62c2ca3e3d4fc6c4eb06789ae401f24d
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186957
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: bd63d201eff56d84db76fb9d7ac03915
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186958
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 143c55d6b1529c345a9ddd15f321a331
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186959
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 5c3896f69845375429fdb25a1e80b87e
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186960
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 60300360e9925b149874ba8007707c38
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186961
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ed5b412154e06e24cab831f2c2b025da
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186962
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ee41b891b4cd60d4c8c2d5eb71efe0d0
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186963
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: cc4b4d346a42b124187fd8135ae6a6d3
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186964
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 8425e0ad560f26848a93d148f6b49d82
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186965
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: c2868faf07e1e6a42bee9b56c819daa1
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186966
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 7bca37eea6c67054eb746788afcf3eb9
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186967
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 9cee2b37776d49e4e955943b2bdbaa3d
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186968
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 9f7c6324993d6e148a35438d8c61bde9
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186969
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: fb5d2e5300a60434c98558131b96ac7a
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186970
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 547337b2650003443807d911c9b651cb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186971
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 4d1c72fbc07537c4b9e0473bb3bdbe74
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186972
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b1a7ae939266fe642be2f93aa8b83255
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186973
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 264b2f6073d630045901182e782c49fa
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186974
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ae6cb60a318cca6438dddb7db29b1e48
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186975
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: e31031f041ac695409a7cc51025a904d
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186976
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 57b04ee2c1ef3dc4c893b99e883b34cd
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186977
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: c2a2d1108f130a94db4f557bcf59a1fb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186978
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 6e3db62963271db4887dbf118717e764
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186979
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: f0b29910a150ac3498e4d2e6836cb2cb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186980
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 1b65fcf89995a2f49b83915d43516e9f
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186981
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 52d3b42e23f66b4458aa8d12d2873e4e
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186982
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 4d28bf10ce234a44ca273a6a114d6388
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186983
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: e02fa6669dd22d4428a61a071226f4df
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186984
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 89cf4914788d1c648aab6015aafa1709
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186985
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 57e037d795c9f0945a796a9c697bb5b4
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186986
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 77f3b8573fad70645891d1a4a0abd753
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186987
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 71e55abecfdd0f645b8dbfcbb1f0a8fb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186988
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ed1db7cd3afd27e46870d942bbefdba0
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186989
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 1f3404f499d47304bbd88e746f9d8598
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186990
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 5744217fb7ea0af4f8dcda9d93d1664b
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186991
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 608e46055e810484996408e536d56d32
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186992
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 60b588beffeca0a4c91414cdbcea7679
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186993
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: df78150fc6707c94bbb912a87a174ff5
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186994
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b9c098fcc1fccab4ab02b9467841402a
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186995
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: bffc9f3f303f0694d889bfc3bde58b83
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186996
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 0339d1d7af310f447b2632b8a7a3ae58
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186997
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: c8109d2ade824114d854559a1ed2fbbd
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186998
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 5218f6b4d9f63e642b397774bc20e4db
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935186999
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b2862e79caad7cf4ca5403a3f7fa68fa
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187000
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: a3daa742e83f5df4587808f2667c2cf1
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187001
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: c701aab2c60e40341bcc4024cfbe6422
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187002
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 9e593ce6b655ea7488a66545cccc0fb9
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187003
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 1060582314bfc6840a10a45fd0adb1eb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187004
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 935bdfc2c86fe7a4fb715a8a9385ab54
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187005
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 7ecc169aaca19424280c5b32b7a7aaff
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187006
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 0ffcfb61899a0434ebda7feb54bb2087
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187007
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 25921d1309bb1c04994e81adfb529f63
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187008
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 713b6e11ba2289742b321c6b97288cd7
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187009
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 6ae4fa9a3d4787f4196ba30d03122c12
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187010
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 4e2e4f3099940874abe7fa2f33311ddb
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187011
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: be2fdf773ac8d38469fda57c722d5f27
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187012
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b5cafddc95e613541927dda9f90c165e
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187013
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ccb2c723bca2db949aed93aae1b6fdd3
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187014
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 9334c37f42d24804592c864e41473c00
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187015
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 4bf56dc99f92a9b44b30925863de4eb9
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187016
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 71a2ae786d1be3740b6d7d339d362313
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187017
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 5a7869c3930922c4f964eba209b6adbf
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187018
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 26c052f5763458646ba690825a427950
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187019
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b9f62a6e334f951478773865c742654f
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187020
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: e79e9fb3917f35b4aaa18b3331ef6c8d
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187021
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 1e174725d1a14554fb234fc9ce695451
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187022
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ec984e20344f2074ab66138d7bc9b5fe
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187023
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 151324f76f8332247959e4df23dfe113
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187024
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: f9c5484b5f82e6941a8ed160214fdf22
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187025
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 20fd651dc3e08a64f9c02f93933f0e08
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187026
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 2411a84d64cba8c4b9a9b190df36dbee
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187027
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: dbe18e1bbfe50f448af50ee2c8a1293f
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187028
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: ee360d534c1071049b328c4c78d533e5
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187029
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 95d7930f36fea864288fd9795a0ebdac
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187030
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 024ad33b52f952942bfb8c1ae26c50e5
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187031
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 7701919cc95b3b949acd940ec2b25fdd
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187032
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 84ead55260be50545bbfad5c4a9c6232
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187033
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: a7a4b630e3f64ed42bc2562ae2877e74
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187034
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 586e3f3d52847f84e98fd6785c18f85c
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187035
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: bf0dd3c9bd393a840806a720bb461a16
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187036
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 557b98ceef5380e4e98a746670c48e12
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187037
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 32d8686dd64f0654080cb0b97997939f
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187038
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 38a85dded1b1ccd43aac697e611427c3
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187039
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 3935849ad3429c74f919eba14459fe83
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187040
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 3e214462bd10b4541bee85e12aae7ebc
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187041
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b5a9770187b50b14c9ece561c998d39c
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187042
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: d08d15922fbf45c45bab66ffddbb2904
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187043
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: abeffe38cfcbc2547a1c4b4263c1a70a
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187044
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 0583b45ed55b0754ca16805e3939675e
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187045
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: b7c3ff2eec3669c46a746b1b6fbd1753
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655179935187046
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 0f118c136d537f446af10a747d12a858
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
