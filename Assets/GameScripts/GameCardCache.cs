@@ -27,7 +27,7 @@ namespace GameScripts
 
             gameCard.SetData(template);
             gameCard.SetOwner(inOwner);
-            
+
             return gameCard;
         }
 
@@ -35,6 +35,7 @@ namespace GameScripts
         {
             Assert.IsTrue(inCard.transform.parent != this.transform);
             inCard.transform.SetParent(transform);
+            inCard.owner = null;
         }
     }
 }

@@ -48,7 +48,7 @@ namespace GameScripts
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
 
-        private bool m_isUsing;
+        public bool isUsing;
         private bool m_isTweenDisappearCreated;
 
         public DOTweenAnimation disappearTweenAnimation;
@@ -91,6 +91,8 @@ namespace GameScripts
             var trans = disappearTweenAnimation.transform;
             trans.localPosition = Vector3.zero;
             trans.localScale = Vector3.one;
+            var scriptMachine = GetComponent<ScriptMachine>();
+            scriptMachine.nest.SwitchToMacro(m_data.logic);
         }
 
         public void SetOwner(GamePlayer inOwner)
@@ -105,7 +107,7 @@ namespace GameScripts
         {
             Assert.IsNotNull(m_data);
             SharedLogics.ResChange(owner, m_data.costType, -m_data.cost);
-            m_isUsing = true;
+            isUsing = true;
             OnShowUseCard();
         }
 
@@ -127,30 +129,11 @@ namespace GameScripts
 
         public void OnUseCardComplete()
         {
-            // var macro = flow.GetValue<TMacro>(graphInput);
-            // var targetValue = flow.GetValue(target, targetType);
-            //
-            // if (targetValue is GameObject go)
-            // {
-            //     go.GetComponent<TMachine>().nest.SwitchToMacro(macro);
-            // }
-            // else
-            // {
-            //     ((TMachine)targetValue).nest.SwitchToMacro(macro);
-            // }
-            //
-            // flow.SetValue(graphOutput, macro);
-            //
-            // return exit;
-            GetComponent<ScriptMachine>().nest.SwitchToMacro(m_data.logic);
-            // local currentPlayer = DB.GetData("CurrentPlayer")
-            // local player = DB.GetData(string.format("Player%s", currentPlayer))
-            // m_useCardResult = m_cardData.func(player)
+            CustomEvent.Trigger(gameObject, "Apply", owner);
             Log.LogInfo("卡牌使用完成", "卡牌使用完成");
             GameMain.PlayerSwitch.Invoke(false, this);
-            m_isUsing = false;
-            // DB.TriggerEvent("Main/PlayerSwitch", m_useCardResult, m_cardData)
-            // m_cardData.using = false
+            isUsing = false;
+            GameCardCache.Instance.TurnBack(this);
         }
     }
 }

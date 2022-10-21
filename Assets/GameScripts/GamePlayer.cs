@@ -54,17 +54,15 @@ namespace GameScripts
 
         public void OnRecycleHandCards()
         {
-            // local gameMain = DB.GetData("Main")
-            // local gameMainCS = gameMain.GameMainCS
-            // local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
-            // for i = #m_handCards, 1, -1 do
-            //     local handCard = m_handCards[i]
-            // table.remove(m_handCards, i)
-            // if handCard.transform ~= nil then
-            // handCard.transform:SetParent(cardObjCacheRoot, false)
-            // handCard.transform = nil
-            // end
-            //     end
+            foreach (GameCard handCard in handCards)
+            {
+                if (!handCard.isUsing)
+                {
+                    GameCardCache.Instance.TurnBack(handCard);
+                }
+            }
+
+            handCards.Clear();
         }
 
         public void OnRecycleAll()
@@ -167,7 +165,5 @@ namespace GameScripts
             Log.LogInfo("玩家手牌", $"玩家：{playerID}\n总手牌：{handCards.Count}\n详情：");
             // DB.SetData(string.format("Player%s/HandCards", GamePlayerCS.playerID), m_handCards)
         }
-
-        
     }
 }
