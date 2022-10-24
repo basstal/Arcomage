@@ -3,12 +3,12 @@
     "com.91act.noah.dotween": "1.2.16",
     "com.91act.noah.text.mesh.pro": "3.0.63",
     "com.91act.noah.odin.inspector": "3.2.5",
-    "com.91act.noah.google.protobuf": "0.1.5",
     "com.unity.visualscripting" : "1.7.8",
     "com.unity.addressables": "1.20.5",
     "com.unity.ide.rider": "3.0.16",
     "com.unity.modules.ui": "1.0.0",
-    "com.unity.modules.particlesystem": "1.0.0"
+    "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.ml-agents": "2.3.0-exp.2"
   },
   "scopedRegistries": [
     {
