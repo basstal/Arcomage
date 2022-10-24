@@ -31,12 +31,8 @@ namespace GameScripts
 #if UNITY_EDITOR
         public TextMeshProUGUI debug;
 #endif
-        // private int m_id;
-
         public int id => m_data.id;
 
-        // public CostType costType = CostType.None;
-        // public int cost = 0;
         [NonSerialized] private ArcomageCard m_data;
         [NonSerialized] public GamePlayer owner;
 
@@ -48,10 +44,10 @@ namespace GameScripts
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
 
-        public bool isUsing;
         private bool m_isTweenDisappearCreated;
 
         public DOTweenAnimation disappearTweenAnimation;
+        public DOTweenAnimation drawTweenAnimation;
 
         private void Awake()
         {
@@ -62,11 +58,9 @@ namespace GameScripts
         {
             Assert.IsNotNull(inData);
             m_data = inData;
-            // local image = REF.CardImage
             Assert.IsNotNull(m_data.sprite);
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
-            // local costData = cardData.cost
             AssetReferenceSprite spriteRef = m_data.costType == CostType.Brick
                 ? GameMain.Database.brickAssetRef
                 : (m_data.costType == CostType.Gem ? GameMain.Database.gemAssetRef : GameMain.Database.recruitAssetRef);
@@ -80,7 +74,6 @@ namespace GameScripts
             }
 
             Assert.IsNotNull(costTypeImage.sprite);
-            // local GetString = CS.LocaleManager.GetString
             var localization = GameMain.Database.localization;
             cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
             cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
@@ -106,9 +99,7 @@ namespace GameScripts
         public void UseCard()
         {
             Assert.IsNotNull(m_data);
-            SharedLogics.ResChange(owner, m_data.costType, -m_data.cost);
-            isUsing = true;
-            OnShowUseCard();
+            owner.usingCard = this;
         }
 
         public void OnShowUseCard()
@@ -119,21 +110,17 @@ namespace GameScripts
                 disappearTweenAnimation.useTargetAsV3 = true;
                 disappearTweenAnimation.endValueTransform = GameMain.Instance.cardDisappearPoint;
                 disappearTweenAnimation.CreateTween();
-                disappearTweenAnimation.onComplete.AddListener(OnUseCardComplete);
+                disappearTweenAnimation.onComplete.AddListener(Apply);
             }
 
             disappearTweenAnimation.DORestart();
-            GamePlayer.RecycleHandCards.Invoke();
-            // DB.TriggerEvent(string.format("Player%s/RecycleAll", currentPlayer))
         }
 
-        public void OnUseCardComplete()
+        public void Apply()
         {
+            Assert.IsNotNull(owner);
             CustomEvent.Trigger(gameObject, "Apply", owner);
             Log.LogInfo("卡牌使用完成", "卡牌使用完成");
-            GameMain.PlayerSwitch.Invoke(false, this);
-            isUsing = false;
-            GameCardCache.Instance.TurnBack(this);
         }
     }
 }

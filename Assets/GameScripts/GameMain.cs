@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using DG.Tweening;
 using GameScripts.Utils;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
@@ -10,53 +10,37 @@ using UnityEngine.UI;
 
 namespace GameScripts
 {
-    public delegate void PlayerSwitchDelegate(bool result, GameCard previousCard);
-
     public class GameMain : MonoBehaviour
     {
         public AssetReference databaseRef;
         public int firstPlayer = 1;
 
         private int m_round = 0;
-        private const int CARD_CACHE_SIZE = 20;
-        private GameObject m_player1Obj;
-        private GameObject m_player2Obj;
 
+        private GamePlayer m_player1;
+        private GamePlayer m_player2;
+
+        [NonSerialized] public GamePlayer currentPlayer;
 
         public static ArcomageDatabase Database;
-        // public Transform CardObjCacheRoot { get; private set; }
-        // public Dictionary<int, Sprite> ID2Sprite { get; private set; }
-
-        [HideInInspector] public Sprite brick;
-        [HideInInspector] public Sprite gem;
-        [HideInInspector] public Sprite recruit;
 
         public Button startButton;
         public Button reloadButton;
         public RectTransform handCardLayout;
         public RectTransform cardDisappearPoint;
+        public RectTransform gameEndBlock;
 
-        public static PlayerSwitchDelegate PlayerSwitch;
         public static GameMain Instance;
 
         private Action currentStage;
-        private bool playerSwitched;
-        private int currentPlayerId;
 
-        public static GamePlayer FindPlayerById(int id)
-        {
-            return (id == 1 ? Instance.m_player1Obj : Instance.m_player2Obj).GetComponent<GamePlayer>();
-        }
+        private bool playerSwitched;
+
+        private string m_gameEnd;
 
         public static GamePlayer FindEnemyById(int id)
         {
-            return (id == 1 ? Instance.m_player2Obj : Instance.m_player1Obj).GetComponent<GamePlayer>();
-        }
-
-        public void SetCurrentPlayer(int playerId)
-        {
-            // DataBinding.Instance.SetData("CurrentPlayer", playerId);
-            currentPlayerId = playerId;
+            return id == 1 ? Instance.m_player2 : Instance.m_player1;
         }
 
         private void Awake()
@@ -65,19 +49,21 @@ namespace GameScripts
             Instance = this;
             GameMain.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
             Assert.IsNotNull(Database);
+            gameEndBlock.gameObject.SetActive(false);
             startButton.BindButtonEvent(GameStart);
             reloadButton.BindButtonEvent(OnReload);
-
-            PlayerSwitch += OnPlayerSwitch;
-        }
-
-        private void OnDestroy()
-        {
-            PlayerSwitch -= OnPlayerSwitch;
+            gameEndBlock.GetComponent<Button>().BindButtonEvent(OnReload);
         }
 
         private void Update()
         {
+            if (m_gameEnd != null)
+            {
+                gameEndBlock.gameObject.SetActive(true);
+                gameEndBlock.GetComponentInChildren<TextMeshProUGUI>().text = m_gameEnd;
+                currentStage = null;
+            }
+
             if (currentStage != null)
             {
                 currentStage.Invoke();
@@ -88,20 +74,32 @@ namespace GameScripts
         {
             startButton.gameObject.SetActive(false);
             m_round = 0;
-            m_player1Obj = Database.player1PrefabAssetRef.InstantiateAsync(transform).WaitForCompletion();
-            m_player2Obj = Database.player2PrefabAssetRef.InstantiateAsync(transform).WaitForCompletion();
-            // Init();
-            currentStage = TurnRound;
-
-
-            SetCurrentPlayer(0);
+            m_player1 = Database.player1PrefabAssetRef.InstantiateAsync(transform).WaitForCompletion().GetComponent<GamePlayer>();
+            m_player2 = Database.player2PrefabAssetRef.InstantiateAsync(transform).WaitForCompletion().GetComponent<GamePlayer>();
+            currentPlayer = firstPlayer == 1 ? m_player1 : m_player2;
             playerSwitched = false;
+            currentStage = IsGameEnded;
+        }
+
+        public bool IsPlayerWin(GamePlayer target)
+        {
+            return target.tower > 50 || FindEnemyById(target.playerID).tower <= 0;
+        }
+
+        public void IsGameEnded()
+        {
+            var player1Win = IsPlayerWin(m_player1);
+            var player2Win = IsPlayerWin(m_player2);
+            if (player1Win || player2Win)
+            {
+                m_gameEnd = player1Win && player2Win ? $"Peace End" : (player1Win ? $"player1Win" : "player2Win");
+            }
+
+            currentStage = DisplayHandCards;
         }
 
         public void OnReload()
         {
-            // GameObject singletonLoaderGameObject = GameObject.Find("/SingletonLoader");
-            // SingletonLoader singletonLoader = singletonLoaderGameObject.GetComponent<SingletonLoader>();
 #if UNITY_EDITOR
             ClearLog();
 #endif
@@ -116,87 +114,55 @@ namespace GameScripts
             method?.Invoke(new object(), null);
         }
 #endif
-        public void TurnRound()
+        public void DisplayHandCards()
         {
-            m_round++;
-            if (m_round == 1)
+            Assert.IsNotNull(currentPlayer);
+            if (currentPlayer.handCards.Count == 0)
             {
-                GamePlayer.GenHandCards.Invoke(5, 0);
-                SetCurrentPlayer(firstPlayer);
-            }
-            else
-            {
-                GamePlayer.RecycleHandCards.Invoke();
-                GamePlayer.GenHandCards.Invoke(5, 0);
-                SetCurrentPlayer(currentPlayerId % 2 + 1);
-                // local player = DB.GetData("Player{CurrentPlayer}")
-                // local U = require("Utils")
-                SharedLogics.PlayerResourceGrowthAll(FindPlayerById(currentPlayerId));
+                currentPlayer.OnGenHandCards(5);
             }
 
-            currentStage = PlayerRound;
-        }
+            Assert.IsTrue(currentPlayer.handCards.Count > 0);
 
-        public void PlayerRound()
-        {
-            // local playerId = DB.GetData("CurrentPlayer")
-            // local handCards = DB.GetData(string.format("Player%s/HandCards", playerId))
-            GamePlayer currentPlayer = FindPlayerById(currentPlayerId);
-
-            // local parentTrans = REF.HandCardsLayout.transform
-            // local cardObjCacheRoot = GameMainCS.CardObjCacheRoot
             foreach (var handCard in currentPlayer.handCards)
             {
-                // **此卡已在手牌中
-                if (handCard.transform.parent == handCardLayout)
-                {
-                    var tweenComponent = handCard.GetComponentInChildren<DOTweenAnimation>();
-                    tweenComponent.DORestartById(currentPlayerId == 1 ? "left2right" : "right2left");
-                    tweenComponent.DORestartById("alpha");
-                }
-                else
-                {
-                    handCard.transform.SetParent(handCardLayout, false);
-                    handCard.GetComponentInChildren<CanvasGroup>().alpha = 1;
-                }
+                handCard.gameObject.SetActive(true);
+                handCard.transform.SetParent(handCardLayout, false);
+                handCard.GetComponentInChildren<CanvasGroup>().alpha = 1;
             }
 
             UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(handCardLayout);
-            currentStage = null;
-            // local player = DB.GetData("Player{CurrentPlayer}")
-            // if player.GamePlayerCS.useAI then
-            // player.bevTree:Reset()
-            // player.bevTreeEnabled = true
-            // end
+            currentStage = WaitCardUse;
         }
 
-        public void OnPlayerSwitch(bool playAgain, GameCard previousCard)
+        public void WaitCardUse()
         {
-            // ** 再次出牌直接不改变当前玩家进入PlayerRound
-            if (playAgain)
+            if (currentPlayer.usingCard != null)
             {
-                // local player = DB.GetData("Player{CurrentPlayer}")
-                GamePlayer currentPlayer = FindPlayerById(currentPlayerId);
-                int removedIndex = currentPlayer.UseHandCard(previousCard);
-                currentPlayer.OnGenHandCards(1, removedIndex);
-                currentStage = PlayerRound;
-                return;
+                var usingCard = currentPlayer.usingCard;
+                currentPlayer.RemoveFromHandCard(usingCard);
+                usingCard.Apply();
+                GameCardCache.Instance.TurnBack(usingCard);
+                currentPlayer.usingCard = null;
+                currentStage = IsNextPlayer;
             }
+        }
 
+        public void IsNextPlayer()
+        {
             if (playerSwitched)
             {
-                currentStage = TurnRound;
+                m_round++;
             }
             else
             {
-                GamePlayer currentPlayer = FindPlayerById(currentPlayerId);
-                // local player = DB.GetData("Player{CurrentPlayer}")
-                currentPlayer.OnRecycleHandCards();
-
-                SetCurrentPlayer(currentPlayerId % 2 + 1);
                 playerSwitched = true;
-                currentStage = PlayerRound;
             }
+
+            SharedLogics.PlayerResourceGrowthAll(currentPlayer);
+            currentPlayer.WithdrawAnimation();
+            currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
+            currentStage = IsGameEnded;
         }
     }
 }

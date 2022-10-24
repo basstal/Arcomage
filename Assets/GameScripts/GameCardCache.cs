@@ -18,6 +18,7 @@ namespace GameScripts
             if (transform.childCount > 0)
             {
                 gameCard = transform.GetChild(0).GetComponent<GameCard>();
+                gameCard.transform.SetParent(GameMain.Instance.handCardLayout);
             }
             else
             {

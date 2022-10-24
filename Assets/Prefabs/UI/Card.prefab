@@ -1224,6 +1224,7 @@ MonoBehaviour:
   cardCostText: {fileID: 3888378973330498820}
   cardExtentImage: {fileID: 2458767164919460986}
   disappearTweenAnimation: {fileID: 8339419201928358634}
+  drawTweenAnimation: {fileID: 256921124482028745}
 --- !u!222 &5314714062505722121
 CanvasRenderer:
   m_ObjectHideFlags: 0

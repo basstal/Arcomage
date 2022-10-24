@@ -17,44 +17,6 @@ namespace GameScripts.Utils
 {
     public static class Log
     {
-        static Regex stackRegex = new Regex(@"([^:]+):(\d+): (.*)");
-
-        // public static string GetCallStack(LuaFunction debugTraceback)
-        // {
-        //     string result = null;
-        //     var results = debugTraceback.Call();
-        //     if (results.Length >= 1)
-        //     {
-        //         if (results[0] is string stack)
-        //         {
-        //             var lines = stack.Split('\n').Skip(4).Select(s => s.Trim()).ToArray();
-        //             for (int i = 0; i < lines.Length; i++)
-        //             {
-        //                 var line = lines[i];
-        //                 var match = stackRegex.Match(line);
-        //                 var requirePath = match.Groups[1].Value;
-        //                 var lineNumber = match.Groups[2].Value;
-        //                 var message = match.Groups[3].Value;
-        //                 var fullPath = requirePath;
-        //                 try
-        //                 {
-        //                     if (!string.IsNullOrWhiteSpace(requirePath))
-        //                     {
-        //                         fullPath = Path.Combine(LuaManager.UniqueLuaScriptsPath, $"{requirePath}.bytes");
-        //                     }
-        //                 }
-        //                 catch(Exception){}
-        //                 finally
-        //                 {
-        //                     lines[i] = $"{message} () (at {fullPath}:{lineNumber})";
-        //                 }
-        //             }
-        //             result = string.Join("\n  ", lines);
-        //         }
-        //     }
-        //
-        //     return result;
-        // }
         public static Color GetLogColor(LogLevel level)
         {
             switch (level)

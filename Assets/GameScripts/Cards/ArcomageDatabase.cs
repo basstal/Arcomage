@@ -9,6 +9,7 @@ namespace GameScripts
         EN,
         CN
     }
+
     [CreateAssetMenu(fileName = "ArcomageDatabase", menuName = "ScriptableObjects/ArcomageDatabase", order = 1)]
     public class ArcomageDatabase : ScriptableObject
     {

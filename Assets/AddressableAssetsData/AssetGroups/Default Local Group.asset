@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 7f187839e0a625d46b43b72a4f118bd2
   m_SerializeEntries:
-  - m_GUID: d319a4305a4cc0243914b7427faac355
-    m_Address: Assets/Lua
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Lua
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7c9d90b48a6294e42a5ed1874e48bd5f
     m_Address: Assets/Prefabs/PlayerLeft.prefab
     m_ReadOnly: 0

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using GameScripts.Utils;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace GameScripts
 {
-    public delegate void GenHandCardsDelegate(int cardAmount, int fromIndex);
-
     public class GamePlayer : MonoBehaviour
     {
         public int brick = 0;
@@ -23,8 +23,6 @@ namespace GameScripts
         public string playerName = "Default";
         public int playerID;
 
-        public bool useAI = false;
-
         // ** control the fillAmount of tower sprite
         public const float TOWER_MAX_FILL_AMOUNT_SCORE = 100;
 
@@ -34,111 +32,117 @@ namespace GameScripts
         public const float WALL_MAX_FILL_AMOUNT_SCORE = 100;
         public const float WALL_MIN_FILL_AMOUNT = 0.05f;
 
-        public static GenHandCardsDelegate GenHandCards;
-        public static Action RecycleHandCards;
-
         [NonSerialized] public List<GameCard> handCards;
+        [NonSerialized] public GameCard usingCard;
+
+        public TextMeshProUGUI bricksCountTMP;
+        public TextMeshProUGUI gemsCountTMP;
+        public TextMeshProUGUI recruitsCountTMP;
+        public TextMeshProUGUI towerScoreTMP;
+        public TextMeshProUGUI wallScoreTMP;
+        public TextMeshProUGUI bricksIncRateTMP;
+        public TextMeshProUGUI gemsIncRateTMP;
+        public TextMeshProUGUI recruitsIncRateTMP;
+        public TextMeshProUGUI playerNameTMP;
+
+        public GameObject towerRoof;
+        public GameObject wallRoof;
+
+        public Image towerBodyImage;
+        public Image wallBodyImage;
+
+        public ParticleSystem bricksAddEffect;
+        public ParticleSystem bricksDropEffect;
+        public ParticleSystem gemsAddEffect;
+        public ParticleSystem gemsDropEffect;
+        public ParticleSystem recruitsAddEffect;
+        public ParticleSystem recruitsDropEffect;
+        public ParticleSystem towerAddEffect;
+        public ParticleSystem towerDropEffect;
+        public ParticleSystem wallAddEffect;
+        public ParticleSystem wallDropEffect;
 
         private void Awake()
         {
-            GenHandCards += OnGenHandCards;
-            RecycleHandCards += OnRecycleHandCards;
             handCards = new List<GameCard>();
         }
 
-        private void OnDestroy()
+        private void Start()
         {
-            GenHandCards -= OnGenHandCards;
-            RecycleHandCards -= OnRecycleHandCards;
+            OnRefresh();
         }
 
-        public void OnRecycleHandCards()
+        public void WithdrawAnimation()
         {
-            foreach (GameCard handCard in handCards)
+            foreach (var handcard in handCards)
             {
-                if (!handCard.isUsing)
-                {
-                    GameCardCache.Instance.TurnBack(handCard);
-                }
+                handcard.gameObject.SetActive(false);
             }
-
-            handCards.Clear();
         }
 
-        public void OnRecycleAll()
+        void RepositionRoof(Transform roofTrans, Image bodyImage)
         {
-            // for i = 1, #m_handCards do
-            //     local handCard = m_handCards[i]
-            // if not handCard.using then
-            //     local ref = handCard.REF
-            // local id = GamePlayerCS.playerID == 1 and "left2right" or "right2left"
-            //     ref.DrawCard:DOPlayBackwardsById(id)
-            //     ref.DrawCard:DOPlayBackwardsById("alpha")
-            // end
-            //     end
+            var position = roofTrans.localPosition;
+            var parentImage = roofTrans.parent.GetComponent<Image>();
+            position.y = parentImage.preferredHeight / 2 + bodyImage.preferredHeight * bodyImage.fillAmount;
+            roofTrans.localPosition = position;
         }
 
         public void OnRefresh()
         {
-            // local GetString = CS.LocaleManager.GetString
-            // REF.BricksCountTMP.text = GetString("BrickCount", GamePlayerCS.brick)
-            // REF.GemsCountTMP.text = GetString("GemsCount", GamePlayerCS.gem)
-            // REF.RecruitsCountTMP.text = GetString("RecruitsCount", GamePlayerCS.recruit)
-            // local tower = GamePlayerCS.tower
-            // REF.TowerScoreTMP.text = GetString("SingleScore", tower)
-            // local wall = GamePlayerCS.wall
-            // REF.WallScoreTMP.text = GetString("SingleScore", wall)
-            // REF.BricksIncRateTMP.text = GetString("IncRate", GamePlayerCS.brickIncRate)
-            // REF.GemsIncRateTMP.text = GetString("IncRate", GamePlayerCS.gemIncRate)
-            // REF.RecruitsIncRateTMP.text = GetString("IncRate", GamePlayerCS.recruitIncRate)
-            // REF.PlayerNameTMP.text = GamePlayerCS.playerName
-            //
-            // local hasTower = tower > 0
-            // REF.TowerRoof:SetActive(hasTower)
-            // if hasTower then
-            // REF.TowerBodyImage.fillAmount =
-            //     math.max(tower / CS.GamePlayer.TOWER_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.TOWER_MIN_FILL_AMOUNT)
-            // RepositionRoof(REF.TowerRoof.transform, REF.TowerBodyImage)
-            // else
-            // REF.TowerBodyImage.fillAmount = 0
-            // end
-            //
-            // local hasWall = wall > 0
-            // REF.WallRoof:SetActive(hasWall)
-            // if hasWall then
-            // REF.WallBodyImage.fillAmount =
-            //     math.max(wall / CS.GamePlayer.WALL_MAX_FILL_AMOUNT_SCORE, CS.GamePlayer.WALL_MIN_FILL_AMOUNT)
-            // RepositionRoof(REF.WallRoof.transform, REF.WallBodyImage)
-            // else
-            // REF.WallBodyImage.fillAmount = 0
-            // end
+            bricksCountTMP.text = $"{brick} <size=80%>bricks</size>";
+            gemsCountTMP.text = $"{gem} <size=80%>gem</size>";
+            recruitsCountTMP.text = $"{recruit} <size=80%>recruit</size>";
+            towerScoreTMP.text = $"{tower}";
+            wallScoreTMP.text = $"{wall}";
+            bricksIncRateTMP.text = $"+ {brickIncRate}";
+            gemsIncRateTMP.text = $"+ {gemIncRate}";
+            recruitsIncRateTMP.text = $"+ {recruitIncRate}";
+            playerNameTMP.text = playerName;
+
+            towerRoof.SetActive(tower > 0);
+            if (tower > 0)
+            {
+                towerBodyImage.fillAmount =
+                    Math.Max(tower / TOWER_MAX_FILL_AMOUNT_SCORE, TOWER_MIN_FILL_AMOUNT);
+                RepositionRoof(towerRoof.transform, towerBodyImage);
+            }
+            else
+            {
+                towerBodyImage.fillAmount = 0;
+            }
+
+            wallRoof.SetActive(wall > 0);
+            if (wall > 0)
+            {
+                wallBodyImage.fillAmount =
+                    Math.Max(wall / WALL_MAX_FILL_AMOUNT_SCORE, WALL_MIN_FILL_AMOUNT);
+                RepositionRoof(wallRoof.transform, wallBodyImage);
+            }
+            else
+            {
+                wallBodyImage.fillAmount = 0;
+            }
         }
 
-        public int UseHandCard(GameCard inCard)
+        public void RemoveFromHandCard(GameCard inCard)
         {
-            // local gameMain = DB.GetData("Main")
-            // local gameMainCS = gameMain.GameMainCS
-            // local cardObjCacheRoot = gameMainCS.CardObjCacheRoot
             for (int i = handCards.Count - 1; i >= 0; --i)
             {
                 if (handCards[i] == inCard)
                 {
                     handCards.RemoveAt(i);
-                    GameCardCache.Instance.TurnBack(inCard);
-                    return i;
+                    OnGenHandCards(1);
+                    return;
                 }
             }
 
-            return -1;
+            throw new Exception($"use card not in hand?");
         }
 
-        public void OnGenHandCards(int cardAmount, int fromIndex)
+        public void OnGenHandCards(int cardAmount)
         {
             Log.LogInfo("生成玩家手牌", $"玩家：{playerName}\n预定生成：{cardAmount}张手牌\n玩家详情:");
-            // local dataSize = #Data
-            // local gameMain = DB.GetData("Main")
-            // local gameMainCS = gameMain.GameMainCS
-            // local ID2Sprite = gameMainCS.ID2Sprite
             while (cardAmount > 0)
             {
                 int index = Random.Range(0, GameMain.Database.cardsAssetRef.Count);
@@ -155,15 +159,16 @@ namespace GameScripts
                 }
 
                 Assert.IsNotNull(template);
-                if (!handCards.Find(card => card.id == template.id))
+                if (handCards.Find(card => card.id == template.id) == null)
                 {
-                    handCards.Add(GameCardCache.Instance.Acquire(this, template));
+                    GameCard genCard = GameCardCache.Instance.Acquire(this, template);
+                    genCard.gameObject.SetActive(false);
+                    handCards.Add(genCard);
                     cardAmount--;
                 }
             }
 
             Log.LogInfo("玩家手牌", $"玩家：{playerID}\n总手牌：{handCards.Count}\n详情：");
-            // DB.SetData(string.format("Player%s/HandCards", GamePlayerCS.playerID), m_handCards)
         }
     }
 }

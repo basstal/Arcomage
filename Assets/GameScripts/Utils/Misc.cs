@@ -58,16 +58,6 @@ namespace GameScripts.Utils
             @event.AddListener(callback);
         }
 
-        // public static void SetTweenOnComplete(DOTweenAnimation animation, LuaFunction callback)
-        // {
-        //     if (LuaManager.Instance == null) return;
-        //     LuaManager.Instance.disposableCallbacks.Add(callback);
-        //     animation.onComplete.RemoveAllListeners();
-        //     animation.onComplete.AddListener(() =>
-        //     {
-        //         callback.Call();
-        //     });
-        // }
         static int HexToInt(char hex)
         {
             switch (hex)

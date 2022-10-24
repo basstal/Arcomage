@@ -1,23 +1,22 @@
 {
-    "name": "Game",
-    "rootNamespace": "",
-    "references": [
-        "Unity.TextMeshPro",
-        "Unity.Addressables",
-        "Unity.ResourceManager",
-        "XLuaCSharp",
-        "Unity.VisualScripting.Core",
-        "Unity.VisualScripting.Flow",
-        "DOTweenExt",
-        "DOTweenPro"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "Game",
+  "rootNamespace": "",
+  "references": [
+    "Unity.TextMeshPro",
+    "Unity.Addressables",
+    "Unity.ResourceManager",
+    "Unity.VisualScripting.Core",
+    "Unity.VisualScripting.Flow",
+    "DOTweenExt",
+    "DOTweenPro"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

@@ -1,6 +1,5 @@
 using System;
 using Unity.VisualScripting;
-using UnityEngine;
 
 namespace GameScripts
 {
@@ -15,11 +14,11 @@ namespace GameScripts
                     target.brick = Math.Max(target.brick + changeAmount, 0);
                     if (changeAmount > 0)
                     {
-                        // target.BricksAddEffect:Play()
+                        target.bricksAddEffect.Play();
                     }
                     else
                     {
-                        // target.REF.BricksDropEffect:Play()
+                        target.bricksDropEffect.Play();
                     }
 
                     break;
@@ -27,11 +26,15 @@ namespace GameScripts
                 case CostType.Gem:
                 {
                     target.gem = Math.Max(target.gem + changeAmount, 0);
-                    // if inCostAmount > 0 then
-                    // target.REF.GemsAddEffect:Play()
-                    // else
-                    // target.REF.GemsDropEffect:Play()
-                    // end
+                    if (changeAmount > 0)
+                    {
+                        target.gemsAddEffect.Play();
+                    }
+                    else
+                    {
+                        target.gemsDropEffect.Play();
+                    }
+
                     break;
                 }
                 case CostType.Recruit:
@@ -39,16 +42,18 @@ namespace GameScripts
                     target.recruit = Math.Max(target.recruit + changeAmount, 0);
                     if (changeAmount > 0)
                     {
-                        // target.REF.RecruitsAddEffect:Play()
+                        target.recruitsAddEffect.Play();
                     }
                     else
                     {
-                        // target.REF.RecruitsDropEffect:Play()
+                        target.recruitsDropEffect.Play();
                     }
 
                     break;
                 }
             }
+
+            target.OnRefresh();
         }
 
         public static void BuildingChange(GamePlayer target, BuildingType buildingType, int changeAmount)
@@ -58,24 +63,34 @@ namespace GameScripts
                 case BuildingType.Wall:
                 {
                     target.wall = target.wall + changeAmount;
-                    // if change > 0 then
-                    // player.REF.WallAddEffect:Play()
-                    // else
-                    // player.REF.WallDropEffect:Play()
-                    // end
+                    if (changeAmount > 0)
+                    {
+                        target.wallAddEffect.Play();
+                    }
+                    else
+                    {
+                        target.wallDropEffect.Play();
+                    }
+
                     break;
                 }
                 case BuildingType.Tower:
                 {
                     target.tower = target.tower + changeAmount;
-                    // if change > 0 then
-                    // player.REF.TowerAddEffect:Play()
-                    // else
-                    // player.REF.TowerDropEffect:Play()
-                    // end
+                    if (changeAmount > 0)
+                    {
+                        target.towerAddEffect.Play();
+                    }
+                    else
+                    {
+                        target.towerDropEffect.Play();
+                    }
+
                     break;
                 }
             }
+
+            target.OnRefresh();
         }
 
         public static void PlayerResourceGrowth(GamePlayer target, CostType costType)
@@ -98,6 +113,8 @@ namespace GameScripts
                     break;
                 }
             }
+
+            target.OnRefresh();
         }
 
         public static void PlayerResourceGrowthAll(GamePlayer target)
