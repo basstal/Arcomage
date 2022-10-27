@@ -19,7 +19,7 @@ MonoBehaviour:
   cost: 24
   logic: {fileID: 11400000, guid: bf5b05019f0d29648aac34d3fb8b33af, type: 2}
   luaSource: "function(player)\nU.BuildingChange(player, \"Wall\", 20)\nU.BuildingChange(player,
-    \"Castle\", 8)\n        end"
+    \"Tower\", 8)\n        end"
   describe_en: '+20 Wall
 
     +8 Tower'

@@ -149,6 +149,10 @@ MonoBehaviour:
   - rid: 5750655179935187044
   - rid: 5750655179935187045
   - rid: 5750655179935187046
+  difficultyAssetRef:
+  - rid: 5750655336035647488
+  - rid: 5750655336035647489
+  - rid: 5750655336035647490
   references:
     version: 2
     RefIds:
@@ -863,6 +867,27 @@ MonoBehaviour:
       type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
       data:
         m_AssetGUID: 0f118c136d537f446af10a747d12a858
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655336035647488
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: e62c8269cc287fd46a0f0925facd9235
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655336035647489
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: c896acb23c5b68147ab4104249fbcc1f
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655336035647490
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 5bba64e2946540b4db773b18d70b8864
         m_SubObjectName: 
         m_SubObjectType: 
         m_EditorAssetChanged: 0

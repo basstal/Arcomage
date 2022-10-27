@@ -62,28 +62,44 @@ namespace GameScripts
             {
                 case BuildingType.Wall:
                 {
-                    target.wall = target.wall + changeAmount;
+                    target.wall = Math.Max(target.wall + changeAmount, 0);
                     if (changeAmount > 0)
                     {
                         target.wallAddEffect.Play();
+                        // if (target.trainingMode)
+                        // {
+                        //     target.AddReward(.1f + (float)changeAmount / Math.Max(target.wall, 1));
+                        // }
                     }
                     else
                     {
                         target.wallDropEffect.Play();
+                        // if (target.wall == 0)
+                        // {
+                        //     target.AddReward(-0.2f);
+                        // }
                     }
 
                     break;
                 }
                 case BuildingType.Tower:
                 {
-                    target.tower = target.tower + changeAmount;
+                    target.tower = Math.Max(target.tower + changeAmount, 0);
                     if (changeAmount > 0)
                     {
                         target.towerAddEffect.Play();
+                        // if (target.trainingMode)
+                        // {
+                        //     target.AddReward(.1f + (float)changeAmount / Math.Max(target.tower, 1));
+                        // }
                     }
                     else
                     {
                         target.towerDropEffect.Play();
+                        // if (target.tower == 0)
+                        // {
+                        //     target.AddReward(-1.0f);
+                        // }
                     }
 
                     break;
@@ -143,6 +159,60 @@ namespace GameScripts
             }
 
             throw new Exception();
+        }
+
+        public static void GrowthChange(GamePlayer target, CostType costType, int changeAmount)
+        {
+            switch (costType)
+            {
+                case CostType.Brick:
+                {
+                    target.brickIncRate = target.brickIncRate + changeAmount;
+                    if (changeAmount > 0)
+                    {
+                        // target.bricksIncRateAnimation.DORestartById("startInc");
+                    }
+                    else
+                    {
+                        // target.bricksDecRateAnimation.DORestartById("startDec");
+                    }
+
+                    break;
+                }
+                case CostType.Gem:
+                {
+                    target.gemIncRate = target.gemIncRate + changeAmount;
+                    if (changeAmount > 0)
+                    {
+                        // target.bricksIncRateAnimation.DORestartById("startInc");
+                    }
+                    else
+                    {
+                        // target.bricksDecRateAnimation.DORestartById("startDec");
+                    }
+
+                    break;
+                }
+                case CostType.Recruit:
+                {
+                    target.recruitIncRate = target.recruitIncRate + changeAmount;
+                    if (changeAmount > 0)
+                    {
+                        // target.bricksIncRateAnimation.DORestartById("startInc");
+                    }
+                    else
+                    {
+                        // target.bricksDecRateAnimation.DORestartById("startDec");
+                    }
+
+                    break;
+                }
+            }
+
+            // if (changeAmount > 0 && target.trainingMode)
+            // {
+            //     target.AddReward(0.05f * changeAmount);
+            // }
         }
     }
 
@@ -281,48 +351,15 @@ namespace GameScripts
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 int changeAmount = flow.GetValue<int>(inChangeAmount);
-                CostType buildingType = flow.GetValue<CostType>(inCostType);
+                CostType costType = flow.GetValue<CostType>(inCostType);
                 GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
-                resultValue = $"{buildingType} - {changeAmount}!!!";
+                resultValue = $"{costType} - {changeAmount}!!!";
                 if (changeAmount == 0)
                 {
                     return outputTrigger;
                 }
 
-                switch (buildingType)
-                {
-                    case CostType.Brick:
-                    {
-                        player.brickIncRate = player.brickIncRate + changeAmount;
-//         if change > 0 then
-//             player.REF.BricksIncRateAnimation:DORestartById("startInc")
-//         else
-//             player.REF.BricksDecRateAnimation:DORestartById("startDec")
-//         end
-                        break;
-                    }
-                    case CostType.Gem:
-                    {
-                        player.gemIncRate = player.gemIncRate + changeAmount;
-//         if change > 0 then
-//             player.REF.GemsIncRateAnimation:DORestartById("startInc")
-//         else
-//             player.REF.GemsDecRateAnimation:DORestartById("startDec")
-//         end
-                        break;
-                    }
-                    case CostType.Recruit:
-                    {
-                        player.recruitIncRate = player.recruitIncRate + changeAmount;
-//         if change > 0 then
-//             player.REF.RecruitsIncRateAnimation:DORestartById("startInc")
-//         else
-//             player.REF.RecruitsDecRateAnimation:DORestartById("startDec")
-//         end
-                        break;
-                    }
-                }
-                //     local player = player.player
+                SharedLogics.GrowthChange(player, costType, changeAmount);
 
                 resultValue = $"Player{player.playerID}/Refresh";
                 return outputTrigger;
@@ -370,7 +407,7 @@ namespace GameScripts
                 bool direct = flow.GetValue<bool>(inDirect);
                 int damage = flow.GetValue<int>(inDamage);
                 GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
-                GamePlayer enemy = GameMain.FindEnemyById(player.playerID);
+                GamePlayer enemy = player.arcomageCombat.FindEnemyById(player.playerID);
                 var wall = player.wall;
                 // ** 直接对塔楼的伤害
                 if (direct)
@@ -429,7 +466,7 @@ namespace GameScripts
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
-                resultValue = GameMain.FindEnemyById(player.playerID);
+                resultValue = player.arcomageCombat.FindEnemyById(player.playerID);
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");

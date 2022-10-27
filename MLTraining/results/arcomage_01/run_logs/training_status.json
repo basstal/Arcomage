@@ -1,0 +1,47 @@
+{
+    "AgainstPlayer": {
+        "checkpoints": [
+            {
+                "steps": 499968,
+                "file_path": "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-499968.onnx",
+                "reward": 3.604128159931861,
+                "creation_time": 1666860573.5876153,
+                "auxillary_file_paths": [
+                    "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-499968.pt"
+                ]
+            },
+            {
+                "steps": 999936,
+                "file_path": "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-999936.onnx",
+                "reward": 3.56678818911314,
+                "creation_time": 1666861325.490673,
+                "auxillary_file_paths": [
+                    "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-999936.pt"
+                ]
+            },
+            {
+                "steps": 1243648,
+                "file_path": "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-1243648.onnx",
+                "reward": 3.580019174143672,
+                "creation_time": 1666861754.3009832,
+                "auxillary_file_paths": [
+                    "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-1243648.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1243648,
+            "file_path": "results\\arcomage_01\\AgainstPlayer.onnx",
+            "reward": 3.580019174143672,
+            "creation_time": 1666861754.3009832,
+            "auxillary_file_paths": [
+                "results\\arcomage_01\\AgainstPlayer\\AgainstPlayer-1243648.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.12.1+cpu"
+    }
+}

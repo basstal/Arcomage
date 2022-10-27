@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 14
   logic: {fileID: 11400000, guid: c5999fff1652ccb4fa7ca66c4c28198c, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 8)\nU.GrowthChange(player,
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 8)\nU.GrowthChange(player,
     ResourceType.Recruit, 1)\n        end"
   describe_en: +8 Tower +1 Dungeon
   describe_cn: "+8 \u5854\u697C\n+1 \u602A\u517D\u4EA7\u91CF"

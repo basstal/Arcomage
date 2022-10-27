@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 6
   logic: {fileID: 11400000, guid: 54dea68dcffb20941895dceddb32b7e7, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 8)\n       
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 8)\n       
     end"
   describe_en: +8 Tower
   describe_cn: "+8 \u5854\u697C"

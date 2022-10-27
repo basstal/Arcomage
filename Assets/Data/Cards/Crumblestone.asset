@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 7
   logic: {fileID: 11400000, guid: f94aa644e533d514f83344987dd3fb35, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 5)\nlocal target
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 5)\nlocal target
     = U.GetEnemyPlayer(player)\nU.ResChange(target, ResourceType.Brick, -6)\n       
     end"
   describe_en: +5 Tower Enemy loses 6 bricks

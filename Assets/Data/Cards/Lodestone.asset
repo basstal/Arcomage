@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 5
   logic: {fileID: 11400000, guid: e127744fe7a9c34499153617a939762f, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 3)\n       
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 3)\n       
     end"
   describe_en: +3 Tower. This card can't be discarded without playing it
   describe_cn: "+3 \u5854\u697C\n\u8FD9\u5F20\u724C\u4E0D\u80FD\u6254"

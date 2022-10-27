@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 4
   logic: {fileID: 11400000, guid: 6d5d49c6fc6f4804f9e7cd61a7696c18, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 2)\nU.CauseDamage(player,
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 2)\nU.CauseDamage(player,
     2, true)\n        end"
   describe_en: +2 Tower 2 Damage to enemy tower
   describe_cn: "+2 \u5854\u697C\n\u5BF9\u65B9\u5854\u697C -2"

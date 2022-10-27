@@ -8,7 +8,8 @@
     "Unity.VisualScripting.Core",
     "Unity.VisualScripting.Flow",
     "DOTweenExt",
-    "DOTweenPro"
+    "DOTweenPro",
+    "Unity.ML-Agents"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

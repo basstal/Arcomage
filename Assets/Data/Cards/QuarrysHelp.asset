@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 4
   logic: {fileID: 11400000, guid: d4d401251c900fa46b2c20b381e79415, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 7)\nU.ResChange(player,
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 7)\nU.ResChange(player,
     ResourceType.Brick, -10)\n        end"
   describe_en: +7 Tower Lose 10 bricks
   describe_cn: "+7 \u5854\u697C\n\u7816\u5757 -10"

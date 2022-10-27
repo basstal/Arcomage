@@ -18,8 +18,8 @@ MonoBehaviour:
   costType: 3
   cost: 0
   logic: {fileID: 11400000, guid: 433818d178fb8764d823ce1aade00fac, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 1)\nlocal target
-    = U.GetEnemyPlayer(player)\nU.BuildingChange(target, \"Castle\", 1)\nU.ResChange(player,
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 1)\nlocal target
+    = U.GetEnemyPlayer(player)\nU.BuildingChange(target, \"Tower\", 1)\nU.ResChange(player,
     ResourceType.Recruit, 3)\n        end"
   describe_en: +1 Tower to all players. You gain 3 gems
   describe_cn: "+1 \u53CC\u65B9\u5854\u697C\n+3 \u5B9D\u77F3"

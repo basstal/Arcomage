@@ -19,7 +19,7 @@ MonoBehaviour:
   cost: 7
   logic: {fileID: 11400000, guid: 63a09f1851dd7cd489a6c7c35b0ebd2a, type: 2}
   luaSource: "function(player)\nU.GrowthChange(player, ResourceType.Gem, 1)\nU.BuildingChange(player,
-    \"Castle\", 3)\nU.BuildingChange(player, \"Wall\", 3)\n        end"
+    \"Tower\", 3)\nU.BuildingChange(player, \"Wall\", 3)\n        end"
   describe_en: +1 Magic +3 Tower +3 Wall
   describe_cn: "+1 \u5B9D\u77F3\n+3 \u5854\u697C\n+3 \u57CE\u5899"
   sprite: {fileID: 5290588743308969707, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

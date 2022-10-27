@@ -10,6 +10,13 @@ namespace GameScripts
         CN
     }
 
+    public enum Difficulty
+    {
+        Easy = 0,
+        Normal = 1,
+        Hard = 2
+    }
+
     [CreateAssetMenu(fileName = "ArcomageDatabase", menuName = "ScriptableObjects/ArcomageDatabase", order = 1)]
     public class ArcomageDatabase : ScriptableObject
     {
@@ -21,5 +28,16 @@ namespace GameScripts
         public AssetReferenceSprite gemAssetRef;
         public AssetReferenceSprite recruitAssetRef;
         [SerializeReference] public List<AssetReference> cardsAssetRef;
+        [SerializeReference] public List<AssetReference> difficultyAssetRef;
+
+        public static T RetrieveObject<T>(AssetReference assetReference) where T : UnityEngine.Object
+        {
+            if (!assetReference.IsValid())
+            {
+                return assetReference.LoadAssetAsync<T>().WaitForCompletion();
+            }
+
+            return (T)assetReference.OperationHandle.Result;
+        }
     }
 }

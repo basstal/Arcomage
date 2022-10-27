@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 17
   logic: {fileID: 11400000, guid: 253fc088c01dca244b29546b3e629c4a, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 12)\nU.CauseDamage(player,
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 12)\nU.CauseDamage(player,
     6)\n        end"
   describe_en: +12 Tower 6 Damage to all enemies
   describe_cn: "+12 \u5854\u697C\n\u53CC\u65B9 6 \u4F24\u5BB3"

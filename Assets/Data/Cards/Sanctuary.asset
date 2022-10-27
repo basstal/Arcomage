@@ -18,7 +18,7 @@ MonoBehaviour:
   costType: 3
   cost: 15
   logic: {fileID: 11400000, guid: 55da0dfcd26592d4bb4cbc29ba99539d, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Castle\", 10)\nU.BuildingChange(player,
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 10)\nU.BuildingChange(player,
     \"Wall\", 10)\nU.ResChange(player, ResourceType.Recruit, 5)\n        end"
   describe_en: +10 Tower +5 Wall Gain 5 recruits
   describe_cn: "+10 \u5854\u697C\n+5 \u57CE\u5899\n+5 \u602A\u517D"

@@ -23,7 +23,6 @@ namespace GameScripts
         None,
         Wall,
         Tower,
-        Castle,
     }
 
     public class GameCard : MonoBehaviour
@@ -45,6 +44,7 @@ namespace GameScripts
         public Image cardExtentImage;
 
         private bool m_isTweenDisappearCreated;
+        [NonSerialized] public bool isDisabled;
 
         public DOTweenAnimation disappearTweenAnimation;
         public DOTweenAnimation drawTweenAnimation;
@@ -62,8 +62,8 @@ namespace GameScripts
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
             AssetReferenceSprite spriteRef = m_data.costType == CostType.Brick
-                ? GameMain.Database.brickAssetRef
-                : (m_data.costType == CostType.Gem ? GameMain.Database.gemAssetRef : GameMain.Database.recruitAssetRef);
+                ? ArcomageCombat.Database.brickAssetRef
+                : (m_data.costType == CostType.Gem ? ArcomageCombat.Database.gemAssetRef : ArcomageCombat.Database.recruitAssetRef);
             if (spriteRef.IsValid())
             {
                 costTypeImage.sprite = (Sprite)spriteRef.OperationHandle.Result;
@@ -74,7 +74,7 @@ namespace GameScripts
             }
 
             Assert.IsNotNull(costTypeImage.sprite);
-            var localization = GameMain.Database.localization;
+            var localization = ArcomageCombat.Database.localization;
             cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
             cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
             cardCostText.text = m_data.cost.ToString();
@@ -92,8 +92,13 @@ namespace GameScripts
         {
             Assert.IsNotNull(inOwner);
             owner = inOwner;
-            var left = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost);
-            cardExtentImage.color = left >= 0 ? Color.white : Color.red;
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
+            cardExtentImage.color = isDisabled ? Color.red : Color.white;
         }
 
         public void UseCard()
@@ -108,7 +113,7 @@ namespace GameScripts
             {
                 m_isTweenDisappearCreated = true;
                 disappearTweenAnimation.useTargetAsV3 = true;
-                disappearTweenAnimation.endValueTransform = GameMain.Instance.cardDisappearPoint;
+                disappearTweenAnimation.endValueTransform = owner.arcomageCombat.cardDisappearPoint;
                 disappearTweenAnimation.CreateTween();
                 disappearTweenAnimation.onComplete.AddListener(Apply);
             }
@@ -119,8 +124,12 @@ namespace GameScripts
         public void Apply()
         {
             Assert.IsNotNull(owner);
+
             CustomEvent.Trigger(gameObject, "Apply", owner);
-            Log.LogInfo("卡牌使用完成", "卡牌使用完成");
+            if (!owner.trainingMode)
+            {
+                Log.LogInfo("卡牌使用完成", $"卡牌使用完成 : {m_data.logic.name}");
+            }
         }
     }
 }

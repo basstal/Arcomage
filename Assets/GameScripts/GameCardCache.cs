@@ -5,11 +5,12 @@ namespace GameScripts
 {
     public class GameCardCache : MonoBehaviour
     {
-        public static GameCardCache Instance;
+        // public GameMain gameMain;
+        // public static GameCardCache Instance;
 
         private void Awake()
         {
-            Instance = this;
+            // Instance = this;
         }
 
         public GameCard Acquire(GamePlayer inOwner, ArcomageCard template)
@@ -18,24 +19,22 @@ namespace GameScripts
             if (transform.childCount > 0)
             {
                 gameCard = transform.GetChild(0).GetComponent<GameCard>();
-                gameCard.transform.SetParent(GameMain.Instance.handCardLayout);
             }
             else
             {
-                var cardGameObject = GameMain.Database.cardPrefabAssetRef.InstantiateAsync().WaitForCompletion();
+                var cardGameObject = ArcomageCombat.Database.cardPrefabAssetRef.InstantiateAsync().WaitForCompletion();
                 gameCard = cardGameObject.GetComponent<GameCard>();
             }
 
             gameCard.SetData(template);
             gameCard.SetOwner(inOwner);
-
             return gameCard;
         }
 
         public void TurnBack(GameCard inCard)
         {
             Assert.IsTrue(inCard.transform.parent != this.transform);
-            inCard.transform.SetParent(transform);
+            inCard.transform.SetParent(transform, false);
             inCard.owner = null;
         }
     }
