@@ -1,0 +1,29 @@
+{
+    "AgainstPlayer": {
+        "checkpoints": [
+            {
+                "steps": 28964,
+                "file_path": "results\\arcomage_08\\AgainstPlayer\\AgainstPlayer-28964.onnx",
+                "reward": 0.5779853777416735,
+                "creation_time": 1666866686.055513,
+                "auxillary_file_paths": [
+                    "results\\arcomage_08\\AgainstPlayer\\AgainstPlayer-28964.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 28964,
+            "file_path": "results\\arcomage_08\\AgainstPlayer.onnx",
+            "reward": 0.5779853777416735,
+            "creation_time": 1666866686.055513,
+            "auxillary_file_paths": [
+                "results\\arcomage_08\\AgainstPlayer\\AgainstPlayer-28964.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.12.1+cpu"
+    }
+}

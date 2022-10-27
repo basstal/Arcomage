@@ -301,7 +301,7 @@ namespace GameScripts
             }
 
             int diffTower = tower - snapshot.tower;
-            AddReward(diffTower > 0 ? diffTower / (float)tower : 0);
+            AddReward(diffTower > 0 ? Mathf.Clamp01(tower / TOWER_MAX_FILL_AMOUNT_SCORE) : 0);
             snapshot.TakeSnapshot(this);
         }
     }
