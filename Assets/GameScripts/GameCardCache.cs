@@ -5,14 +5,6 @@ namespace GameScripts
 {
     public class GameCardCache : MonoBehaviour
     {
-        // public GameMain gameMain;
-        // public static GameCardCache Instance;
-
-        private void Awake()
-        {
-            // Instance = this;
-        }
-
         public GameCard Acquire(GamePlayer inOwner, ArcomageCard template)
         {
             GameCard gameCard = null;

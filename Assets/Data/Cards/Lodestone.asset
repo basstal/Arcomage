@@ -17,9 +17,9 @@ MonoBehaviour:
   id: 40
   costType: 3
   cost: 5
+  disallowDrop: 1
   logic: {fileID: 11400000, guid: e127744fe7a9c34499153617a939762f, type: 2}
-  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 3)\n       
-    end"
+  luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 3)\n        end"
   describe_en: +3 Tower. This card can't be discarded without playing it
   describe_cn: "+3 \u5854\u697C\n\u8FD9\u5F20\u724C\u4E0D\u80FD\u6254"
   sprite: {fileID: -5622938358748693357, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

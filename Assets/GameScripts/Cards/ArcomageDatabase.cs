@@ -4,19 +4,6 @@ using UnityEngine.AddressableAssets;
 
 namespace GameScripts
 {
-    public enum Localization
-    {
-        EN,
-        CN
-    }
-
-    public enum Difficulty
-    {
-        Easy = 0,
-        Normal = 1,
-        Hard = 2
-    }
-
     [CreateAssetMenu(fileName = "ArcomageDatabase", menuName = "ScriptableObjects/ArcomageDatabase", order = 1)]
     public class ArcomageDatabase : ScriptableObject
     {

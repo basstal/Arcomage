@@ -21,5 +21,5 @@ MonoBehaviour:
   luaSource: "function(player)\nif player.GamePlayerCS.wall == 0 then\nU.BuildingChange(player,
     \"Wall\", 6)\nelse\nU.BuildingChange(player, \"Wall\", 3)\nend\n        end"
   describe_en: If wall = 0,+6 wall, else +3 wall
-  describe_cn: "\u57CE\u5899=0\n+6 \u57CE\u5899\n\u5426\u5219\n+3 \u57CE\u5899"
+  describe_cn: "\u5982\u679C\u57CE\u5899=0\n+6 \u57CE\u5899\n\u5426\u5219\n+3 \u57CE\u5899"
   sprite: {fileID: 8948946568479395471, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

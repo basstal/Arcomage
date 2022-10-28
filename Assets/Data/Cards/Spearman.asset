@@ -17,12 +17,13 @@ MonoBehaviour:
   id: 98
   costType: 2
   cost: 2
+  disallowDrop: 0
   logic: {fileID: 11400000, guid: 737bd04044947dd41b1b56c5040166ea, type: 2}
   luaSource: "function(player)\nlocal p1w = player.GamePlayerCS.wall\nlocal target
     = U.GetEnemyPlayer(player)\nlocal p2w = target.GamePlayerCS.wall\nif p1w > p2w
     then\nU.CauseDamage(player, 3)\nelse\nU.CauseDamage(player, 2)\nend\n       
     end"
   describe_en: If Wall > enemy Wall 3 Damage else 2 Damage
-  describe_cn: "\u57CE\u5899>\u5BF9\u65B9\u57CE\u5899\n3 \u4F24\u5BB3\n\u5426\u5219\n2
+  describe_cn: "\u5982\u679C\u57CE\u5899>\u5BF9\u65B9\u57CE\u5899\n3 \u4F24\u5BB3\n\u5426\u5219\n2
     \u4F24\u5BB3"
   sprite: {fileID: -4949399290984227110, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

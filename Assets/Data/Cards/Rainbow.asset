@@ -22,5 +22,5 @@ MonoBehaviour:
     = U.GetEnemyPlayer(player)\nU.BuildingChange(target, \"Tower\", 1)\nU.ResChange(player,
     ResourceType.Recruit, 3)\n        end"
   describe_en: +1 Tower to all players. You gain 3 gems
-  describe_cn: "+1 \u53CC\u65B9\u5854\u697C\n+3 \u5B9D\u77F3"
+  describe_cn: "+1 \u53CC\u65B9\u5854\u697C\n+3 \u5DF1\u65B9\u5B9D\u77F3"
   sprite: {fileID: -2739360914950123156, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

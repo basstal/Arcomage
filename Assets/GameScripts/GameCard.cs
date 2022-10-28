@@ -6,34 +6,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace GameScripts
 {
-    public enum CostType
-    {
-        None,
-        Brick,
-        Recruit,
-        Gem,
-    }
-
-    public enum BuildingType
-    {
-        None,
-        Wall,
-        Tower,
-    }
-
     public class GameCard : MonoBehaviour
     {
-#if UNITY_EDITOR
-        public TextMeshProUGUI debug;
-#endif
         public int id => m_data.id;
+        public bool canDrop => !m_data.disallowDrop;
 
         [NonSerialized] private ArcomageCard m_data;
         [NonSerialized] public GamePlayer owner;
+        [NonSerialized] public bool isDisabled;
 
         public Button useCardButton;
         public Image cardImage;
@@ -42,12 +27,8 @@ namespace GameScripts
         public TextMeshProUGUI cardDescribeText;
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
-
-        private bool m_isTweenDisappearCreated;
-        [NonSerialized] public bool isDisabled;
-
-        public DOTweenAnimation disappearTweenAnimation;
-        public DOTweenAnimation drawTweenAnimation;
+        public DOTweenAnimation cardUsingAnimation;
+        public DOTweenAnimation cardDisplayingAnimation;
 
         private void Awake()
         {
@@ -78,10 +59,7 @@ namespace GameScripts
             cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
             cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
             cardCostText.text = m_data.cost.ToString();
-#if UNITY_EDITOR
-            debug.gameObject.SetActive(true);
-#endif
-            var trans = disappearTweenAnimation.transform;
+            var trans = cardUsingAnimation.transform;
             trans.localPosition = Vector3.zero;
             trans.localScale = Vector3.one;
             var scriptMachine = GetComponent<ScriptMachine>();
@@ -92,33 +70,48 @@ namespace GameScripts
         {
             Assert.IsNotNull(inOwner);
             owner = inOwner;
-            Refresh();
         }
 
-        public void Refresh()
+        public void OnDisplay()
         {
-            isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
+            gameObject.SetActive(true);
+            transform.SetParent(owner.arcomageCombat.handCardLayout, false);
+            isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0 || (owner.isDropping && !canDrop);
             cardExtentImage.color = isDisabled ? Color.red : Color.white;
+            useCardButton.interactable = !isDisabled;
+            // useCardButton.GetComponent<Image>().raycastTarget = !isDisabled;
         }
 
         public void UseCard()
         {
             Assert.IsNotNull(m_data);
             owner.usingCard = this;
+            owner.arcomageCombat.handCardBlocking.gameObject.SetActive(true);
         }
 
-        public void OnShowUseCard()
+        public void PlayDisplayingCardAnim()
         {
-            if (!m_isTweenDisappearCreated)
+            cardDisplayingAnimation.DOPlayForwardAllById(owner.playerID == 1 ? "PlayerLeft" : "PlayerRight");
+        }
+
+        public void PlayUsingCardAnim(UnityAction callback)
+        {
+            var tweenAnimations = cardUsingAnimation.GetComponents<DOTweenAnimation>();
+            foreach (var tweenAnimation in tweenAnimations)
             {
-                m_isTweenDisappearCreated = true;
-                disappearTweenAnimation.useTargetAsV3 = true;
-                disappearTweenAnimation.endValueTransform = owner.arcomageCombat.cardDisappearPoint;
-                disappearTweenAnimation.CreateTween();
-                disappearTweenAnimation.onComplete.AddListener(Apply);
+                if (tweenAnimation.id == "Final")
+                {
+                    tweenAnimation.onComplete.RemoveAllListeners();
+                    tweenAnimation.onComplete.AddListener(callback);
+                }
+
+                if (tweenAnimation.id == "GoCenter")
+                {
+                    tweenAnimation.endValueV3 = owner.arcomageCombat.cardDisappearPoint.position;
+                }
             }
 
-            disappearTweenAnimation.DORestart();
+            cardUsingAnimation.DORestart();
         }
 
         public void Apply()

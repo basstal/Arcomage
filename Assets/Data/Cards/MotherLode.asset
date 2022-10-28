@@ -17,6 +17,7 @@ MonoBehaviour:
   id: 5
   costType: 1
   cost: 4
+  disallowDrop: 0
   logic: {fileID: 11400000, guid: 86d4af24567a7c149b02562897e1b78e, type: 2}
   luaSource: "function(player)\nlocal p1g = player.GamePlayerCS.brickIncRate\nlocal
     target = U.GetEnemyPlayer(player)\nlocal p2g = target.GamePlayerCS.brickIncRate\nif
@@ -27,6 +28,6 @@ MonoBehaviour:
     Else,+1
 
     quarry'
-  describe_cn: "\u7816\u5757\u4EA7\u91CF<\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF\n+2
+  describe_cn: "\u5982\u679C\u7816\u5757\u4EA7\u91CF<\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF\n+2
     \u7816\u5757\u4EA7\u91CF\n\u5426\u5219\n+1 \u7816\u5757\u4EA7\u91CF"
   sprite: {fileID: -2922113337684369405, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

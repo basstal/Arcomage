@@ -21,5 +21,5 @@ MonoBehaviour:
   luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nU.CauseDamage(player,
     8)\nU.CauseDamage(target, 3, true)\n        end"
   describe_en: 8 Damage 3 Damage to your tower
-  describe_cn: "8 \u4F24\u5BB3\n\u5854\u697C -3"
+  describe_cn: "8 \u4F24\u5BB3\n\u5DF1\u65B9\u5854\u697C -3"
   sprite: {fileID: 2765590566971894778, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

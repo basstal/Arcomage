@@ -23,5 +23,5 @@ MonoBehaviour:
     p1g < p2g then\nU.GrowthChange(player, ResourceType.Brick, p2g - p1g)\nend\n       
     end"
   describe_en: If quarry < enemy quarry, quarry = enemy quarry
-  describe_cn: "\u7816\u5757\u4EA7\u91CF<\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF\n\u7816\u5757\u4EA7\u91CF=\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF"
+  describe_cn: "\u5982\u679C\u7816\u5757\u4EA7\u91CF<\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF\n\u7816\u5757\u4EA7\u91CF=\u5BF9\u65B9\u7816\u5757\u4EA7\u91CF"
   sprite: {fileID: -657809462729225012, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

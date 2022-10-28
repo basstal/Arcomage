@@ -22,5 +22,6 @@ MonoBehaviour:
     ResourceType.Gem, -1)\nU.GrowthChange(target, ResourceType.Gem, -1)\nU.CauseDamage(player,
     7, true)\nU.CauseDamage(target, 7, true)\n        end"
   describe_en: 7 Damage to all towers, all player's magic -1
-  describe_cn: "\u53CC\u65B9\u5854\u697C -7\n\u53CC\u65B9\u5B9D\u77F3 -1"
+  describe_cn: "\u53CC\u65B9\u5854\u697C -7\n\u53CC\u65B9\u5B9D\u77F3\u4EA7\u91CF
+    -1"
   sprite: {fileID: -7012814685275929695, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

@@ -4,10 +4,8 @@ using GameScripts.Utils;
 using TMPro;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
-using Unity.MLAgents.Policies;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -16,18 +14,37 @@ namespace GameScripts
 {
     public class GamePlayer : Agent
     {
-        [NonSerialized] public int brick = 0;
-        [NonSerialized] public int gem = 0;
-        [NonSerialized] public int recruit = 0;
-        [NonSerialized] public int brickIncRate = 1;
-        [NonSerialized] public int gemIncRate = 1;
-        [NonSerialized] public int recruitIncRate = 1;
+        #region SerializedProperties
 
-        [NonSerialized] public int tower = 0;
-        [NonSerialized] public int wall = 0;
+        [Tooltip("是否被AI接管")] public bool isAIControlling = false;
         public string playerName = "Default";
         public int playerID;
         public Difficulty difficulty = Difficulty.Easy;
+        public TextMeshProUGUI bricksCountTMP;
+        public TextMeshProUGUI gemsCountTMP;
+        public TextMeshProUGUI recruitsCountTMP;
+        public TextMeshProUGUI towerScoreTMP;
+        public TextMeshProUGUI wallScoreTMP;
+        public TextMeshProUGUI bricksIncRateTMP;
+        public TextMeshProUGUI gemsIncRateTMP;
+        public TextMeshProUGUI recruitsIncRateTMP;
+        public TextMeshProUGUI playerNameTMP;
+        public GameObject towerRoof;
+        public GameObject wallRoof;
+        public Image towerBodyImage;
+        public Image wallBodyImage;
+        public ParticleSystem bricksAddEffect;
+        public ParticleSystem bricksDropEffect;
+        public ParticleSystem gemsAddEffect;
+        public ParticleSystem gemsDropEffect;
+        public ParticleSystem recruitsAddEffect;
+        public ParticleSystem recruitsDropEffect;
+        public ParticleSystem towerAddEffect;
+        public ParticleSystem towerDropEffect;
+        public ParticleSystem wallAddEffect;
+        public ParticleSystem wallDropEffect;
+
+        #endregion
 
         public const float RESOURCE_LIMITATION = 10000;
         public const float RESOURCE_INCREASE_RATE_LIMITATION = 100;
@@ -41,39 +58,24 @@ namespace GameScripts
         public const float WALL_MAX_FILL_AMOUNT_SCORE = 100;
         public const float WALL_MIN_FILL_AMOUNT = 0.05f;
 
+
+        [NonSerialized] public bool isAIWaitAnimation;
+        [NonSerialized] public int brick = 0;
+        [NonSerialized] public int gem = 0;
+        [NonSerialized] public int recruit = 0;
+        [NonSerialized] public int brickIncRate = 1;
+        [NonSerialized] public int gemIncRate = 1;
+        [NonSerialized] public int recruitIncRate = 1;
+        [NonSerialized] public int tower = 0;
+        [NonSerialized] public int wall = 0;
         [NonSerialized] public List<GameCard> handCards;
         [NonSerialized] public ArcomageCombat arcomageCombat;
         [NonSerialized] public GameCard usingCard;
-
-        public TextMeshProUGUI bricksCountTMP;
-        public TextMeshProUGUI gemsCountTMP;
-        public TextMeshProUGUI recruitsCountTMP;
-        public TextMeshProUGUI towerScoreTMP;
-        public TextMeshProUGUI wallScoreTMP;
-        public TextMeshProUGUI bricksIncRateTMP;
-        public TextMeshProUGUI gemsIncRateTMP;
-        public TextMeshProUGUI recruitsIncRateTMP;
-        public TextMeshProUGUI playerNameTMP;
-
-        public GameObject towerRoof;
-        public GameObject wallRoof;
-
-        public Image towerBodyImage;
-        public Image wallBodyImage;
-
-        public ParticleSystem bricksAddEffect;
-        public ParticleSystem bricksDropEffect;
-        public ParticleSystem gemsAddEffect;
-        public ParticleSystem gemsDropEffect;
-        public ParticleSystem recruitsAddEffect;
-        public ParticleSystem recruitsDropEffect;
-        public ParticleSystem towerAddEffect;
-        public ParticleSystem towerDropEffect;
-        public ParticleSystem wallAddEffect;
-        public ParticleSystem wallDropEffect;
+        [NonSerialized] private ArcomagePlayer snapshot;
+        [NonSerialized] public bool isPlayAgain;
+        [NonSerialized] public bool isDropping;
 
         public bool trainingMode => Academy.Instance.IsCommunicatorOn;
-        [NonSerialized] private ArcomagePlayer snapshot;
 
         public override void Initialize()
         {
@@ -110,6 +112,7 @@ namespace GameScripts
             int useCardId = actions.DiscreteActions[0];
             if (PauseAction() || useCardId == 0)
             {
+                isAIWaitAnimation = false;
                 return;
             }
 
@@ -117,9 +120,6 @@ namespace GameScripts
             GameCard card = handCards.Find(card => card.id == useCardId);
             Assert.IsNotNull(card);
             card.UseCard();
-            // Assert.IsTrue(index >= 0 && handCards.Count > index);
-            // GameCard card = handCards[index];
-            // card.UseCard();
         }
 
         /// <summary>
@@ -147,7 +147,14 @@ namespace GameScripts
             for (int i = 1; i < ArcomageCombat.Database.cardsAssetRef.Count + 1; ++i)
             {
                 // only 1 branch, which is set to all discrete actions
-                actionMask.SetActionEnabled(0, i, !isPauseAction && handCards.Find(card => card.id == i && !card.isDisabled) != null);
+                var findCard = handCards.Find(card => card.id == i && !card.isDisabled);
+                var actionEnabled = !isPauseAction && findCard != null;
+                if (isDropping)
+                {
+                    actionEnabled = actionEnabled && findCard.canDrop;
+                }
+
+                actionMask.SetActionEnabled(0, i, actionEnabled);
             }
         }
 

@@ -17,10 +17,12 @@ MonoBehaviour:
   id: 87
   costType: 2
   cost: 8
+  disallowDrop: 0
   logic: {fileID: 11400000, guid: 8cb07fbee62231744988716f329ab547, type: 2}
   luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nif target.GamePlayerCS.wall
     == 0 then\nU.CauseDamage(player, 10)\nelse\nU.CauseDamage(player, 6)\nend\n       
     end"
   describe_en: If enemy wall = 0. 10 damage, else 6 damage
-  describe_cn: "\u5BF9\u65B9\u57CE\u5899=0\n10 \u4F24\u5BB3\n\u5426\u5219\n6 \u4F24\u5BB3"
+  describe_cn: "\u5982\u679C\u5BF9\u65B9\u57CE\u5899=0\n10 \u4F24\u5BB3\n\u5426\u5219\n6
+    \u4F24\u5BB3"
   sprite: {fileID: -530570659171988228, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

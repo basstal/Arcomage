@@ -21,5 +21,5 @@ MonoBehaviour:
   luaSource: "function(player)\nU.CauseDamage(player, 3)\nU.ResChange(player, ResourceType.Gem,
     1)\n        end"
   describe_en: 3 Damage +1 gem
-  describe_cn: "3 \u4F24\u5BB3\n+1 \u5B9D\u77F3\u4EA7\u91CF"
+  describe_cn: "3 \u4F24\u5BB3\n+1 \u5B9D\u77F3"
   sprite: {fileID: 2117089487733031850, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

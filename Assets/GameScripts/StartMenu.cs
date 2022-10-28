@@ -22,5 +22,25 @@ namespace GameScripts
             method?.Invoke(new object(), null);
         }
 #endif
+
+        // public bool IsPlayerWin(GamePlayer target)
+        // {
+        //     return target.tower > 50 || FindEnemyById(target.playerID).tower <= 0;
+        // }
+
+        // public void IsGameEnded()
+        // {
+        //     var player1Win = IsPlayerWin(m_player1);
+        //     var player2Win = IsPlayerWin(m_player2);
+        //     if (player1Win || player2Win)
+        //     {
+        //         // m_gameEnd = player1Win && player2Win ? $"Peace End" : (player1Win ? $"player1Win" : "player2Win");
+        //         m_isGameEnded = true;
+        //         return;
+        //     }
+        //
+        //     currentStage = DisplayHandCards;
+        //     m_isGameEnded = false;
+        // }
     }
 }

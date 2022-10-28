@@ -22,6 +22,6 @@ MonoBehaviour:
     > player.GamePlayerCS.tower then\nU.BuildingChange(player, \"Tower\", 2)\nelse\nU.BuildingChange(player,
     \"Tower\", 1)\nend\n        end"
   describe_en: if Tower< enemy Tower +2 Tower. else + Tower
-  describe_cn: "\u5854\u697C<\u5BF9\u65B9\u5854\u697C\n+2 \u5854\u697C\n\u5426\u5219\n+1
+  describe_cn: "\u5982\u679C\u5854\u697C<\u5BF9\u65B9\u5854\u697C\n+2 \u5854\u697C\n\u5426\u5219\n+1
     \u5854\u697C"
   sprite: {fileID: 3626534658845240668, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

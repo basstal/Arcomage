@@ -23,6 +23,6 @@ MonoBehaviour:
     m2g = target.GamePlayerCS.recruitIncRate\nif m1g < m2g then\nU.GrowthChange(player,
     ResourceType.Recruit, 1)\nend\n        end"
   describe_en: +6 recruits, +6 Wall, If dungeon < enemy dungeon, +1 dungeon
-  describe_cn: "+6 \u602A\u517D +6 \u57CE\u5899\n\u602A\u517D\u4EA7\u91CF<\u5BF9\u65B9\u602A\u517D\u4EA7\u91CF\n+1
+  describe_cn: "+6 \u602A\u517D +6 \u57CE\u5899\n\u5982\u679C\u602A\u517D\u4EA7\u91CF<\u5BF9\u65B9\u602A\u517D\u4EA7\u91CF\n+1
     \u602A\u517D\u4EA7\u91CF"
   sprite: {fileID: -2824835690293362544, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

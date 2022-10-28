@@ -1,46 +1,30 @@
 ﻿using System;
-using System.Reflection;
 using GameScripts.Utils;
-using TMPro;
-using Unity.MLAgents.Policies;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace GameScripts
 {
     public class ArcomageCombat : MonoBehaviour
     {
+        public static ArcomageDatabase Database;
+
         public AssetReference databaseRef;
         public int firstPlayer = 1;
-
-        private int m_round = 0;
-
         public GamePlayer m_player1;
         public GamePlayer m_player2;
         public GameCardCache gameCardCache;
+        public RectTransform handCardLayout;
+        public RectTransform cardDisappearPoint;
+        public RectTransform handCardBlocking;
 
         [NonSerialized] public GamePlayer currentPlayer;
-
-        public static ArcomageDatabase Database;
-
-        // public Button startButton;
-        // public Button reloadButton;
-        public RectTransform handCardLayout;
-
-        public RectTransform cardDisappearPoint;
-        // public RectTransform gameEndBlock;
-
-        private Action currentStage;
-
-        private bool playerSwitched;
-
-        // [NonSerialized] public bool m_isGameEnded;
-
         [NonSerialized] public bool blockAction;
-        // private string m_gameEnd;
+
+        private int m_round = 0;
+        private Action m_currentStage;
+        private bool m_playerSwitched;
 
         public GamePlayer FindEnemyById(int id)
         {
@@ -51,28 +35,13 @@ namespace GameScripts
         {
             ArcomageCombat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
             Assert.IsNotNull(Database);
-            // gameEndBlock.gameObject.SetActive(false);
-            // startButton.BindButtonEvent(GameStart);
-            // reloadButton.BindButtonEvent(OnReload);
-            // gameEndBlock.GetComponent<Button>().BindButtonEvent(OnReload);
         }
 
         private void Update()
         {
-            // if (m_isGameEnded)
-            // {
-            //     return;
-            // }
-            // if (m_gameEnd != null)
-            // {
-            //     // gameEndBlock.gameObject.SetActive(true);
-            //     // gameEndBlock.GetComponentInChildren<TextMeshProUGUI>().text = m_gameEnd;
-            //     currentStage = null;
-            // }
-
-            if (currentStage != null)
+            if (m_currentStage != null)
             {
-                currentStage.Invoke();
+                m_currentStage.Invoke();
             }
         }
 
@@ -92,29 +61,9 @@ namespace GameScripts
             currentPlayer = firstPlayer == 1 ? m_player1 : m_player2;
             m_player1.ResetPlayer();
             m_player2.ResetPlayer();
-            playerSwitched = false;
-            currentStage = DisplayHandCards;
+            m_playerSwitched = false;
+            m_currentStage = DisplayHandCards;
         }
-
-        // public bool IsPlayerWin(GamePlayer target)
-        // {
-        //     return target.tower > 50 || FindEnemyById(target.playerID).tower <= 0;
-        // }
-
-        // public void IsGameEnded()
-        // {
-        //     var player1Win = IsPlayerWin(m_player1);
-        //     var player2Win = IsPlayerWin(m_player2);
-        //     if (player1Win || player2Win)
-        //     {
-        //         // m_gameEnd = player1Win && player2Win ? $"Peace End" : (player1Win ? $"player1Win" : "player2Win");
-        //         m_isGameEnded = true;
-        //         return;
-        //     }
-        //
-        //     currentStage = DisplayHandCards;
-        //     m_isGameEnded = false;
-        // }
 
         public void DisplayHandCards()
         {
@@ -128,53 +77,91 @@ namespace GameScripts
 
             foreach (var handCard in currentPlayer.handCards)
             {
-                handCard.gameObject.SetActive(true);
-                handCard.transform.SetParent(handCardLayout, false);
-                handCard.GetComponentInChildren<CanvasGroup>().alpha = 1;
-                handCard.Refresh();
+                handCard.OnDisplay();
+                if (!currentPlayer.trainingMode)
+                {
+                    handCard.PlayDisplayingCardAnim();
+                }
             }
 
             UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(handCardLayout);
-            currentStage = WaitCardUse;
+            handCardBlocking.gameObject.SetActive(false);
+            m_currentStage = WaitCardUse;
         }
 
         public void WaitCardUse()
         {
-            if (currentPlayer.trainingMode)
+            if (currentPlayer.trainingMode ||
+                (currentPlayer.isAIControlling && !currentPlayer.isAIWaitAnimation))
             {
                 currentPlayer.RequestDecision();
+                currentPlayer.isAIWaitAnimation = true;
             }
+
             if (currentPlayer.usingCard != null)
             {
                 var usingCard = currentPlayer.usingCard;
                 currentPlayer.RemoveFromHandCard(usingCard);
-                usingCard.Apply();
-                gameCardCache.TurnBack(usingCard);
+                if (!currentPlayer.isDropping)
+                {
+                    usingCard.Apply();
+                }
+
+                currentPlayer.isDropping = false;
                 currentPlayer.usingCard = null;
-                currentStage = IsNextPlayer;
+                // ** trainingMode have no animation
+                if (currentPlayer.trainingMode)
+                {
+                    gameCardCache.TurnBack(usingCard);
+                    m_currentStage = IsNextPlayer;
+                }
+                else
+                {
+                    usingCard.PlayUsingCardAnim(() =>
+                    {
+                        currentPlayer.isAIWaitAnimation = false;
+                        gameCardCache.TurnBack(usingCard);
+                        m_currentStage = IsNextPlayer;
+                    });
+                }
             }
         }
 
         public void IsNextPlayer()
         {
-            if (playerSwitched)
+            if (currentPlayer.isPlayAgain)
             {
-                m_round++;
+                handCardBlocking.gameObject.SetActive(false);
+                currentPlayer.isPlayAgain = false;
+                // ** 刷新一遍展示效果，因为有新抽的卡以及不能扔的卡
+                foreach (var handCard in currentPlayer.handCards)
+                {
+                    handCard.OnDisplay();
+                }
+
+                m_currentStage = WaitCardUse;
             }
             else
             {
-                playerSwitched = true;
-            }
+                if (m_playerSwitched)
+                {
+                    m_round++;
+                }
+                else
+                {
+                    m_playerSwitched = true;
+                }
 
-            SharedLogics.PlayerResourceGrowthAll(currentPlayer);
-            currentPlayer.WithdrawAnimation();
-            if (currentPlayer.trainingMode)
-            {
-                currentPlayer.CalculateReward();
-            }
+                SharedLogics.PlayerResourceGrowthAll(currentPlayer);
+                currentPlayer.WithdrawAnimation();
+                if (currentPlayer.trainingMode)
+                {
+                    currentPlayer.CalculateReward();
+                }
 
-            currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
-            currentStage = DisplayHandCards;
+                currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
+                m_currentStage = DisplayHandCards;
+            }
         }
     }
 }

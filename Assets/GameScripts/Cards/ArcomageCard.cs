@@ -11,11 +11,12 @@ namespace GameScripts
         public int id;
         public CostType costType;
         public int cost;
+        public bool disallowDrop;
         public ScriptGraphAsset logic;
         [Multiline(20)] public string luaSource;
 
-        public string describe_en;
-        public string describe_cn;
+        [Multiline(5)] public string describe_en;
+        [Multiline(5)] public string describe_cn;
 
         public Sprite sprite;
     }

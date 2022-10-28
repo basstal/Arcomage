@@ -8,8 +8,10 @@
     "com.unity.ide.rider": "3.0.16",
     "com.unity.modules.ui": "1.0.0",
     "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.modules.animation": "1.0.0",
     "com.unity.ml-agents": "2.3.50",
-    "com.unity.test-framework": "1.1.31"
+    "com.unity.test-framework": "1.1.31",
+    "com.coffee.ui-particle": "https://github.com/mob-sakai/ParticleEffectForUGUI.git#4.1.7"
   },
   "scopedRegistries": [
     {

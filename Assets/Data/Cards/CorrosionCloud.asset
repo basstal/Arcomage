@@ -22,5 +22,6 @@ MonoBehaviour:
     > 0 then\nU.CauseDamage(player, 10)\nelse\nU.CauseDamage(player, 7)\nend\n       
     end"
   describe_en: If enemy wall>0, 10 damage, else 7 damage
-  describe_cn: "\u5BF9\u65B9\u57CE\u5899>0\n10 \u4F24\u5BB3\n\u5426\u5219\n7 \u4F24\u5BB3"
+  describe_cn: "\u5982\u679C\u5BF9\u65B9\u57CE\u5899>0\n10 \u4F24\u5BB3\n\u5426\u5219\n7
+    \u4F24\u5BB3"
   sprite: {fileID: -7211356731620292235, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

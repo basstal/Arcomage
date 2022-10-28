@@ -17,12 +17,13 @@ MonoBehaviour:
   id: 90
   costType: 2
   cost: 9
+  disallowDrop: 0
   logic: {fileID: 11400000, guid: e3a6065f3823c044bbe8e4fbdb7e3d9c, type: 2}
   luaSource: "function(player)\nlocal target = U.GetEnemyPlayer(player)\nlocal j2g
     = player.GamePlayerCS.gemIncRate\nlocal j1g = target.GamePlayerCS.gemIncRate\nif
     j1g > j2g then\nU.CauseDamage(player, 12)\nelse\nU.CauseDamage(player, 8)\nend\n       
     end"
   describe_en: If magic > enemy magic, 12 damage, else 8 damage
-  describe_cn: "\u5B9D\u77F3\u4EA7\u91CF>\u5BF9\u65B9\u5B9D\u77F3\u4EA7\u91CF\n12
+  describe_cn: "\u5982\u679C\u5B9D\u77F3\u4EA7\u91CF>\u5BF9\u65B9\u5B9D\u77F3\u4EA7\u91CF\n12
     \u4F24\u5BB3\n\u5426\u5219\n8 \u4F24\u5BB3"
   sprite: {fileID: -3815161397092718392, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

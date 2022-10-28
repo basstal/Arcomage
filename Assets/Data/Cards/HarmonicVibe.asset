@@ -21,5 +21,5 @@ MonoBehaviour:
   luaSource: "function(player)\nU.GrowthChange(player, ResourceType.Gem, 1)\nU.BuildingChange(player,
     \"Tower\", 3)\nU.BuildingChange(player, \"Wall\", 3)\n        end"
   describe_en: +1 Magic +3 Tower +3 Wall
-  describe_cn: "+1 \u5B9D\u77F3\n+3 \u5854\u697C\n+3 \u57CE\u5899"
+  describe_cn: "+1 \u5B9D\u77F3\u4EA7\u91CF\n+3 \u5854\u697C\n+3 \u57CE\u5899"
   sprite: {fileID: 5290588743308969707, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

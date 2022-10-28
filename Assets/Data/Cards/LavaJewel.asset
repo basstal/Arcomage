@@ -21,5 +21,5 @@ MonoBehaviour:
   luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 12)\nU.CauseDamage(player,
     6)\n        end"
   describe_en: +12 Tower 6 Damage to all enemies
-  describe_cn: "+12 \u5854\u697C\n\u53CC\u65B9 6 \u4F24\u5BB3"
+  describe_cn: "+12 \u5854\u697C\n\u53CC\u65B9\u906D\u53D7 6 \u4F24\u5BB3"
   sprite: {fileID: 4374710206130159297, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

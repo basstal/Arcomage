@@ -23,6 +23,6 @@ MonoBehaviour:
     then\nU.CauseDamage(player, 16)\nelse\nU.CauseDamage(player, 8, true)\nend\n       
     end"
   describe_en: If Tower > enemy Wall, 8 damage to enemy Tower else 8 damage
-  describe_cn: "\u5854\u697C>\u5BF9\u65B9\u57CE\u5899\n\u5BF9\u65B9\u5854\u697C -8\n\u5426\u5219\n8
-    \u4F24\u5BB3"
+  describe_cn: "\u5982\u679C\u5854\u697C>\u5BF9\u65B9\u57CE\u5899\n\u5BF9\u65B9\u5854\u697C
+    -8\n\u5426\u5219\n8 \u4F24\u5BB3"
   sprite: {fileID: 4925889629097389547, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}

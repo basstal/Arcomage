@@ -17,9 +17,10 @@ MonoBehaviour:
   id: 50
   costType: 3
   cost: 9
+  disallowDrop: 0
   logic: {fileID: 11400000, guid: eab885a015b5ad647b401069072dc6d0, type: 2}
   luaSource: "function(player)\nU.BuildingChange(player, \"Tower\", 5)\nU.GrowthChange(player,
     ResourceType.Gem, 1)\n        end"
   describe_en: +5 Tower +1 Magic
-  describe_cn: "+5 \u5854\u697C\n+1 \u5B9D\u77F3"
+  describe_cn: "+5 \u5854\u697C\n+1 \u5B9D\u77F3\u4EA7\u91CF"
   sprite: {fileID: 5125170831202582444, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}
