@@ -69,7 +69,7 @@ namespace GameScripts
         [NonSerialized] public int tower = 0;
         [NonSerialized] public int wall = 0;
         [NonSerialized] public List<GameCard> handCards;
-        [NonSerialized] public ArcomageCombat arcomageCombat;
+        [NonSerialized] public GameCombat GameCombat;
         [NonSerialized] public GameCard usingCard;
         [NonSerialized] private ArcomagePlayer snapshot;
         [NonSerialized] public bool isPlayAgain;
@@ -80,7 +80,7 @@ namespace GameScripts
         public override void Initialize()
         {
             handCards = new List<GameCard>();
-            arcomageCombat = transform.GetComponentInParent<ArcomageCombat>();
+            GameCombat = transform.GetComponentInParent<GameCombat>();
             if (!trainingMode)
             {
                 MaxStep = 0;
@@ -92,12 +92,12 @@ namespace GameScripts
         /// </summary>
         public override void OnEpisodeBegin()
         {
-            arcomageCombat.GameReset();
+            GameCombat.GameReset();
         }
 
         public bool PauseAction()
         {
-            return arcomageCombat.blockAction || handCards.Count == 0 || arcomageCombat.currentPlayer != this || usingCard != null;
+            return GameCombat.blockAction || handCards.Count == 0 || GameCombat.currentPlayer != this || usingCard != null;
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace GameScripts
             var isPauseAction = PauseAction();
             // 0 means do nothing
             actionMask.SetActionEnabled(0, 0, true);
-            for (int i = 1; i < ArcomageCombat.Database.cardsAssetRef.Count + 1; ++i)
+            for (int i = 1; i < GameCombat.Database.cardsAssetRef.Count + 1; ++i)
             {
                 // only 1 branch, which is set to all discrete actions
                 var findCard = handCards.Find(card => card.id == i && !card.isDisabled);
@@ -195,7 +195,7 @@ namespace GameScripts
             // ** 将手牌全部交回
             foreach (var handCard in handCards)
             {
-                arcomageCombat.gameCardCache.TurnBack(handCard);
+                GameCombat.gameCardCache.TurnBack(handCard);
             }
 
             handCards.Clear();
@@ -204,7 +204,7 @@ namespace GameScripts
             usingCard = null;
 
             // ** 按难度重置基本数据
-            ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(ArcomageCombat.Database.difficultyAssetRef[(int)difficulty]);
+            ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(GameCombat.Database.difficultyAssetRef[(int)difficulty]);
             brick = arcomagePlayer.brick;
             gem = arcomagePlayer.gem;
             recruit = arcomagePlayer.recruit;
@@ -278,14 +278,14 @@ namespace GameScripts
 
             while (cardAmount > 0)
             {
-                int index = Random.Range(0, ArcomageCombat.Database.cardsAssetRef.Count);
-                var cardAssetRef = ArcomageCombat.Database.cardsAssetRef[index];
+                int index = Random.Range(0, GameCombat.Database.cardsAssetRef.Count);
+                var cardAssetRef = GameCombat.Database.cardsAssetRef[index];
                 Assert.IsNotNull(cardAssetRef);
                 ArcomageCard template = ArcomageDatabase.RetrieveObject<ArcomageCard>(cardAssetRef);
                 Assert.IsNotNull(template);
                 if (handCards.Find(card => card.id == template.id) == null)
                 {
-                    GameCard genCard = arcomageCombat.gameCardCache.Acquire(this, template);
+                    GameCard genCard = GameCombat.gameCardCache.Acquire(this, template);
                     genCard.transform.SetParent(transform, false);
                     genCard.gameObject.SetActive(false);
                     handCards.Add(genCard);

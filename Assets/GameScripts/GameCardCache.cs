@@ -14,7 +14,7 @@ namespace GameScripts
             }
             else
             {
-                var cardGameObject = ArcomageCombat.Database.cardPrefabAssetRef.InstantiateAsync().WaitForCompletion();
+                var cardGameObject = GameCombat.Database.cardPrefabAssetRef.InstantiateAsync().WaitForCompletion();
                 gameCard = cardGameObject.GetComponent<GameCard>();
             }
 

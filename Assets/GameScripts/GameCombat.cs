@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 
 namespace GameScripts
 {
-    public class ArcomageCombat : MonoBehaviour
+    public class GameCombat : MonoBehaviour
     {
         public static ArcomageDatabase Database;
 
@@ -33,7 +33,7 @@ namespace GameScripts
 
         private void Awake()
         {
-            ArcomageCombat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
+            GameCombat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
             Assert.IsNotNull(Database);
         }
 

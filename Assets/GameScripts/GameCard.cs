@@ -43,8 +43,8 @@ namespace GameScripts
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
             AssetReferenceSprite spriteRef = m_data.costType == CostType.Brick
-                ? ArcomageCombat.Database.brickAssetRef
-                : (m_data.costType == CostType.Gem ? ArcomageCombat.Database.gemAssetRef : ArcomageCombat.Database.recruitAssetRef);
+                ? GameCombat.Database.brickAssetRef
+                : (m_data.costType == CostType.Gem ? GameCombat.Database.gemAssetRef : GameCombat.Database.recruitAssetRef);
             if (spriteRef.IsValid())
             {
                 costTypeImage.sprite = (Sprite)spriteRef.OperationHandle.Result;
@@ -55,7 +55,7 @@ namespace GameScripts
             }
 
             Assert.IsNotNull(costTypeImage.sprite);
-            var localization = ArcomageCombat.Database.localization;
+            var localization = GameCombat.Database.localization;
             cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
             cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
             cardCostText.text = m_data.cost.ToString();
@@ -75,7 +75,7 @@ namespace GameScripts
         public void OnDisplay()
         {
             gameObject.SetActive(true);
-            transform.SetParent(owner.arcomageCombat.handCardLayout, false);
+            transform.SetParent(owner.GameCombat.handCardLayout, false);
             isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0 || (owner.isDropping && !canDrop);
             cardExtentImage.color = isDisabled ? Color.red : Color.white;
             useCardButton.interactable = !isDisabled;
@@ -86,7 +86,7 @@ namespace GameScripts
         {
             Assert.IsNotNull(m_data);
             owner.usingCard = this;
-            owner.arcomageCombat.handCardBlocking.gameObject.SetActive(true);
+            owner.GameCombat.handCardBlocking.gameObject.SetActive(true);
         }
 
         public void PlayDisplayingCardAnim()
@@ -107,7 +107,7 @@ namespace GameScripts
 
                 if (tweenAnimation.id == "GoCenter")
                 {
-                    tweenAnimation.endValueV3 = owner.arcomageCombat.cardDisappearPoint.position;
+                    tweenAnimation.endValueV3 = owner.GameCombat.cardDisappearPoint.position;
                 }
             }
 

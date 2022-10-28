@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 4185563472570023112}
   - component: {fileID: 5796544723676494283}
   m_Layer: 0
-  m_Name: ArcomageCombat
+  m_Name: GameCombat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

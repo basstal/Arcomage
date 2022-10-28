@@ -1,4 +1,4 @@
-# com.91act.noah.odin.inspector@3.2.5
+# com.91act.noah.odin.inspector@3.2.6
 
 本文件夹下内容为 package 导出的资源文件。
 
