@@ -261,7 +261,6 @@ namespace GameScripts
                 if (handCards[i] == inCard)
                 {
                     handCards.RemoveAt(i);
-                    OnGenHandCards(1);
                     return;
                 }
             }

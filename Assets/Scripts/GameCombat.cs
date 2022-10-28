@@ -68,9 +68,9 @@ namespace GameScripts
         public void DisplayHandCards()
         {
             Assert.IsNotNull(currentPlayer);
-            if (currentPlayer.handCards.Count == 0)
+            if (currentPlayer.handCards.Count < 5)
             {
-                currentPlayer.OnGenHandCards(5);
+                currentPlayer.OnGenHandCards(5 - currentPlayer.handCards.Count);
             }
 
             Assert.IsTrue(currentPlayer.handCards.Count > 0);
@@ -78,9 +78,13 @@ namespace GameScripts
             foreach (var handCard in currentPlayer.handCards)
             {
                 handCard.OnDisplay();
-                if (!currentPlayer.trainingMode)
+                if (!currentPlayer.trainingMode && !currentPlayer.isPlayAgain)
                 {
-                    handCard.PlayDisplayingCardAnim();
+                    currentPlayer.isAIWaitAnimation = true;
+                    handCard.PlayDisplayingCardAnim(() =>
+                    {
+                        currentPlayer.isAIWaitAnimation = false;
+                    });
                 }
             }
 
@@ -102,6 +106,7 @@ namespace GameScripts
             {
                 var usingCard = currentPlayer.usingCard;
                 currentPlayer.RemoveFromHandCard(usingCard);
+                currentPlayer.isPlayAgain = false;
                 if (!currentPlayer.isDropping)
                 {
                     usingCard.Apply();
@@ -131,15 +136,7 @@ namespace GameScripts
         {
             if (currentPlayer.isPlayAgain)
             {
-                handCardBlocking.gameObject.SetActive(false);
-                currentPlayer.isPlayAgain = false;
-                // ** 刷新一遍展示效果，因为有新抽的卡以及不能扔的卡
-                foreach (var handCard in currentPlayer.handCards)
-                {
-                    handCard.OnDisplay();
-                }
-
-                m_currentStage = WaitCardUse;
+                m_currentStage = DisplayHandCards;
             }
             else
             {

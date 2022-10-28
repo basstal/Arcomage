@@ -28,7 +28,6 @@ namespace GameScripts
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
         public DOTweenAnimation cardUsingAnimation;
-        public DOTweenAnimation cardDisplayingAnimation;
 
         private void Awake()
         {
@@ -89,29 +88,20 @@ namespace GameScripts
             owner.GameCombat.handCardBlocking.gameObject.SetActive(true);
         }
 
-        public void PlayDisplayingCardAnim()
+        public void PlayDisplayingCardAnim(TweenCallback callback)
         {
-            cardDisplayingAnimation.DOPlayForwardAllById(owner.playerID == 1 ? "PlayerLeft" : "PlayerRight");
+            transform.GetChild(0).DOLocalMoveX(0, 1).From(owner.playerID == 1 ? -150 : 150).SetEase(Ease.OutQuad).OnComplete(callback);
+            GetComponent<CanvasGroup>().DOFade(1, 1).From(0);
         }
 
         public void PlayUsingCardAnim(UnityAction callback)
         {
-            var tweenAnimations = cardUsingAnimation.GetComponents<DOTweenAnimation>();
-            foreach (var tweenAnimation in tweenAnimations)
+            transform.DOMove(owner.GameCombat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
             {
-                if (tweenAnimation.id == "Final")
-                {
-                    tweenAnimation.onComplete.RemoveAllListeners();
-                    tweenAnimation.onComplete.AddListener(callback);
-                }
-
-                if (tweenAnimation.id == "GoCenter")
-                {
-                    tweenAnimation.endValueV3 = owner.GameCombat.cardDisappearPoint.position;
-                }
-            }
-
-            cardUsingAnimation.DORestart();
+                cardUsingAnimation.onComplete.RemoveAllListeners();
+                cardUsingAnimation.onComplete.AddListener(callback);
+                cardUsingAnimation.DORestartById("Rotation");
+            });
         }
 
         public void Apply()
