@@ -11,13 +11,16 @@ using UnityEngine.UI;
 
 namespace GameScripts
 {
-    public class GameCard : MonoBehaviour
+    /// <summary>
+    /// 游戏中卡牌实例的逻辑
+    /// </summary>
+    public class Card : MonoBehaviour
     {
         public int id => m_data.id;
         public bool canDrop => !m_data.disallowDrop;
 
         [NonSerialized] private ArcomageCard m_data;
-        [NonSerialized] public GamePlayer owner;
+        [NonSerialized] public Player owner;
         [NonSerialized] public bool isDisabled;
 
         public Button useCardButton;
@@ -29,9 +32,14 @@ namespace GameScripts
         public Image cardExtentImage;
         public DOTweenAnimation cardUsingAnimation;
 
+        private Transform m_debug;
+
         private void Awake()
         {
             useCardButton.BindButtonEvent(UseCard);
+#if USING_GMTOOL
+            m_debug = transform.Find("Debug");
+#endif
         }
 
         public void SetData(ArcomageCard inData)
@@ -42,8 +50,8 @@ namespace GameScripts
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
             AssetReferenceSprite spriteRef = m_data.costType == CostType.Brick
-                ? GameCombat.Database.brickAssetRef
-                : (m_data.costType == CostType.Gem ? GameCombat.Database.gemAssetRef : GameCombat.Database.recruitAssetRef);
+                ? Combat.Database.brickAssetRef
+                : (m_data.costType == CostType.Gem ? Combat.Database.gemAssetRef : Combat.Database.recruitAssetRef);
             if (spriteRef.IsValid())
             {
                 costTypeImage.sprite = (Sprite)spriteRef.OperationHandle.Result;
@@ -54,7 +62,7 @@ namespace GameScripts
             }
 
             Assert.IsNotNull(costTypeImage.sprite);
-            var localization = GameCombat.Database.localization;
+            var localization = Combat.Database.localization;
             cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
             cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
             cardCostText.text = m_data.cost.ToString();
@@ -63,9 +71,15 @@ namespace GameScripts
             trans.localScale = Vector3.one;
             var scriptMachine = GetComponent<ScriptMachine>();
             scriptMachine.nest.SwitchToMacro(m_data.logic);
+#if USING_GMTOOL
+            if (m_debug != null)
+            {
+                m_debug.GetComponent<TextMeshProUGUI>().text = $"id : {id}";
+            }
+#endif
         }
 
-        public void SetOwner(GamePlayer inOwner)
+        public void SetOwner(Player inOwner)
         {
             Assert.IsNotNull(inOwner);
             owner = inOwner;
@@ -74,8 +88,13 @@ namespace GameScripts
         public void OnDisplay()
         {
             gameObject.SetActive(true);
-            transform.SetParent(owner.GameCombat.handCardLayout, false);
-            isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0 || (owner.isDropping && !canDrop);
+            transform.SetParent(owner.Combat.handCardLayout, false);
+            isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
+            if (owner.isDropping)
+            {
+                isDisabled = !canDrop;
+            }
+
             cardExtentImage.color = isDisabled ? Color.red : Color.white;
             useCardButton.interactable = !isDisabled;
             // useCardButton.GetComponent<Image>().raycastTarget = !isDisabled;
@@ -84,8 +103,13 @@ namespace GameScripts
         public void UseCard()
         {
             Assert.IsNotNull(m_data);
+            if (!owner.isDropping)
+            {
+                SharedLogics.ResChange(owner, m_data.costType, -m_data.cost);
+            }
+
             owner.usingCard = this;
-            owner.GameCombat.handCardBlocking.gameObject.SetActive(true);
+            owner.Combat.handCardBlocking.gameObject.SetActive(true);
         }
 
         public void PlayDisplayingCardAnim(TweenCallback callback)
@@ -96,7 +120,7 @@ namespace GameScripts
 
         public void PlayUsingCardAnim(UnityAction callback)
         {
-            transform.DOMove(owner.GameCombat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
+            transform.DOMove(owner.Combat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
             {
                 cardUsingAnimation.onComplete.RemoveAllListeners();
                 cardUsingAnimation.onComplete.AddListener(callback);

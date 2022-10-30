@@ -10,7 +10,8 @@
     "DOTween",
     "DOTweenExt",
     "DOTweenPro",
-    "Unity.ML-Agents"
+    "Unity.ML-Agents",
+    "UnityEngine.UI"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

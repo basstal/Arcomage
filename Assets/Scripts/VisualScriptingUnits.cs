@@ -32,7 +32,7 @@ namespace GameScripts
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 int costAmount = flow.GetValue<int>(inCostAmount);
                 CostType costType = flow.GetValue<CostType>(inCostType);
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 resultValue = $"{costType} - {costAmount}!!!";
                 if (costAmount == 0)
                 {
@@ -48,7 +48,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             //Making the myValueB input value port visible, setting the port label name to myValueB and setting its default value to an empty string.
             inCostType = ValueInput<CostType>("costType", CostType.None);
             inCostAmount = ValueInput<int>("costAmount", 0);
@@ -86,7 +86,7 @@ namespace GameScripts
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 int changeAmount = flow.GetValue<int>(inChangeAmount);
                 BuildingType buildingType = flow.GetValue<BuildingType>(inBuilding);
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 resultValue = $"{buildingType} - {changeAmount}!!!";
                 if (changeAmount == 0)
                 {
@@ -101,7 +101,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             //Making the myValueB input value port visible, setting the port label name to myValueB and setting its default value to an empty string.
             inBuilding = ValueInput<BuildingType>("building", BuildingType.None);
             inChangeAmount = ValueInput<int>("changeAmount", 0);
@@ -139,7 +139,7 @@ namespace GameScripts
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 int changeAmount = flow.GetValue<int>(inChangeAmount);
                 CostType costType = flow.GetValue<CostType>(inCostType);
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 resultValue = $"{costType} - {changeAmount}!!!";
                 if (changeAmount == 0)
                 {
@@ -154,7 +154,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             //Making the myValueB input value port visible, setting the port label name to myValueB and setting its default value to an empty string.
             inCostType = ValueInput<CostType>("building", CostType.None);
             inChangeAmount = ValueInput<int>("changeAmount", 0);
@@ -193,8 +193,8 @@ namespace GameScripts
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 bool direct = flow.GetValue<bool>(inDirect);
                 int damage = flow.GetValue<int>(inDamage);
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
-                GamePlayer enemy = player.GameCombat.FindEnemyById(player.playerID);
+                Player player = flow.GetValue<Player>(inPlayer);
+                Player enemy = player.Combat.FindEnemyById(player.playerID);
                 var wall = player.wall;
                 // ** 直接对塔楼的伤害
                 if (direct)
@@ -220,7 +220,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             //Making the myValueB input value port visible, setting the port label name to myValueB and setting its default value to an empty string.
             inDamage = ValueInput<int>("damage", 0);
             inDirect = ValueInput("direct", false);
@@ -245,23 +245,23 @@ namespace GameScripts
         [DoNotSerialize] // No need to serialize ports
         public ValueOutput result; // Adding the ValueOutput variable for result
 
-        private GamePlayer resultValue; // Adding the string variable for the processed result value
+        private Player resultValue; // Adding the string variable for the processed result value
 
         protected override void Definition() //The method to set what our node will be doing.
         {
             inputTrigger = ControlInput("inputTrigger", (flow) =>
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
-                resultValue = player.GameCombat.FindEnemyById(player.playerID);
+                Player player = flow.GetValue<Player>(inPlayer);
+                resultValue = player.Combat.FindEnemyById(player.playerID);
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
 
-            result = ValueOutput<GamePlayer>("result", (flow) => resultValue);
+            result = ValueOutput<Player>("result", (flow) => resultValue);
         }
     }
 
@@ -295,14 +295,14 @@ namespace GameScripts
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 int costAmount = flow.GetValue<int>(inCostAmount);
                 CostType costType = flow.GetValue<CostType>(inCostType);
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 resultValue = SharedLogics.HandleCost(player, costType, costAmount);
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             //Making the myValueB input value port visible, setting the port label name to myValueB and setting its default value to an empty string.
             inCostType = ValueInput<CostType>("costType", CostType.None);
             inCostAmount = ValueInput("costAmount", 0);
@@ -337,7 +337,7 @@ namespace GameScripts
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 CostType costType = flow.GetValue<CostType>(inCostType);
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 SharedLogics.PlayerResourceGrowth(player, costType);
                 resultValue = $"Player{player.playerID}/Refresh";
                 return outputTrigger;
@@ -345,7 +345,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             //Making the myValueB input value port visible, setting the port label name to myValueB and setting its default value to an empty string.
             inCostType = ValueInput<CostType>("costType", CostType.None);
 
@@ -375,7 +375,7 @@ namespace GameScripts
             inputTrigger = ControlInput("inputTrigger", (flow) =>
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 SharedLogics.PlayerResourceGrowthAll(player);
                 resultValue = $"Player{player.playerID}/Refresh";
                 return outputTrigger;
@@ -383,7 +383,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
 
             result = ValueOutput<string>("result", (flow) => resultValue);
         }
@@ -413,7 +413,7 @@ namespace GameScripts
             inputTrigger = ControlInput("inputTrigger", (flow) =>
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
-                GamePlayer player = flow.GetValue<GamePlayer>(inPlayer);
+                Player player = flow.GetValue<Player>(inPlayer);
                 ArcomageCard card = flow.GetValue<ArcomageCard>(inCard);
                 var left = SharedLogics.HandleCost(player, card.costType, card.cost);
                 resultValue = left >= 0;
@@ -422,7 +422,7 @@ namespace GameScripts
             outputTrigger = ControlOutput("outputTrigger");
 
             //Making the myValueA input value port visible, setting the port label name to myValueA and setting its default value to Hello.
-            inPlayer = ValueInput<GamePlayer>("player", default);
+            inPlayer = ValueInput<Player>("player", default);
             inCard = ValueInput<ArcomageCard>("card", default);
             result = ValueOutput<bool>("result", (flow) => resultValue);
         }

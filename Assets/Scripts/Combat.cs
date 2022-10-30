@@ -6,35 +6,36 @@ using UnityEngine.Assertions;
 
 namespace GameScripts
 {
-    public class GameCombat : MonoBehaviour
+    public class Combat : MonoBehaviour
     {
         public static ArcomageDatabase Database;
 
         public AssetReference databaseRef;
         public int firstPlayer = 1;
-        public GamePlayer m_player1;
-        public GamePlayer m_player2;
-        public GameCardCache gameCardCache;
+        public Player m_player1;
+        public Player m_player2;
         public RectTransform handCardLayout;
         public RectTransform cardDisappearPoint;
         public RectTransform handCardBlocking;
 
-        [NonSerialized] public GamePlayer currentPlayer;
+        [NonSerialized] public CardCache cardCache;
+        [NonSerialized] public Player currentPlayer;
         [NonSerialized] public bool blockAction;
 
         private int m_round = 0;
         private Action m_currentStage;
         private bool m_playerSwitched;
 
-        public GamePlayer FindEnemyById(int id)
+        public Player FindEnemyById(int id)
         {
             return id == 1 ? m_player2 : m_player1;
         }
 
         private void Awake()
         {
-            GameCombat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
+            Combat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
             Assert.IsNotNull(Database);
+            cardCache = GetComponentInChildren<CardCache>();
         }
 
         private void Update()
@@ -81,16 +82,14 @@ namespace GameScripts
                 if (!currentPlayer.trainingMode && !currentPlayer.isPlayAgain)
                 {
                     currentPlayer.isAIWaitAnimation = true;
-                    handCard.PlayDisplayingCardAnim(() =>
-                    {
-                        currentPlayer.isAIWaitAnimation = false;
-                    });
+                    handCard.PlayDisplayingCardAnim(() => { currentPlayer.isAIWaitAnimation = false; });
                 }
             }
 
             UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(handCardLayout);
             handCardBlocking.gameObject.SetActive(false);
-            m_currentStage = WaitCardUse;
+            currentPlayer.isPlayAgain = currentPlayer.isDropping;
+            m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
         }
 
         public void WaitCardUse()
@@ -106,18 +105,20 @@ namespace GameScripts
             {
                 var usingCard = currentPlayer.usingCard;
                 currentPlayer.RemoveFromHandCard(usingCard);
-                currentPlayer.isPlayAgain = false;
                 if (!currentPlayer.isDropping)
                 {
                     usingCard.Apply();
                 }
+                else
+                {
+                    currentPlayer.isDropping = false;
+                }
 
-                currentPlayer.isDropping = false;
                 currentPlayer.usingCard = null;
                 // ** trainingMode have no animation
                 if (currentPlayer.trainingMode)
                 {
-                    gameCardCache.TurnBack(usingCard);
+                    cardCache.TurnBack(usingCard);
                     m_currentStage = IsNextPlayer;
                 }
                 else
@@ -125,7 +126,7 @@ namespace GameScripts
                     usingCard.PlayUsingCardAnim(() =>
                     {
                         currentPlayer.isAIWaitAnimation = false;
-                        gameCardCache.TurnBack(usingCard);
+                        cardCache.TurnBack(usingCard);
                         m_currentStage = IsNextPlayer;
                     });
                 }

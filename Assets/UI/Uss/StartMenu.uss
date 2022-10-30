@@ -1,0 +1,9 @@
+.BasicButton {
+    font-size: 36px;
+    -unity-font-style: bold;
+    -unity-font: url('project://database/Assets/PackageAssets/com.91act.noah.text.mesh.pro/Resources/Fonts%20&%20Materials/SOURCEHANSANSSC-REGULAR.OTF?fileID=12800000&guid=c724fb41aea4c0f44b1513fc1cf05758&type=3#SOURCEHANSANSSC-REGULAR');
+    padding-bottom: 0;
+    margin-bottom: 10px;
+    -unity-text-align: upper-center;
+    width: 50%;
+}

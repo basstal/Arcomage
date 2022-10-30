@@ -2,20 +2,26 @@ using UnityEngine;
 
 namespace GameScripts
 {
+    /// <summary>
+    /// 难度数据，用来初始化玩家数据
+    /// </summary>
     [CreateAssetMenu(fileName = "ArcomagePlayer", menuName = "ScriptableObjects/ArcomagePlayer", order = 1)]
     public class ArcomagePlayer : ScriptableObject
     {
-        public int brick = 0;
-        public int gem = 0;
-        public int recruit = 0;
-        public int brickIncRate = 1;
-        public int gemIncRate = 1;
-        public int recruitIncRate = 1;
+        [Tooltip("拥有砖块数量")] public int brick = 0;
+        [Tooltip("拥有宝石数量")] public int gem = 0;
+        [Tooltip("拥有怪兽数量")] public int recruit = 0;
+        [Tooltip("砖块增长量")] public int brickIncRate = 1;
+        [Tooltip("宝石增长量")] public int gemIncRate = 1;
+        [Tooltip("怪兽增长量")] public int recruitIncRate = 1;
+        [Tooltip("城堡数量")] public int tower = 1;
+        [Tooltip("城墙数量")] public int wall = 1;
 
-        public int tower = 1;
-        public int wall = 1;
-
-        public void TakeSnapshot(GamePlayer player)
+        /// <summary>
+        /// 将<see cref="player"/>玩家当前的数据暂存起来供以后使用。
+        /// </summary>
+        /// <param name="player">需暂存数据的玩家</param>
+        public void TakeSnapshot(Player player)
         {
             brick = player.brick;
             gem = player.gem;

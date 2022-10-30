@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Uss/StartMenu.uss?fileID=7433441132597879392&amp;guid=1fd09d6c1e95c2246a71c0f0b713af48&amp;type=3#StartMenu" />
+    <ui:VisualElement style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; align-items: center; justify-content: center;">
+        <ui:Button text="StartGame" display-tooltip-when-elided="true" name="StartGame" binding-path="StartGame" class="BasicButton" />
+        <ui:Button text="Guide" display-tooltip-when-elided="true" name="Guide" binding-path="Guide" class="BasicButton" />
+        <ui:Button text="Quit" display-tooltip-when-elided="true" name="Quit" binding-path="Quit" class="BasicButton" />
+    </ui:VisualElement>
+</ui:UXML>

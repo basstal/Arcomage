@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GameScripts.Utils;
 using TMPro;
 using Unity.MLAgents;
@@ -12,7 +13,7 @@ using Random = UnityEngine.Random;
 
 namespace GameScripts
 {
-    public class GamePlayer : Agent
+    public class Player : Agent
     {
         #region SerializedProperties
 
@@ -43,6 +44,7 @@ namespace GameScripts
         public ParticleSystem towerDropEffect;
         public ParticleSystem wallAddEffect;
         public ParticleSystem wallDropEffect;
+        public int[] debugInitCardIds;
 
         #endregion
 
@@ -68,19 +70,21 @@ namespace GameScripts
         [NonSerialized] public int recruitIncRate = 1;
         [NonSerialized] public int tower = 0;
         [NonSerialized] public int wall = 0;
-        [NonSerialized] public List<GameCard> handCards;
-        [NonSerialized] public GameCombat GameCombat;
-        [NonSerialized] public GameCard usingCard;
+        [NonSerialized] public List<Card> handCards;
+        [NonSerialized] public Combat Combat;
+        [NonSerialized] public Card usingCard;
         [NonSerialized] private ArcomagePlayer snapshot;
         [NonSerialized] public bool isPlayAgain;
         [NonSerialized] public bool isDropping;
 
         public bool trainingMode => Academy.Instance.IsCommunicatorOn;
 
+        public bool allCardsDisabled => !handCards.Exists(card => !card.isDisabled);
+
         public override void Initialize()
         {
-            handCards = new List<GameCard>();
-            GameCombat = transform.GetComponentInParent<GameCombat>();
+            handCards = new List<Card>();
+            Combat = transform.GetComponentInParent<Combat>();
             if (!trainingMode)
             {
                 MaxStep = 0;
@@ -92,12 +96,12 @@ namespace GameScripts
         /// </summary>
         public override void OnEpisodeBegin()
         {
-            GameCombat.GameReset();
+            Combat.GameReset();
         }
 
         public bool PauseAction()
         {
-            return GameCombat.blockAction || handCards.Count == 0 || GameCombat.currentPlayer != this || usingCard != null;
+            return Combat.blockAction || handCards.Count == 0 || Combat.currentPlayer != this || usingCard != null;
         }
 
         /// <summary>
@@ -117,7 +121,7 @@ namespace GameScripts
             }
 
             Assert.IsTrue(useCardId > 0 && useCardId <= 102);
-            GameCard card = handCards.Find(card => card.id == useCardId);
+            Card card = handCards.Find(card => card.id == useCardId);
             Assert.IsNotNull(card);
             card.UseCard();
         }
@@ -144,7 +148,7 @@ namespace GameScripts
             var isPauseAction = PauseAction();
             // 0 means do nothing
             actionMask.SetActionEnabled(0, 0, true);
-            for (int i = 1; i < GameCombat.Database.cardsAssetRef.Count + 1; ++i)
+            for (int i = 1; i < Combat.Database.cardsAssetRef.Count + 1; ++i)
             {
                 // only 1 branch, which is set to all discrete actions
                 var findCard = handCards.Find(card => card.id == i && !card.isDisabled);
@@ -195,7 +199,7 @@ namespace GameScripts
             // ** 将手牌全部交回
             foreach (var handCard in handCards)
             {
-                GameCombat.gameCardCache.TurnBack(handCard);
+                Combat.cardCache.TurnBack(handCard);
             }
 
             handCards.Clear();
@@ -204,7 +208,7 @@ namespace GameScripts
             usingCard = null;
 
             // ** 按难度重置基本数据
-            ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(GameCombat.Database.difficultyAssetRef[(int)difficulty]);
+            ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Combat.Database.difficultyAssetRef[(int)difficulty]);
             brick = arcomagePlayer.brick;
             gem = arcomagePlayer.gem;
             recruit = arcomagePlayer.recruit;
@@ -254,7 +258,7 @@ namespace GameScripts
             }
         }
 
-        public void RemoveFromHandCard(GameCard inCard)
+        public void RemoveFromHandCard(Card inCard)
         {
             for (int i = handCards.Count - 1; i >= 0; --i)
             {
@@ -268,6 +272,14 @@ namespace GameScripts
             throw new Exception($"use card not in hand?");
         }
 
+        void AddOneCardToHand(ArcomageCard template)
+        {
+            Card genCard = Combat.cardCache.Acquire(this, template);
+            genCard.transform.SetParent(transform, false);
+            genCard.gameObject.SetActive(false);
+            handCards.Add(genCard);
+        }
+
         public void OnGenHandCards(int cardAmount)
         {
             if (!trainingMode)
@@ -277,17 +289,35 @@ namespace GameScripts
 
             while (cardAmount > 0)
             {
-                int index = Random.Range(0, GameCombat.Database.cardsAssetRef.Count);
-                var cardAssetRef = GameCombat.Database.cardsAssetRef[index];
+#if USING_GMTOOL
+                if (debugInitCardIds != null)
+                {
+                    debugInitCardIds = debugInitCardIds.Distinct().ToArray();
+                    for (int i = 0; i < Math.Min(debugInitCardIds.Length, 5); ++i)
+                    {
+                        var cardId = debugInitCardIds[i];
+                        foreach (var _cardAssetRef in Combat.Database.cardsAssetRef)
+                        {
+                            ArcomageCard _template = ArcomageDatabase.RetrieveObject<ArcomageCard>(_cardAssetRef);
+                            if (_template.id == cardId)
+                            {
+                                AddOneCardToHand(_template);
+                                cardAmount--;
+                            }
+                        }
+                    }
+                    // ** do init only once
+                    debugInitCardIds = null;
+                }
+#endif
+                int index = Random.Range(0, Combat.Database.cardsAssetRef.Count);
+                var cardAssetRef = Combat.Database.cardsAssetRef[index];
                 Assert.IsNotNull(cardAssetRef);
                 ArcomageCard template = ArcomageDatabase.RetrieveObject<ArcomageCard>(cardAssetRef);
                 Assert.IsNotNull(template);
                 if (handCards.Find(card => card.id == template.id) == null)
                 {
-                    GameCard genCard = GameCombat.gameCardCache.Acquire(this, template);
-                    genCard.transform.SetParent(transform, false);
-                    genCard.gameObject.SetActive(false);
-                    handCards.Add(genCard);
+                    AddOneCardToHand(template);
                     cardAmount--;
                 }
             }

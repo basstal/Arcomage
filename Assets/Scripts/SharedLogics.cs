@@ -5,7 +5,7 @@ namespace GameScripts
 {
     public static class SharedLogics
     {
-        public static void ResChange(GamePlayer target, CostType costType, int changeAmount)
+        public static void ResChange(Player target, CostType costType, int changeAmount)
         {
             switch (costType)
             {
@@ -56,7 +56,7 @@ namespace GameScripts
             target.OnRefresh();
         }
 
-        public static void BuildingChange(GamePlayer target, BuildingType buildingType, int changeAmount)
+        public static void BuildingChange(Player target, BuildingType buildingType, int changeAmount)
         {
             switch (buildingType)
             {
@@ -109,7 +109,7 @@ namespace GameScripts
             target.OnRefresh();
         }
 
-        public static void PlayerResourceGrowth(GamePlayer target, CostType costType)
+        public static void PlayerResourceGrowth(Player target, CostType costType)
         {
             switch (costType)
             {
@@ -133,14 +133,14 @@ namespace GameScripts
             target.OnRefresh();
         }
 
-        public static void PlayerResourceGrowthAll(GamePlayer target)
+        public static void PlayerResourceGrowthAll(Player target)
         {
             PlayerResourceGrowth(target, CostType.Brick);
             PlayerResourceGrowth(target, CostType.Gem);
             PlayerResourceGrowth(target, CostType.Recruit);
         }
 
-        public static int HandleCost(GamePlayer target, CostType costType, int costAmount)
+        public static int HandleCost(Player target, CostType costType, int costAmount)
         {
             switch (costType)
             {
@@ -161,7 +161,7 @@ namespace GameScripts
             throw new Exception();
         }
 
-        public static void GrowthChange(GamePlayer target, CostType costType, int changeAmount)
+        public static void GrowthChange(Player target, CostType costType, int changeAmount)
         {
             switch (costType)
             {
@@ -208,7 +208,7 @@ namespace GameScripts
                     break;
                 }
             }
-
+            target.OnRefresh();
             // if (changeAmount > 0 && target.trainingMode)
             // {
             //     target.AddReward(0.05f * changeAmount);
