@@ -39,4 +39,14 @@ namespace GameScripts
         Normal = 1,
         Hard = 2
     }
+
+    /// <summary>
+    /// MLAgent学习的目标，这里决定使用哪种奖励函数
+    /// </summary>
+    public enum MLAgentLearningGoal
+    {
+        None = 0,
+        BuildTower = 1,
+        WinCombat = 2,
+    }
 }

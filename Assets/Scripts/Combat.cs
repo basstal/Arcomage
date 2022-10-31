@@ -22,7 +22,7 @@ namespace GameScripts
         [NonSerialized] public Player currentPlayer;
         [NonSerialized] public bool blockAction;
 
-        private int m_round = 0;
+        private int m_round;
         private Action m_currentStage;
         private bool m_playerSwitched;
 
@@ -154,7 +154,34 @@ namespace GameScripts
                 currentPlayer.WithdrawAnimation();
                 if (currentPlayer.trainingMode)
                 {
-                    currentPlayer.CalculateReward();
+                    if (Database.learningGoal == MLAgentLearningGoal.BuildTower)
+                    {
+                        currentPlayer.CalculateReward();
+                    }
+
+                    if (Database.learningGoal == MLAgentLearningGoal.WinCombat)
+                    {
+                        ArcomagePlayer winningCond = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Database.winningAssetRef);
+                        var enemyPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
+                        var gameEnd = false;
+                        if (winningCond.IsPlayerWin(currentPlayer) || winningCond.IsPlayerLose(enemyPlayer))
+                        {
+                            currentPlayer.CalculateReward();
+                            gameEnd = true;
+                        }
+                        else if (winningCond.IsPlayerLose(currentPlayer) || winningCond.IsPlayerWin(enemyPlayer))
+                        {
+                            enemyPlayer.CalculateReward();
+                            gameEnd = true;
+                        }
+
+                        if (gameEnd)
+                        {
+                            currentPlayer.EndEpisode();
+                            enemyPlayer.EndEpisode();
+                            return;
+                        }
+                    }
                 }
 
                 currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;

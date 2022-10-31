@@ -2876,11 +2876,11 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 100
+  MaxStep: 2000
   isAIControlling: 0
   playerName: default
   playerID: 0
-  difficulty: 2
+  difficulty: 0
   bricksCountTMP: {fileID: 7359019911571253201}
   gemsCountTMP: {fileID: 7359019911660175590}
   recruitsCountTMP: {fileID: 7359019911432885948}
@@ -2904,6 +2904,7 @@ MonoBehaviour:
   towerDropEffect: {fileID: 4779487911403330468}
   wallAddEffect: {fileID: 1346747661494948068}
   wallDropEffect: {fileID: 5673948018333640508}
+  debugInitCardIds: 
 --- !u!114 &502996469392021771
 MonoBehaviour:
   m_ObjectHideFlags: 0

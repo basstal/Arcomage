@@ -88,7 +88,7 @@ namespace GameScripts
         public void OnDisplay()
         {
             gameObject.SetActive(true);
-            transform.SetParent(owner.Combat.handCardLayout, false);
+            transform.SetParent(owner.combat.handCardLayout, false);
             isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
             if (owner.isDropping)
             {
@@ -109,7 +109,7 @@ namespace GameScripts
             }
 
             owner.usingCard = this;
-            owner.Combat.handCardBlocking.gameObject.SetActive(true);
+            owner.combat.handCardBlocking.gameObject.SetActive(true);
         }
 
         public void PlayDisplayingCardAnim(TweenCallback callback)
@@ -120,7 +120,7 @@ namespace GameScripts
 
         public void PlayUsingCardAnim(UnityAction callback)
         {
-            transform.DOMove(owner.Combat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
+            transform.DOMove(owner.combat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
             {
                 cardUsingAnimation.onComplete.RemoveAllListeners();
                 cardUsingAnimation.onComplete.AddListener(callback);

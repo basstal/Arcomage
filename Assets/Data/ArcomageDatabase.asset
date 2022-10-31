@@ -13,16 +13,7 @@ MonoBehaviour:
   m_Name: ArcomageDatabase
   m_EditorClassIdentifier: 
   localization: 1
-  player1PrefabAssetRef:
-    m_AssetGUID: 7c9d90b48a6294e42a5ed1874e48bd5f
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 1
-  player2PrefabAssetRef:
-    m_AssetGUID: 4fa5d3334302681489d0f699671f2d81
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 1
+  learningGoal: 0
   cardPrefabAssetRef:
     m_AssetGUID: d180b78a14b40dc42869ed213459fd53
     m_SubObjectName: 
@@ -153,6 +144,8 @@ MonoBehaviour:
   - rid: 5750655336035647488
   - rid: 5750655336035647489
   - rid: 5750655336035647490
+  winningAssetRef:
+    rid: 5750655428573003776
   references:
     version: 2
     RefIds:
@@ -888,6 +881,13 @@ MonoBehaviour:
       type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
       data:
         m_AssetGUID: 5bba64e2946540b4db773b18d70b8864
+        m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
+    - rid: 5750655428573003776
+      type: {class: AssetReference, ns: UnityEngine.AddressableAssets, asm: Unity.Addressables}
+      data:
+        m_AssetGUID: 4f67e2f64c30b3e4bba35e78870fda16
         m_SubObjectName: 
         m_SubObjectType: 
         m_EditorAssetChanged: 0

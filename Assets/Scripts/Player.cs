@@ -71,7 +71,7 @@ namespace GameScripts
         [NonSerialized] public int tower = 0;
         [NonSerialized] public int wall = 0;
         [NonSerialized] public List<Card> handCards;
-        [NonSerialized] public Combat Combat;
+        [NonSerialized] public Combat combat;
         [NonSerialized] public Card usingCard;
         [NonSerialized] private ArcomagePlayer snapshot;
         [NonSerialized] public bool isPlayAgain;
@@ -84,7 +84,7 @@ namespace GameScripts
         public override void Initialize()
         {
             handCards = new List<Card>();
-            Combat = transform.GetComponentInParent<Combat>();
+            combat = transform.GetComponentInParent<Combat>();
             if (!trainingMode)
             {
                 MaxStep = 0;
@@ -96,12 +96,12 @@ namespace GameScripts
         /// </summary>
         public override void OnEpisodeBegin()
         {
-            Combat.GameReset();
+            combat.GameReset();
         }
 
         public bool PauseAction()
         {
-            return Combat.blockAction || handCards.Count == 0 || Combat.currentPlayer != this || usingCard != null;
+            return combat.blockAction || handCards.Count == 0 || combat.currentPlayer != this || usingCard != null;
         }
 
         /// <summary>
@@ -199,7 +199,7 @@ namespace GameScripts
             // ** 将手牌全部交回
             foreach (var handCard in handCards)
             {
-                Combat.cardCache.TurnBack(handCard);
+                combat.cardCache.TurnBack(handCard);
             }
 
             handCards.Clear();
@@ -274,7 +274,7 @@ namespace GameScripts
 
         void AddOneCardToHand(ArcomageCard template)
         {
-            Card genCard = Combat.cardCache.Acquire(this, template);
+            Card genCard = combat.cardCache.Acquire(this, template);
             genCard.transform.SetParent(transform, false);
             genCard.gameObject.SetActive(false);
             handCards.Add(genCard);
@@ -290,7 +290,7 @@ namespace GameScripts
             while (cardAmount > 0)
             {
 #if USING_GMTOOL
-                if (debugInitCardIds != null)
+                if (!trainingMode && debugInitCardIds != null)
                 {
                     debugInitCardIds = debugInitCardIds.Distinct().ToArray();
                     for (int i = 0; i < Math.Min(debugInitCardIds.Length, 5); ++i)
@@ -306,6 +306,7 @@ namespace GameScripts
                             }
                         }
                     }
+
                     // ** do init only once
                     debugInitCardIds = null;
                 }
@@ -328,17 +329,29 @@ namespace GameScripts
             }
         }
 
+        /// <summary>
+        /// MLAgent奖励函数结算
+        /// </summary>
         public void CalculateReward()
         {
-            if (snapshot == null)
+            if (Combat.Database.learningGoal == MLAgentLearningGoal.BuildTower)
             {
-                snapshot = ScriptableObject.CreateInstance<ArcomagePlayer>();
+                if (snapshot == null)
+                {
+                    snapshot = ScriptableObject.CreateInstance<ArcomagePlayer>();
+                    snapshot.TakeSnapshot(this);
+                }
+
+                int diffTower = tower - snapshot.tower;
+                AddReward(diffTower > 0 ? Mathf.Clamp01(tower / TOWER_MAX_FILL_AMOUNT_SCORE) : 0);
                 snapshot.TakeSnapshot(this);
             }
 
-            int diffTower = tower - snapshot.tower;
-            AddReward(diffTower > 0 ? Mathf.Clamp01(tower / TOWER_MAX_FILL_AMOUNT_SCORE) : 0);
-            snapshot.TakeSnapshot(this);
+            if (Combat.Database.learningGoal == MLAgentLearningGoal.WinCombat)
+            {
+                // winner will set reward to 1.0
+                SetReward(1.0f);
+            }
         }
     }
 }

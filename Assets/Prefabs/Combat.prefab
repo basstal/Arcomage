@@ -324,7 +324,6 @@ MonoBehaviour:
   firstPlayer: 1
   m_player1: {fileID: 4393161025956058252}
   m_player2: {fileID: 6637402013328713778}
-  cardCache: {fileID: 7175752240050258508}
   handCardLayout: {fileID: 4185563471850941661}
   cardDisappearPoint: {fileID: 2626459861905480434}
   handCardBlocking: {fileID: 8723772367743222666}
@@ -967,26 +966,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.data[0]
-      value: 73
-      objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.data[1]
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.data[2]
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 8137424135324935435, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
         type: 3}
       propertyPath: m_RootOrder
@@ -1068,11 +1047,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 463814422039739215, guid: 4fa5d3334302681489d0f699671f2d81,
-        type: 3}
-      propertyPath: isAIControlling
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 797977010989422702, guid: 4fa5d3334302681489d0f699671f2d81,
         type: 3}

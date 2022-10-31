@@ -194,7 +194,7 @@ namespace GameScripts
                 bool direct = flow.GetValue<bool>(inDirect);
                 int damage = flow.GetValue<int>(inDamage);
                 Player player = flow.GetValue<Player>(inPlayer);
-                Player enemy = player.Combat.FindEnemyById(player.playerID);
+                Player enemy = player.combat.FindEnemyById(player.playerID);
                 var wall = player.wall;
                 // ** 直接对塔楼的伤害
                 if (direct)
@@ -253,7 +253,7 @@ namespace GameScripts
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 Player player = flow.GetValue<Player>(inPlayer);
-                resultValue = player.Combat.FindEnemyById(player.playerID);
+                resultValue = player.combat.FindEnemyById(player.playerID);
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
