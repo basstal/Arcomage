@@ -501,7 +501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
+  m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
@@ -1097,6 +1097,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
+        type: 3}
+      propertyPath: debugInitCardIds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
+        type: 3}
+      propertyPath: debugInitCardIds.Array.data[0]
+      value: 73
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
+        type: 3}
+      propertyPath: debugInitCardIds.Array.data[1]
+      value: 97
+      objectReference: {fileID: 0}
+    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
+        type: 3}
+      propertyPath: debugInitCardIds.Array.data[2]
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8137424135324935435, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
         type: 3}

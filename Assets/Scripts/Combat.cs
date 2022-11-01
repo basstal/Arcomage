@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using GameScripts.Utils;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -72,18 +73,34 @@ namespace GameScripts
         /// </summary>
         public void DisplayHandCards()
         {
-            var displayIndex = 0;
-            foreach (var handCard in currentPlayer.handCards)
+            if (currentPlayer.trainingMode || currentPlayer.handCards.Count == 0)
             {
-                if (!currentPlayer.trainingMode && !currentPlayer.isPlayAgain)
+                m_currentStage = GenHandCards;
+                return;
+            }
+
+            var index = 0;
+            Tweener theLastTweener = null;
+            for (int displayIndex = 0; displayIndex < MAX_HAND_CARDS; ++displayIndex)
+            {
+                if (displayIndex == currentPlayer.lastRemovedIndex)
                 {
-                    currentPlayer.isAIWaitAnimation = true;
-                    displayIndex = displayIndex == currentPlayer.lastRemovedIndex ? ++displayIndex : displayIndex;
-                    handCard.PlayDisplayingCardAnim(displayIndex++, () => { currentPlayer.isAIWaitAnimation = false; });
+                    continue;
+                }
+
+                var handCard = currentPlayer.handCards[index++];
+                if (currentPlayer.isPlayAgain)
+                {
+                    handCard.OnDisplay();
+                }
+                else
+                {
+                    currentPlayer.isAIWaitAnimation = currentPlayer.isAIControlling;
+                    theLastTweener = handCard.PlayDisplayingCardAnim(displayIndex);
                 }
             }
 
-            // UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(handCardLayout);
+            theLastTweener?.OnComplete(() => { currentPlayer.isAIWaitAnimation = false; });
             m_currentStage = GenHandCards;
         }
 
@@ -101,7 +118,8 @@ namespace GameScripts
             if (currentPlayer.handCards.Count < MAX_HAND_CARDS)
             {
                 m_currentStage = null;
-                currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count, () => { m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse; });
+                currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count,
+                    () => { m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse; });
             }
             else
             {
@@ -118,7 +136,7 @@ namespace GameScripts
                 currentPlayer.RequestDecision();
                 currentPlayer.isAIWaitAnimation = true;
             }
-            else // Inactive the block area when player use card.
+            else if (!currentPlayer.isAIControlling) // Inactive the block area when player use card.
             {
                 handCardBlocking.gameObject.SetActive(false);
             }

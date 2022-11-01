@@ -60,21 +60,18 @@ namespace GameScripts
         // ** control the fillAmount of wall sprite
         public const float WALL_MAX_FILL_AMOUNT_SCORE = 100;
         public const float WALL_MIN_FILL_AMOUNT = 0.05f;
-
-
         [NonSerialized] public bool isAIWaitAnimation;
-        [NonSerialized] public int brick;
-        [NonSerialized] public int gem;
-        [NonSerialized] public int recruit;
+        private int m_brick;
+
+
+        private int m_gem;
+        private int m_recruit;
+        private List<Card> m_handCards;
         [NonSerialized] public int brickIncRate = 1;
         [NonSerialized] public int gemIncRate = 1;
         [NonSerialized] public int recruitIncRate = 1;
         [NonSerialized] public int tower;
         [NonSerialized] public int wall;
-        private List<Card> m_handCards;
-
-        public List<Card> handCards => m_handCards ??= new List<Card>();
-
         [NonSerialized] public Combat combat;
         [NonSerialized] public Card usingCard;
         [NonSerialized] private ArcomagePlayer snapshot;
@@ -83,8 +80,39 @@ namespace GameScripts
         [NonSerialized] public int lastRemovedIndex = -1;
         [NonSerialized] public Transform handCardsLocation;
 
-        public bool trainingMode => Academy.Instance.IsCommunicatorOn;
+        public List<Card> handCards => m_handCards ??= new List<Card>();
 
+        public int brick
+        {
+            get => m_brick;
+            set
+            {
+                OnNumberChanged(bricksCountTMP, m_brick, value);
+                m_brick = value;
+            }
+        }
+
+        public int gem
+        {
+            get => m_gem;
+            set
+            {
+                OnNumberChanged(gemsCountTMP, m_gem, value);
+                m_gem = value;
+            }
+        }
+
+        public int recruit
+        {
+            get => m_recruit;
+            set
+            {
+                OnNumberChanged(recruitsCountTMP, m_recruit, value);
+                m_recruit = value;
+            }
+        }
+
+        public bool trainingMode => Academy.Instance.IsCommunicatorOn;
         public bool allCardsDisabled => !handCards.Exists(card => !card.isDisabled);
 
         protected override void Awake()
@@ -238,9 +266,9 @@ namespace GameScripts
 
         public void OnRefresh()
         {
-            bricksCountTMP.text = $"{brick} <size=80%>bricks</size>";
-            gemsCountTMP.text = $"{gem} <size=80%>gem</size>";
-            recruitsCountTMP.text = $"{recruit} <size=80%>recruit</size>";
+            // bricksCountTMP.text = $"{brick} <size=80%>bricks</size>";
+            // gemsCountTMP.text = $"{gem} <size=80%>gem</size>";
+            // recruitsCountTMP.text = $"{recruit} <size=80%>recruit</size>";
             towerScoreTMP.text = $"{tower}";
             wallScoreTMP.text = $"{wall}";
             bricksIncRateTMP.text = $"+ {brickIncRate}";
@@ -385,6 +413,18 @@ namespace GameScripts
                 // winner will set reward to 1.0
                 SetReward(1.0f);
             }
+        }
+
+        void OnNumberChanged(TextMeshProUGUI target, int oldNum, int num)
+        {
+            if (trainingMode)
+            {
+                target.text = $"{num}";
+                return;
+            }
+
+            DOTween.To(() => oldNum, (lerpNum) => { target.text = lerpNum.ToString(); }, num, 1f);
+            target.transform.DOShakePosition(1.2f);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameScripts
 {
     /// <summary>
-    /// 卡牌数据，这个对象不应该被修改
+    /// 卡牌数据，这个对象不应该在运行时被修改
     /// </summary>
     [CreateAssetMenu(fileName = "ArcomageCard", menuName = "ScriptableObjects/ArcomageCard", order = 1)]
     public class ArcomageCard : ScriptableObject

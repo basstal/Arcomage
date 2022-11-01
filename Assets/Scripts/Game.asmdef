@@ -11,7 +11,8 @@
     "DOTweenExt",
     "DOTweenPro",
     "Unity.ML-Agents",
-    "UnityEngine.UI"
+    "UnityEngine.UI",
+    "UnityEngine.AudioModule"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

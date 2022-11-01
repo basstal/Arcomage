@@ -29,6 +29,7 @@ namespace GameScripts
         public TextMeshProUGUI cardDescribeText;
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
+        public GameObject cardDroppingNode;
         private Transform m_debug;
 
         private void Awake()
@@ -77,6 +78,7 @@ namespace GameScripts
         {
             Assert.IsNotNull(inOwner);
             owner = inOwner;
+            cardDroppingNode.SetActive(false);
         }
 
         public void OnDisplay()
@@ -89,8 +91,10 @@ namespace GameScripts
                 isDisabled = !canDrop;
             }
 
+            cardDroppingNode.SetActive(owner.isDropping && !isDisabled);
             cardExtentImage.color = isDisabled ? Color.red : Color.white;
             useCardButton.interactable = !isDisabled;
+            cardCostText.color = isDisabled ? new Color32(149, 26, 26, 255) : Color.black;
             // useCardButton.GetComponent<Image>().raycastTarget = !isDisabled;
         }
 
@@ -106,12 +110,13 @@ namespace GameScripts
             owner.combat.handCardBlocking.gameObject.SetActive(true);
         }
 
-        public void PlayDisplayingCardAnim(int offsetIndex, TweenCallback callback)
+        public Tweener PlayDisplayingCardAnim(int offsetIndex)
         {
             var handCardPos = GetHandCardAnimPos(offsetIndex);
             float duration = 0.45f;
-            transform.DOMove(handCardPos, duration).From(owner.handCardsLocation.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f).OnComplete(offsetIndex == Combat.MAX_HAND_CARDS - 1 ? callback : null);
+            var tweener = transform.DOMove(handCardPos, duration).From(owner.handCardsLocation.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f);
             transform.DOScale(2.2f, duration).From(owner.handCardsLocation.lossyScale).SetEase(Ease.OutQuad).OnComplete(OnDisplay);
+            return tweener;
         }
 
         public void PlayUsingCardAnim(TweenCallback callback)
@@ -132,7 +137,7 @@ namespace GameScripts
 
         public Vector3 GetHandCardAnimPos(int offsetIndex)
         {
-            float offset = GetComponent<RectTransform>().rect.size.x + 50f;
+            float offset = GetComponent<RectTransform>().rect.size.x + 150f;
             var handCardsLayoutBegin = owner.combat.handCardLayout.position;
             handCardsLayoutBegin.x -= Combat.MAX_HAND_CARDS / 2 * offset;
             handCardsLayoutBegin.x += offsetIndex * offset;
