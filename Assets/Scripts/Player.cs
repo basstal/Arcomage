@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using GameScripts.Utils;
 using TMPro;
 using Unity.MLAgents;
@@ -8,6 +9,7 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -17,7 +19,7 @@ namespace GameScripts
     {
         #region SerializedProperties
 
-        [Tooltip("是否被AI接管")] public bool isAIControlling = false;
+        [Tooltip("是否被AI接管")] public bool isAIControlling;
         public string playerName = "Default";
         public int playerID;
         public Difficulty difficulty = Difficulty.Easy;
@@ -62,29 +64,40 @@ namespace GameScripts
 
 
         [NonSerialized] public bool isAIWaitAnimation;
-        [NonSerialized] public int brick = 0;
-        [NonSerialized] public int gem = 0;
-        [NonSerialized] public int recruit = 0;
+        [NonSerialized] public int brick;
+        [NonSerialized] public int gem;
+        [NonSerialized] public int recruit;
         [NonSerialized] public int brickIncRate = 1;
         [NonSerialized] public int gemIncRate = 1;
         [NonSerialized] public int recruitIncRate = 1;
-        [NonSerialized] public int tower = 0;
-        [NonSerialized] public int wall = 0;
-        [NonSerialized] public List<Card> handCards;
+        [NonSerialized] public int tower;
+        [NonSerialized] public int wall;
+        private List<Card> m_handCards;
+
+        public List<Card> handCards => m_handCards ??= new List<Card>();
+
         [NonSerialized] public Combat combat;
         [NonSerialized] public Card usingCard;
         [NonSerialized] private ArcomagePlayer snapshot;
         [NonSerialized] public bool isPlayAgain;
         [NonSerialized] public bool isDropping;
+        [NonSerialized] public int lastRemovedIndex = -1;
+        [NonSerialized] public Transform handCardsLocation;
 
         public bool trainingMode => Academy.Instance.IsCommunicatorOn;
 
         public bool allCardsDisabled => !handCards.Exists(card => !card.isDisabled);
 
+        protected override void Awake()
+        {
+            base.Awake();
+            handCardsLocation = transform.Find("HandCardsLocation");
+            handCardsLocation.gameObject.SetActive(false);
+            combat = transform.GetComponentInParent<Combat>();
+        }
+
         public override void Initialize()
         {
-            handCards = new List<Card>();
-            combat = transform.GetComponentInParent<Combat>();
             if (!trainingMode)
             {
                 MaxStep = 0;
@@ -178,11 +191,14 @@ namespace GameScripts
             ResetPlayer();
         }
 
-        public void WithdrawAnimation()
+        public void WithdrawAnimation(TweenCallback callback)
         {
-            foreach (var handcard in handCards)
+            var duration = 0.5f;
+            for (int i = 0; i < handCards.Count; ++i)
             {
-                handcard.gameObject.SetActive(false);
+                var handCard = handCards[i];
+                handCard.transform.DOMove(handCardsLocation.position, duration).SetDelay(i * 0.025f).OnComplete(i == handCards.Count - 1 ? callback : null);
+                handCard.transform.DOScale(1.0f, duration);
             }
         }
 
@@ -265,6 +281,7 @@ namespace GameScripts
                 if (handCards[i] == inCard)
                 {
                     handCards.RemoveAt(i);
+                    lastRemovedIndex = i;
                     return;
                 }
             }
@@ -272,15 +289,24 @@ namespace GameScripts
             throw new Exception($"use card not in hand?");
         }
 
-        void AddOneCardToHand(ArcomageCard template)
+        Tweener AddOneCardToHand(ArcomageCard template, TweenCallback callback)
         {
             Card genCard = combat.cardCache.Acquire(this, template);
-            genCard.transform.SetParent(transform, false);
-            genCard.gameObject.SetActive(false);
-            handCards.Add(genCard);
+            if (lastRemovedIndex == -1)
+            {
+                handCards.Add(genCard);
+            }
+            else
+            {
+                handCards.Insert(lastRemovedIndex, genCard);
+            }
+
+            var tweener = genCard.PlayAcquireAnim(lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex);
+            lastRemovedIndex = -1;
+            return tweener;
         }
 
-        public void OnGenHandCards(int cardAmount)
+        public void OnGenHandCards(int cardAmount, TweenCallback callback)
         {
             if (!trainingMode)
             {
@@ -301,8 +327,12 @@ namespace GameScripts
                             ArcomageCard _template = ArcomageDatabase.RetrieveObject<ArcomageCard>(_cardAssetRef);
                             if (_template.id == cardId)
                             {
-                                AddOneCardToHand(_template);
+                                var tweener = AddOneCardToHand(_template, callback);
                                 cardAmount--;
+                                if (cardAmount == 0)
+                                {
+                                    tweener.OnComplete(callback);
+                                }
                             }
                         }
                     }
@@ -318,8 +348,12 @@ namespace GameScripts
                 Assert.IsNotNull(template);
                 if (handCards.Find(card => card.id == template.id) == null)
                 {
-                    AddOneCardToHand(template);
+                    var tweener = AddOneCardToHand(template, callback);
                     cardAmount--;
+                    if (cardAmount == 0)
+                    {
+                        tweener.OnComplete(callback);
+                    }
                 }
             }
 

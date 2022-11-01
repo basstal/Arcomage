@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -12,8 +13,8 @@ namespace GameScripts
     {
         public AssetReference combat;
         VisualElement m_root;
-
         UIDocument m_mainMenuDocument;
+        private GameObject m_runningCombat;
         public UIDocument mainMenuDocument => m_mainMenuDocument;
 
         private void Awake()
@@ -24,22 +25,12 @@ namespace GameScripts
                 Debug.LogWarning("MenuScreen StartMenu: missing UIDocument. Check Script Execution Order.");
                 return;
             }
-            else
-            {
-                ShowHomeScreen();
-                RegisterButtonCallbacks();
-            }
-        }
 
-        void OnEnable()
-        {
-            // if (m_mainMenuDocument == null)
-            // {
-            //     m_mainMenuDocument = GetComponent<UIDocument>();
-            // }
-            //
-            // SetupModalScreens();
-            // ShowHomeScreen();
+            // get a reference to the root VisualElement 
+            if (m_mainMenuDocument != null)
+                m_root = m_mainMenuDocument.rootVisualElement;
+            ShowStartMenu(null);
+            RegisterButtonCallbacks();
         }
 
         protected virtual void RegisterButtonCallbacks()
@@ -48,17 +39,27 @@ namespace GameScripts
             m_root.Q("Quit").RegisterCallback<ClickEvent>(Quit);
         }
 
-        public void SetupModalScreens()
+        public void ShowStartMenu(ClickEvent evt)
         {
+            if (m_runningCombat != null)
+            {
+                DestroyImmediate(m_runningCombat);
+            }
+
+            var startMenu = m_root.Q<VisualElement>("StartMenu");
+            ShowVisualElement(startMenu, true);
+            var gameEnd = m_root.Q<VisualElement>("GameEnd");
+            ShowVisualElement(gameEnd, false);
         }
 
-        public void ShowHomeScreen()
+        public void ShowGameEnd(string inText, Color inColor)
         {
-            // get a reference to the root VisualElement 
-            if (m_mainMenuDocument != null)
-                m_root = m_mainMenuDocument.rootVisualElement;
-
-            ShowVisualElement(m_root, true);
+            var gameEndLabel = m_root.Q<Label>("GameEndLabel");
+            gameEndLabel.text = inText;
+            gameEndLabel.style.color = inColor;
+            var gameEnd = m_root.Q<VisualElement>("GameEnd");
+            ShowVisualElement(gameEnd, true);
+            m_root.Q("Continue").RegisterCallback<ClickEvent>(ShowStartMenu);
         }
 
         // Toggle a UI on and off using the DisplayStyle. 
@@ -72,8 +73,17 @@ namespace GameScripts
 
         public void StartCombat(ClickEvent evt)
         {
-            combat.InstantiateAsync().WaitForCompletion();
-            ShowVisualElement(m_root, false);
+            m_runningCombat = combat.InstantiateAsync().WaitForCompletion();
+            var startMenu = m_root.Q<VisualElement>("StartMenu");
+            ShowVisualElement(startMenu, false);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKey(KeyCode.R))
+            {
+                OnReload();
+            }
         }
 
         public void Quit(ClickEvent evt)

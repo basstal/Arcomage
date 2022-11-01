@@ -3,6 +3,7 @@ using GameScripts.Utils;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 
 namespace GameScripts
 {
@@ -10,6 +11,7 @@ namespace GameScripts
     {
         public static ArcomageDatabase Database;
 
+        public const int MAX_HAND_CARDS = 5;
         public AssetReference databaseRef;
         public int firstPlayer = 1;
         public Player m_player1;
@@ -66,31 +68,51 @@ namespace GameScripts
             m_currentStage = DisplayHandCards;
         }
 
+        /// <summary>
+        /// 显示当前手牌
+        /// </summary>
         public void DisplayHandCards()
         {
-            Assert.IsNotNull(currentPlayer);
-            if (currentPlayer.handCards.Count < 5)
-            {
-                currentPlayer.OnGenHandCards(5 - currentPlayer.handCards.Count);
-            }
-
-            Assert.IsTrue(currentPlayer.handCards.Count > 0);
-
+            var displayIndex = 0;
             foreach (var handCard in currentPlayer.handCards)
             {
-                handCard.OnDisplay();
                 if (!currentPlayer.trainingMode && !currentPlayer.isPlayAgain)
                 {
                     currentPlayer.isAIWaitAnimation = true;
-                    handCard.PlayDisplayingCardAnim(() => { currentPlayer.isAIWaitAnimation = false; });
+                    displayIndex = displayIndex == currentPlayer.lastRemovedIndex ? ++displayIndex : displayIndex;
+                    handCard.PlayDisplayingCardAnim(displayIndex++, () => { currentPlayer.isAIWaitAnimation = false; });
                 }
             }
 
-            UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(handCardLayout);
-            handCardBlocking.gameObject.SetActive(false);
-            currentPlayer.isPlayAgain = currentPlayer.isDropping;
-            m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
+            // UnityEngine.UI.LayoutRebuilder.MarkLayoutForRebuild(handCardLayout);
+            m_currentStage = GenHandCards;
         }
+
+        public void GenHandCards()
+        {
+            Assert.IsNotNull(currentPlayer);
+            currentPlayer.isPlayAgain = currentPlayer.isDropping;
+            if (currentPlayer.trainingMode)
+            {
+                currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count, null);
+                m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
+                return;
+            }
+
+            if (currentPlayer.handCards.Count < MAX_HAND_CARDS)
+            {
+                m_currentStage = null;
+                currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count, () =>
+                {
+                    m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
+                });
+            }
+            else
+            {
+                m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
+            }
+        }
+
 
         public void WaitCardUse()
         {
@@ -99,6 +121,10 @@ namespace GameScripts
             {
                 currentPlayer.RequestDecision();
                 currentPlayer.isAIWaitAnimation = true;
+            }
+            else // Inactive the block area when player use card.
+            {
+                handCardBlocking.gameObject.SetActive(false);
             }
 
             if (currentPlayer.usingCard != null)
@@ -151,42 +177,82 @@ namespace GameScripts
                 }
 
                 SharedLogics.PlayerResourceGrowthAll(currentPlayer);
-                currentPlayer.WithdrawAnimation();
-                if (currentPlayer.trainingMode)
+
+                if (IsGameEnd())
                 {
-                    if (Database.learningGoal == MLAgentLearningGoal.BuildTower)
-                    {
-                        currentPlayer.CalculateReward();
-                    }
-
-                    if (Database.learningGoal == MLAgentLearningGoal.WinCombat)
-                    {
-                        ArcomagePlayer winningCond = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Database.winningAssetRef);
-                        var enemyPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
-                        var gameEnd = false;
-                        if (winningCond.IsPlayerWin(currentPlayer) || winningCond.IsPlayerLose(enemyPlayer))
-                        {
-                            currentPlayer.CalculateReward();
-                            gameEnd = true;
-                        }
-                        else if (winningCond.IsPlayerLose(currentPlayer) || winningCond.IsPlayerWin(enemyPlayer))
-                        {
-                            enemyPlayer.CalculateReward();
-                            gameEnd = true;
-                        }
-
-                        if (gameEnd)
-                        {
-                            currentPlayer.EndEpisode();
-                            enemyPlayer.EndEpisode();
-                            return;
-                        }
-                    }
+                    m_currentStage = null;
+                    return;
                 }
 
-                currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
-                m_currentStage = DisplayHandCards;
+                if (currentPlayer.trainingMode)
+                {
+                    currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
+                    m_currentStage = DisplayHandCards;
+                }
+                else
+                {
+                    m_currentStage = null;
+                    currentPlayer.WithdrawAnimation(() =>
+                    {
+                        currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
+                        m_currentStage = DisplayHandCards;
+                    });
+                }
             }
+        }
+
+        public bool IsGameEnd()
+        {
+            if (currentPlayer.trainingMode && Database.learningGoal == MLAgentLearningGoal.BuildTower)
+            {
+                currentPlayer.CalculateReward();
+            }
+
+            ArcomagePlayer winningCond = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Database.winningAssetRef);
+            var enemyPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
+            var gameEnd = false;
+            if (winningCond.IsPlayerWin(currentPlayer) || winningCond.IsPlayerLose(enemyPlayer))
+            {
+                if (currentPlayer.trainingMode && Database.learningGoal == MLAgentLearningGoal.WinCombat)
+                {
+                    currentPlayer.CalculateReward();
+                }
+
+                gameEnd = true;
+            }
+            else if (winningCond.IsPlayerLose(currentPlayer) || winningCond.IsPlayerWin(enemyPlayer))
+            {
+                if (enemyPlayer.trainingMode && Database.learningGoal == MLAgentLearningGoal.WinCombat)
+                {
+                    enemyPlayer.CalculateReward();
+                }
+
+                gameEnd = true;
+            }
+
+            if (gameEnd)
+            {
+                if (currentPlayer.trainingMode)
+                {
+                    currentPlayer.EndEpisode();
+                }
+
+                if (enemyPlayer.trainingMode)
+                {
+                    enemyPlayer.EndEpisode();
+                }
+
+                StartMenu startMenu = GameObject.Find("StartMenu")?.GetComponent<StartMenu>();
+                if (startMenu != null)
+                {
+                    var winner = currentPlayer == m_player1 ? "Player" : "Enemy";
+                    startMenu.ShowGameEnd($"{winner} Win!!", winner == "Player" ? Color.red : Color.green);
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

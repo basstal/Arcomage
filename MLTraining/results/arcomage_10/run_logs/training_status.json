@@ -1,0 +1,65 @@
+{
+    "AgainstPlayer": {
+        "checkpoints": [
+            {
+                "steps": 999973,
+                "file_path": "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-999973.onnx",
+                "reward": 0.2437745740498034,
+                "creation_time": 1667217837.519274,
+                "auxillary_file_paths": [
+                    "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-999973.pt"
+                ]
+            },
+            {
+                "steps": 1499979,
+                "file_path": "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-1499979.onnx",
+                "reward": 0.28,
+                "creation_time": 1667232087.3725429,
+                "auxillary_file_paths": [
+                    "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-1499979.pt"
+                ]
+            },
+            {
+                "steps": 1999992,
+                "file_path": "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-1999992.onnx",
+                "reward": 0.259765625,
+                "creation_time": 1667246795.176651,
+                "auxillary_file_paths": [
+                    "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-1999992.pt"
+                ]
+            },
+            {
+                "steps": 2499996,
+                "file_path": "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-2499996.onnx",
+                "reward": 0.2394705174488568,
+                "creation_time": 1667259682.4190965,
+                "auxillary_file_paths": [
+                    "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-2499996.pt"
+                ]
+            },
+            {
+                "steps": 2731225,
+                "file_path": "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-2731225.onnx",
+                "reward": 0.23369565217391305,
+                "creation_time": 1667268034.568485,
+                "auxillary_file_paths": [
+                    "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-2731225.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2731225,
+            "file_path": "results\\arcomage_10\\AgainstPlayer.onnx",
+            "reward": 0.23369565217391305,
+            "creation_time": 1667268034.568485,
+            "auxillary_file_paths": [
+                "results\\arcomage_10\\AgainstPlayer\\AgainstPlayer-2731225.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.12.1+cpu"
+    }
+}

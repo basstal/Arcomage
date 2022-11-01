@@ -23,7 +23,7 @@ namespace GameScripts
             }
             else
             {
-                var cardGameObject = Combat.Database.cardPrefabAssetRef.InstantiateAsync().WaitForCompletion();
+                var cardGameObject = Combat.Database.cardPrefabAssetRef.InstantiateAsync(inOwner.combat.transform).WaitForCompletion();
                 card = cardGameObject.GetComponent<Card>();
             }
 
@@ -38,8 +38,8 @@ namespace GameScripts
         /// <param name="inCard">卡牌实例</param>
         public void TurnBack(Card inCard)
         {
-            Assert.IsTrue(inCard.transform.parent != this.transform);
-            inCard.transform.SetParent(transform, false);
+            // Assert.IsTrue(inCard.transform.parent != this.transform);
+            // inCard.transform.SetParent(transform, false);
             inCard.owner = null;
         }
     }

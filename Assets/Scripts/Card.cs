@@ -30,14 +30,12 @@ namespace GameScripts
         public TextMeshProUGUI cardDescribeText;
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
-        public DOTweenAnimation cardUsingAnimation;
-
         private Transform m_debug;
 
         private void Awake()
         {
             useCardButton.BindButtonEvent(UseCard);
-#if USING_GMTOOL
+#if UNITY_EDITOR && USING_GMTOOL
             m_debug = transform.Find("Debug");
 #endif
         }
@@ -66,12 +64,9 @@ namespace GameScripts
             cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
             cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
             cardCostText.text = m_data.cost.ToString();
-            var trans = cardUsingAnimation.transform;
-            trans.localPosition = Vector3.zero;
-            trans.localScale = Vector3.one;
             var scriptMachine = GetComponent<ScriptMachine>();
             scriptMachine.nest.SwitchToMacro(m_data.logic);
-#if USING_GMTOOL
+#if UNITY_EDITOR && USING_GMTOOL
             if (m_debug != null)
             {
                 m_debug.GetComponent<TextMeshProUGUI>().text = $"id : {id}";
@@ -88,7 +83,7 @@ namespace GameScripts
         public void OnDisplay()
         {
             gameObject.SetActive(true);
-            transform.SetParent(owner.combat.handCardLayout, false);
+            // transform.SetParent(owner.transform);
             isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
             if (owner.isDropping)
             {
@@ -112,20 +107,48 @@ namespace GameScripts
             owner.combat.handCardBlocking.gameObject.SetActive(true);
         }
 
-        public void PlayDisplayingCardAnim(TweenCallback callback)
+        public void PlayDisplayingCardAnim(int offsetIndex, TweenCallback callback)
         {
-            transform.GetChild(0).DOLocalMoveX(0, 1).From(owner.playerID == 1 ? -150 : 150).SetEase(Ease.OutQuad).OnComplete(callback);
-            GetComponent<CanvasGroup>().DOFade(1, 1).From(0);
+            var handCardPos = GetHandCardAnimPos(offsetIndex);
+            float duration = 0.45f;
+            transform.DOMove(handCardPos, duration).From(owner.handCardsLocation.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f).OnComplete(offsetIndex == Combat.MAX_HAND_CARDS - 1 ? callback : null);
+            transform.DOScale(2.2f, duration).From(owner.handCardsLocation.lossyScale).SetEase(Ease.OutQuad).OnComplete(OnDisplay);
         }
 
-        public void PlayUsingCardAnim(UnityAction callback)
+        public void PlayUsingCardAnim(TweenCallback callback)
         {
             transform.DOMove(owner.combat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
             {
-                cardUsingAnimation.onComplete.RemoveAllListeners();
-                cardUsingAnimation.onComplete.AddListener(callback);
-                cardUsingAnimation.DORestartById("Rotation");
+                transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.25f).SetDelay(1.5f).OnComplete(() =>
+                {
+                    transform.SetAsFirstSibling();
+                    var duration = 1f;
+                    transform.DOMove(owner.combat.cardCache.transform.parent.position, duration);
+                    transform.DOLocalRotate(Vector3.zero, duration);
+                    transform.DOScale(Vector3.one, duration);
+                    transform.Find("BackImage").GetComponent<Image>().DOFade(1, duration).SetEase(Ease.OutQuart).OnComplete(callback);
+                });
             });
+        }
+
+        public Vector3 GetHandCardAnimPos(int offsetIndex)
+        {
+            float offset = GetComponent<RectTransform>().rect.size.x + 50f;
+            var handCardsLayoutBegin = owner.combat.handCardLayout.position;
+            handCardsLayoutBegin.x -= Combat.MAX_HAND_CARDS / 2 * offset;
+            handCardsLayoutBegin.x += offsetIndex * offset;
+            return handCardsLayoutBegin;
+        }
+
+        public Tweener PlayAcquireAnim(int offsetIndex)
+        {
+            var handCardPos = GetHandCardAnimPos(offsetIndex);
+            float duration = 0.7f;
+            var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f);
+            transform.DOScale(2.2f, duration).From(owner.combat.cardCache.transform.lossyScale).SetEase(Ease.OutQuad).OnComplete(OnDisplay);
+            transform.Find("BackImage").GetComponent<Image>().DOFade(0, duration).SetEase(Ease.InQuart);
+            return tweener;
+            // transform.DOLocalRotate(Vector3.zero, duration).From(new Vector3(0, -90f, 0)).SetEase(Ease.InQuart);
         }
 
         public void Apply()

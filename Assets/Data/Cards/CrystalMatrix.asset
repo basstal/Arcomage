@@ -17,10 +17,8 @@ MonoBehaviour:
   id: 42
   costType: 3
   cost: 6
+  disallowDrop: 0
   logic: {fileID: 11400000, guid: 52d8ca43f34e48c4ea7c4ac8aedd30df, type: 2}
-  luaSource: "function(player)\nU.ResChange(player, ResourceType.Gem, 1)\nU.BuildingChange(player,
-    \"Tower\", 3)\nlocal target = U.GetEnemyPlayer(player)\n\nU.BuildingChange(target,
-    \"Tower\", 1)\n        end"
   describe_en: +1 Magic +3 Tower +1 Enemy tower
-  describe_cn: "+1 \u5B9D\u77F3\n+3 \u5854\u697C\n+1 \u5BF9\u65B9\u5854\u697C"
+  describe_cn: "+1 \u5B9D\u77F3\u4EA7\u91CF\n+3 \u5854\u697C\n+1 \u5BF9\u65B9\u5854\u697C"
   sprite: {fileID: 6301238216690363317, guid: e1fc82e6a360a3440b38ca41dad9c58c, type: 3}
