@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace GameScripts
 {
@@ -16,7 +15,7 @@ namespace GameScripts
         /// <returns>设置好的卡牌</returns>
         public Card Acquire(Player inOwner, ArcomageCard template)
         {
-            Card card = null;
+            Card card;
             if (transform.childCount > 0)
             {
                 card = transform.GetChild(0).GetComponent<Card>();

@@ -3,7 +3,6 @@ using GameScripts.Utils;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
-using UnityEngine.SceneManagement;
 
 namespace GameScripts
 {
@@ -102,10 +101,7 @@ namespace GameScripts
             if (currentPlayer.handCards.Count < MAX_HAND_CARDS)
             {
                 m_currentStage = null;
-                currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count, () =>
-                {
-                    m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
-                });
+                currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count, () => { m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse; });
             }
             else
             {

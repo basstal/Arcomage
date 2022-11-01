@@ -9,7 +9,6 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -289,7 +288,7 @@ namespace GameScripts
             throw new Exception($"use card not in hand?");
         }
 
-        Tweener AddOneCardToHand(ArcomageCard template, TweenCallback callback)
+        Tweener AddOneCardToHand(ArcomageCard template)
         {
             Card genCard = combat.cardCache.Acquire(this, template);
             if (lastRemovedIndex == -1)
@@ -327,7 +326,7 @@ namespace GameScripts
                             ArcomageCard _template = ArcomageDatabase.RetrieveObject<ArcomageCard>(_cardAssetRef);
                             if (_template.id == cardId)
                             {
-                                var tweener = AddOneCardToHand(_template, callback);
+                                var tweener = AddOneCardToHand(_template);
                                 cardAmount--;
                                 if (cardAmount == 0)
                                 {
@@ -348,7 +347,7 @@ namespace GameScripts
                 Assert.IsNotNull(template);
                 if (handCards.Find(card => card.id == template.id) == null)
                 {
-                    var tweener = AddOneCardToHand(template, callback);
+                    var tweener = AddOneCardToHand(template);
                     cardAmount--;
                     if (cardAmount == 0)
                     {
