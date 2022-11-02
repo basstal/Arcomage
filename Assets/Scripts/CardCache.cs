@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using GameScripts.Utils;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace GameScripts
 {
@@ -37,9 +40,27 @@ namespace GameScripts
         /// <param name="inCard">卡牌实例</param>
         public void TurnBack(Card inCard)
         {
-            // Assert.IsTrue(inCard.transform.parent != this.transform);
-            // inCard.transform.SetParent(transform, false);
             inCard.owner = null;
+        }
+
+        /// <summary>
+        /// 生成一个随机的牌堆
+        /// </summary>
+        /// <returns>生成的牌堆</returns>
+        public List<ArcomageCard> GenCardBank()
+        {
+            List<ArcomageCard> result = new List<ArcomageCard>();
+            for (int i = 0; i < Combat.Database.cardsAssetRef.Count; ++i)
+            {
+                var cardAssetRef = Combat.Database.cardsAssetRef[i];
+                Assert.IsNotNull(cardAssetRef);
+                ArcomageCard template = ArcomageDatabase.RetrieveObject<ArcomageCard>(cardAssetRef);
+                Assert.IsNotNull(template);
+                result.Add(template);
+            }
+
+            result.Shuffle();
+            return result;
         }
     }
 }

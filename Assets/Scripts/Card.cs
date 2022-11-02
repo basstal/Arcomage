@@ -107,6 +107,7 @@ namespace GameScripts
                 }
 
                 owner.usingCard = this;
+                owner.combat.cardBank.Insert(0, m_data);
                 owner.combat.handCardBlocking.gameObject.SetActive(true);
             }
         }

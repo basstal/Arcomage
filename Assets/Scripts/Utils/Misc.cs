@@ -1,6 +1,7 @@
 using UnityEngine.Events;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UI;
 
@@ -8,6 +9,21 @@ namespace GameScripts.Utils
 {
     public static class Misc
     {
+        private static System.Random rand = new System.Random();
+
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rand.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
+
         public static uint CalculateHash(string str)
         {
             uint result = 0x01234567u;

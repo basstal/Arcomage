@@ -139,6 +139,11 @@ namespace GameScripts
             set
             {
                 OnNumberChanged(towerScoreTMP, m_tower, value);
+                if (value < m_tower)
+                {
+                    PlayDropEffect(towerScoreTMP);
+                }
+
                 m_tower = value;
             }
         }
@@ -149,6 +154,11 @@ namespace GameScripts
             set
             {
                 OnNumberChanged(wallScoreTMP, m_wall, value);
+                if (value < m_wall)
+                {
+                    PlayDropEffect(wallScoreTMP);
+                }
+
                 m_wall = value;
             }
         }
@@ -287,10 +297,8 @@ namespace GameScripts
             }
 
             handCards.Clear();
-
             // ** 清空正在使用的卡（是否要清理其他状态？）
             usingCard = null;
-
             // ** 按难度重置基本数据
             ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Combat.Database.difficultyAssetRef[(int)difficulty]);
             brick = arcomagePlayer.brick;
@@ -301,7 +309,6 @@ namespace GameScripts
             recruitIncRate = arcomagePlayer.recruitIncRate;
             wall = arcomagePlayer.wall;
             tower = arcomagePlayer.tower;
-
             OnRefresh();
         }
 
@@ -365,15 +372,16 @@ namespace GameScripts
             return tweener;
         }
 
-        public void OnGenHandCards(int cardAmount, TweenCallback callback)
+        public void OnGenHandCards(int needGenCardAmount, TweenCallback callback)
         {
             if (!trainingMode)
             {
-                Log.LogInfo("生成玩家手牌", $"玩家：{playerName}\n预定生成：{cardAmount}张手牌\n玩家详情:");
+                Log.LogInfo("生成玩家手牌", $"玩家：{playerName}\n预定生成：{needGenCardAmount}张手牌\n玩家详情:");
             }
 
-            while (cardAmount > 0)
+            while (needGenCardAmount > 0)
             {
+                Tweener tweener = null;
 #if USING_GMTOOL
                 if (!trainingMode && debugInitCardIds != null)
                 {
@@ -381,17 +389,21 @@ namespace GameScripts
                     for (int i = 0; i < Math.Min(debugInitCardIds.Length, 5); ++i)
                     {
                         var cardId = debugInitCardIds[i];
-                        foreach (var _cardAssetRef in Combat.Database.cardsAssetRef)
+                        for (int ci = combat.cardBank.Count - 1; ci >= 0; --ci)
                         {
-                            ArcomageCard _template = ArcomageDatabase.RetrieveObject<ArcomageCard>(_cardAssetRef);
-                            if (_template.id == cardId)
+                            var card = combat.cardBank[ci];
+                            if (card.id == cardId)
                             {
-                                var tweener = AddOneCardToHand(_template);
-                                cardAmount--;
-                                if (cardAmount == 0)
+                                // ** remove init card from cardBank
+                                combat.cardBank.RemoveAt(ci);
+                                tweener = AddOneCardToHand(card);
+                                needGenCardAmount--;
+                                if (needGenCardAmount == 0)
                                 {
                                     tweener.OnComplete(callback);
                                 }
+
+                                break;
                             }
                         }
                     }
@@ -400,19 +412,14 @@ namespace GameScripts
                     debugInitCardIds = null;
                 }
 #endif
-                int index = Random.Range(0, Combat.Database.cardsAssetRef.Count);
-                var cardAssetRef = Combat.Database.cardsAssetRef[index];
-                Assert.IsNotNull(cardAssetRef);
-                ArcomageCard template = ArcomageDatabase.RetrieveObject<ArcomageCard>(cardAssetRef);
-                Assert.IsNotNull(template);
-                if (handCards.Find(card => card.id == template.id) == null)
+                var template = combat.cardBank[combat.cardBank.Count - 1];
+                Assert.IsTrue(handCards.Find(card => card.id == template.id) == null);
+                tweener = AddOneCardToHand(template);
+                combat.cardBank.RemoveAt(combat.cardBank.Count - 1);
+                needGenCardAmount--;
+                if (needGenCardAmount == 0)
                 {
-                    var tweener = AddOneCardToHand(template);
-                    cardAmount--;
-                    if (cardAmount == 0)
-                    {
-                        tweener.OnComplete(callback);
-                    }
+                    tweener.OnComplete(callback);
                 }
             }
 
@@ -484,6 +491,17 @@ namespace GameScripts
                     effectInstance.Play(target.transform.position + new Vector3(50f, 0, 0));
                 }
             }
+        }
+
+        void PlayDropEffect(TextMeshProUGUI target)
+        {
+            if (trainingMode)
+            {
+                return;
+            }
+
+            EffectInstance effectInstance = combat.effectCache.CreateEffect("Drop");
+            effectInstance.Play(target.transform.position + new Vector3(10f, 0, 0));
         }
     }
 }

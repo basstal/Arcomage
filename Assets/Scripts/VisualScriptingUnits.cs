@@ -207,7 +207,6 @@ namespace GameScripts
                     SharedLogics.BuildingChange(enemy, BuildingType.Wall, -wall);
                     SharedLogics.BuildingChange(enemy, BuildingType.Tower, -(damage - wall));
                 }
-
                 else
                 {
                     // **若干伤害小于等于城墙，则城墙承受全部伤害

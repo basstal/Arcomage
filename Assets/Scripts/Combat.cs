@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using GameScripts.Utils;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace GameScripts
         [NonSerialized] public EffectCache effectCache;
         [NonSerialized] public Player currentPlayer;
         [NonSerialized] public bool blockAction;
+        [NonSerialized] public List<ArcomageCard> cardBank;
         public Action currentStage;
 
         private int m_round;
@@ -63,6 +65,7 @@ namespace GameScripts
             }
 
             m_round = 0;
+            cardBank = cardCache.GenCardBank();
             currentPlayer = firstPlayer == 1 ? m_player1 : m_player2;
             m_player1.ResetPlayer();
             m_player2.ResetPlayer();

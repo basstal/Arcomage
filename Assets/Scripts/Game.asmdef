@@ -12,7 +12,8 @@
     "DOTweenPro",
     "Unity.ML-Agents",
     "UnityEngine.UI",
-    "UnityEngine.AudioModule"
+    "UnityEngine.AudioModule",
+    "Coffee.UIParticle"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],
