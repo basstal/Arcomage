@@ -48,6 +48,6 @@ namespace GameScripts
         None = 0,
         BuildTower = 1,
         WinCombat = 2,
-        CauseDamage = 3,
+        DamageTower = 3,
     }
 }

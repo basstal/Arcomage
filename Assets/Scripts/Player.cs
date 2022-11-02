@@ -10,7 +10,6 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace GameScripts
 {
@@ -39,8 +38,8 @@ namespace GameScripts
 
         #endregion
 
-        public const float RESOURCE_LIMITATION = 10000;
-        public const float RESOURCE_INCREASE_RATE_LIMITATION = 100;
+        public const float RESOURCE_LIMITATION = 100;
+        public const float RESOURCE_INCREASE_RATE_LIMITATION = 10;
 
         // ** control the fillAmount of tower sprite
         public const float TOWER_MAX_FILL_AMOUNT_SCORE = 100;
@@ -232,6 +231,19 @@ namespace GameScripts
             sensor.AddObservation(recruitIncRate >= RESOURCE_INCREASE_RATE_LIMITATION ? 1.0f : recruitIncRate / RESOURCE_INCREASE_RATE_LIMITATION);
             sensor.AddObservation(tower >= TOWER_MAX_FILL_AMOUNT_SCORE ? 1.0f : tower / TOWER_MAX_FILL_AMOUNT_SCORE);
             sensor.AddObservation(wall >= WALL_MAX_FILL_AMOUNT_SCORE ? 1.0f : tower / WALL_MAX_FILL_AMOUNT_SCORE);
+
+            // 8 observations for enemy
+            var enemy = this == combat.m_player1 ? combat.m_player2 : combat.m_player1;
+            sensor.AddObservation(enemy.brick >= RESOURCE_LIMITATION ? 1.0f : enemy.brick / RESOURCE_LIMITATION);
+            sensor.AddObservation(enemy.gem >= RESOURCE_LIMITATION ? 1.0f : enemy.gem / RESOURCE_LIMITATION);
+            sensor.AddObservation(enemy.recruit >= RESOURCE_LIMITATION ? 1.0f : enemy.recruit / RESOURCE_LIMITATION);
+            sensor.AddObservation(enemy.brickIncRate >= RESOURCE_INCREASE_RATE_LIMITATION ? 1.0f : enemy.brickIncRate / RESOURCE_INCREASE_RATE_LIMITATION);
+            sensor.AddObservation(enemy.gemIncRate >= RESOURCE_INCREASE_RATE_LIMITATION ? 1.0f : enemy.gemIncRate / RESOURCE_INCREASE_RATE_LIMITATION);
+            sensor.AddObservation(enemy.recruitIncRate >= RESOURCE_INCREASE_RATE_LIMITATION ? 1.0f : enemy.recruitIncRate / RESOURCE_INCREASE_RATE_LIMITATION);
+            sensor.AddObservation(enemy.tower >= TOWER_MAX_FILL_AMOUNT_SCORE ? 1.0f : enemy.tower / TOWER_MAX_FILL_AMOUNT_SCORE);
+            sensor.AddObservation(enemy.wall >= WALL_MAX_FILL_AMOUNT_SCORE ? 1.0f : enemy.tower / WALL_MAX_FILL_AMOUNT_SCORE);
+
+            // 102 observations for card and its owner ?? 
         }
 
         public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
@@ -299,6 +311,7 @@ namespace GameScripts
             handCards.Clear();
             // ** 清空正在使用的卡（是否要清理其他状态？）
             usingCard = null;
+            lastRemovedIndex = -1;
             // ** 按难度重置基本数据
             ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Combat.Database.difficultyAssetRef[(int)difficulty]);
             brick = arcomagePlayer.brick;
@@ -367,7 +380,12 @@ namespace GameScripts
                 handCards.Insert(lastRemovedIndex, genCard);
             }
 
-            var tweener = genCard.PlayAcquireAnim(lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex);
+            Tweener tweener = null;
+            if (!trainingMode)
+            {
+                tweener = genCard.PlayAcquireAnim(lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex);
+            }
+
             lastRemovedIndex = -1;
             return tweener;
         }
@@ -381,7 +399,7 @@ namespace GameScripts
 
             while (needGenCardAmount > 0)
             {
-                Tweener tweener = null;
+                Tweener tweener;
 #if USING_GMTOOL
                 if (!trainingMode && debugInitCardIds != null)
                 {
@@ -417,7 +435,7 @@ namespace GameScripts
                 tweener = AddOneCardToHand(template);
                 combat.cardBank.RemoveAt(combat.cardBank.Count - 1);
                 needGenCardAmount--;
-                if (needGenCardAmount == 0)
+                if (!trainingMode && needGenCardAmount == 0)
                 {
                     tweener.OnComplete(callback);
                 }

@@ -690,7 +690,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &271475473455197532
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1208,26 +1208,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.data[0]
-      value: 73
-      objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.data[1]
-      value: 97
-      objectReference: {fileID: 0}
-    - target: {fileID: 7982246178585241876, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
-        type: 3}
-      propertyPath: debugInitCardIds.Array.data[2]
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 8137424135324935435, guid: 7c9d90b48a6294e42a5ed1874e48bd5f,
         type: 3}
       propertyPath: m_RootOrder
@@ -1319,11 +1299,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 463814422039739215, guid: 4fa5d3334302681489d0f699671f2d81,
-        type: 3}
-      propertyPath: isAIControlling
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 797977010989422702, guid: 4fa5d3334302681489d0f699671f2d81,
         type: 3}

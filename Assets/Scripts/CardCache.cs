@@ -22,6 +22,7 @@ namespace GameScripts
             if (transform.childCount > 0)
             {
                 card = transform.GetChild(0).GetComponent<Card>();
+                card.transform.SetParent(inOwner.combat.transform, true);
             }
             else
             {
@@ -40,6 +41,7 @@ namespace GameScripts
         /// <param name="inCard">卡牌实例</param>
         public void TurnBack(Card inCard)
         {
+            inCard.transform.SetParent(transform, true);
             inCard.owner = null;
         }
 

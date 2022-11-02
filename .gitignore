@@ -98,5 +98,6 @@ Assets/Externals/xLua/Generated.meta
 
 
 Packages/com.unity.ml-agents/
+Packages/com.91act.noah.unity.logs.viewer/
 Assets/Samples/
 Assets/Samples.meta

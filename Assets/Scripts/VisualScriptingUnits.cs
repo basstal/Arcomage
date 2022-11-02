@@ -1,5 +1,6 @@
 using System;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace GameScripts
 {
@@ -195,22 +196,31 @@ namespace GameScripts
                 int damage = flow.GetValue<int>(inDamage);
                 Player player = flow.GetValue<Player>(inPlayer);
                 Player enemy = player.combat.FindEnemyById(player.playerID);
-                var wall = player.wall;
+                var wallOld = enemy.wall;
+                var towerOld = enemy.tower;
+                var towerDamage = damage;
                 // ** 直接对塔楼的伤害
                 if (direct)
                 {
                     SharedLogics.BuildingChange(enemy, BuildingType.Tower, -damage);
                 }
-                else if (damage > wall)
+                else if (damage > wallOld)
                 {
                     // **如果伤害大于城墙，溢出的伤害由塔楼承受
-                    SharedLogics.BuildingChange(enemy, BuildingType.Wall, -wall);
-                    SharedLogics.BuildingChange(enemy, BuildingType.Tower, -(damage - wall));
+                    SharedLogics.BuildingChange(enemy, BuildingType.Wall, -wallOld);
+                    towerDamage = damage - wallOld;
+                    SharedLogics.BuildingChange(enemy, BuildingType.Tower, -towerDamage);
                 }
                 else
                 {
                     // **若干伤害小于等于城墙，则城墙承受全部伤害
                     SharedLogics.BuildingChange(enemy, BuildingType.Wall, -damage);
+                    towerDamage = 0;
+                }
+
+                if (Combat.Database.learningGoal == MLAgentLearningGoal.DamageTower)
+                {
+                    player.AddReward(Mathf.Min(1.0f, (float)towerDamage / towerOld));
                 }
 
                 resultValue = $"Player{player.playerID}/Refresh";

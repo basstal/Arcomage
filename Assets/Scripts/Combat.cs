@@ -40,8 +40,8 @@ namespace GameScripts
         {
             Combat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
             Assert.IsNotNull(Database);
-            cardCache = GetComponentInChildren<CardCache>();
-            effectCache = GetComponentInChildren<EffectCache>();
+            cardCache = GetComponentInChildren<CardCache>(true);
+            effectCache = GetComponentInChildren<EffectCache>(true);
         }
 
         private void Update()

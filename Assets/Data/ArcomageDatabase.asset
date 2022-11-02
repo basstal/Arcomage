@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ArcomageDatabase
   m_EditorClassIdentifier: 
   localization: 1
-  learningGoal: 2
+  learningGoal: 3
   cardPrefabAssetRef:
     m_AssetGUID: d180b78a14b40dc42869ed213459fd53
     m_SubObjectName: 
