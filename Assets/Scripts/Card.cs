@@ -83,6 +83,7 @@ namespace GameScripts
 
         public void OnDisplay()
         {
+            cardExtentImage.gameObject.SetActive(true);
             gameObject.SetActive(true);
             isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
             if (owner.isDropping)
@@ -123,17 +124,19 @@ namespace GameScripts
 
         public void PlayUsingCardAnim(TweenCallback callback)
         {
-            transform.DOMove(owner.combat.cardDisappearPoint.position, 0.5f).OnComplete(() =>
+            transform.DOMove(owner.combat.cardDisappearPoint.position, 0.3f).OnComplete(() =>
             {
-                transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.25f).SetDelay(1.5f).OnComplete(() =>
-                {
-                    transform.SetAsFirstSibling();
-                    var duration = 0.3f;
-                    transform.DOMove(owner.combat.cardCache.transform.parent.position, duration);
-                    transform.DOLocalRotate(Vector3.zero, duration);
-                    transform.DOScale(Vector3.one, duration);
-                    transform.Find("BackImage").GetComponent<Image>().DOFade(1, duration).SetEase(Ease.OutQuart).OnComplete(callback);
-                });
+                transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.25f).SetDelay(1.5f)
+                    .OnStart(() => { cardExtentImage.gameObject.SetActive(false); })
+                    .OnComplete(() =>
+                    {
+                        transform.SetAsFirstSibling();
+                        var duration = 0.3f;
+                        transform.DOMove(owner.combat.cardCache.transform.parent.position, duration);
+                        transform.DOLocalRotate(Vector3.zero, duration);
+                        transform.DOScale(Vector3.one, duration);
+                        transform.Find("BackImage").GetComponent<Image>().DOFade(1, duration).SetEase(Ease.OutQuart).OnComplete(callback);
+                    });
             });
         }
 
@@ -148,6 +151,7 @@ namespace GameScripts
 
         public Tweener PlayAcquireAnim(int offsetIndex)
         {
+            cardExtentImage.gameObject.SetActive(false);
             var handCardPos = GetHandCardAnimPos(offsetIndex);
             float duration = 0.7f;
             var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.position).SetEase(Ease.InOutCubic).SetDelay(offsetIndex * 0.075f);
