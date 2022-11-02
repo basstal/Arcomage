@@ -21,11 +21,12 @@ namespace GameScripts
         public RectTransform handCardBlocking;
 
         [NonSerialized] public CardCache cardCache;
+        [NonSerialized] public EffectCache effectCache;
         [NonSerialized] public Player currentPlayer;
         [NonSerialized] public bool blockAction;
+        public Action currentStage;
 
         private int m_round;
-        private Action m_currentStage;
         private bool m_playerSwitched;
 
         public Player FindEnemyById(int id)
@@ -38,13 +39,14 @@ namespace GameScripts
             Combat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
             Assert.IsNotNull(Database);
             cardCache = GetComponentInChildren<CardCache>();
+            effectCache = GetComponentInChildren<EffectCache>();
         }
 
         private void Update()
         {
-            if (m_currentStage != null)
+            if (currentStage != null)
             {
-                m_currentStage.Invoke();
+                currentStage.Invoke();
             }
         }
 
@@ -65,7 +67,7 @@ namespace GameScripts
             m_player1.ResetPlayer();
             m_player2.ResetPlayer();
             m_playerSwitched = false;
-            m_currentStage = DisplayHandCards;
+            currentStage = DisplayHandCards;
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace GameScripts
         {
             if (currentPlayer.trainingMode || currentPlayer.handCards.Count == 0)
             {
-                m_currentStage = GenHandCards;
+                currentStage = GenHandCards;
                 return;
             }
 
@@ -101,7 +103,7 @@ namespace GameScripts
             }
 
             theLastTweener?.OnComplete(() => { currentPlayer.isAIWaitAnimation = false; });
-            m_currentStage = GenHandCards;
+            currentStage = GenHandCards;
         }
 
         public void GenHandCards()
@@ -111,19 +113,19 @@ namespace GameScripts
             if (currentPlayer.trainingMode)
             {
                 currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count, null);
-                m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
+                currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
                 return;
             }
 
             if (currentPlayer.handCards.Count < MAX_HAND_CARDS)
             {
-                m_currentStage = null;
+                currentStage = null;
                 currentPlayer.OnGenHandCards(MAX_HAND_CARDS - currentPlayer.handCards.Count,
-                    () => { m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse; });
+                    () => { currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse; });
             }
             else
             {
-                m_currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
+                currentStage = currentPlayer.allCardsDisabled ? IsNextPlayer : WaitCardUse;
             }
         }
 
@@ -159,15 +161,16 @@ namespace GameScripts
                 if (currentPlayer.trainingMode)
                 {
                     cardCache.TurnBack(usingCard);
-                    m_currentStage = IsNextPlayer;
+                    currentStage = IsNextPlayer;
                 }
                 else
                 {
+                    currentStage = null;
                     usingCard.PlayUsingCardAnim(() =>
                     {
                         currentPlayer.isAIWaitAnimation = false;
                         cardCache.TurnBack(usingCard);
-                        m_currentStage = IsNextPlayer;
+                        currentStage = IsNextPlayer;
                     });
                 }
             }
@@ -177,7 +180,7 @@ namespace GameScripts
         {
             if (currentPlayer.isPlayAgain)
             {
-                m_currentStage = DisplayHandCards;
+                currentStage = DisplayHandCards;
             }
             else
             {
@@ -194,22 +197,22 @@ namespace GameScripts
 
                 if (IsGameEnd())
                 {
-                    m_currentStage = null;
+                    currentStage = null;
                     return;
                 }
 
                 if (currentPlayer.trainingMode)
                 {
                     currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
-                    m_currentStage = DisplayHandCards;
+                    currentStage = DisplayHandCards;
                 }
                 else
                 {
-                    m_currentStage = null;
+                    currentStage = null;
                     currentPlayer.WithdrawAnimation(() =>
                     {
                         currentPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
-                        m_currentStage = DisplayHandCards;
+                        currentStage = DisplayHandCards;
                     });
                 }
             }

@@ -84,7 +84,6 @@ namespace GameScripts
         public void OnDisplay()
         {
             gameObject.SetActive(true);
-            // transform.SetParent(owner.transform);
             isDisabled = SharedLogics.HandleCost(owner, m_data.costType, m_data.cost) < 0;
             if (owner.isDropping)
             {
@@ -95,19 +94,21 @@ namespace GameScripts
             cardExtentImage.color = isDisabled ? Color.red : Color.white;
             useCardButton.interactable = !isDisabled;
             cardCostText.color = isDisabled ? new Color32(149, 26, 26, 255) : Color.black;
-            // useCardButton.GetComponent<Image>().raycastTarget = !isDisabled;
         }
 
         public void UseCard()
         {
-            Assert.IsNotNull(m_data);
-            if (!owner.isDropping)
+            if (owner.usingCard == null && owner.combat.currentStage == owner.combat.WaitCardUse)
             {
-                SharedLogics.ResChange(owner, m_data.costType, -m_data.cost);
-            }
+                Assert.IsNotNull(m_data);
+                if (!owner.isDropping)
+                {
+                    SharedLogics.ResChange(owner, m_data.costType, -m_data.cost);
+                }
 
-            owner.usingCard = this;
-            owner.combat.handCardBlocking.gameObject.SetActive(true);
+                owner.usingCard = this;
+                owner.combat.handCardBlocking.gameObject.SetActive(true);
+            }
         }
 
         public Tweener PlayDisplayingCardAnim(int offsetIndex)
@@ -126,7 +127,7 @@ namespace GameScripts
                 transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.25f).SetDelay(1.5f).OnComplete(() =>
                 {
                     transform.SetAsFirstSibling();
-                    var duration = 1f;
+                    var duration = 0.3f;
                     transform.DOMove(owner.combat.cardCache.transform.parent.position, duration);
                     transform.DOLocalRotate(Vector3.zero, duration);
                     transform.DOScale(Vector3.one, duration);
@@ -148,11 +149,11 @@ namespace GameScripts
         {
             var handCardPos = GetHandCardAnimPos(offsetIndex);
             float duration = 0.7f;
-            var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f);
-            transform.DOScale(2.2f, duration).From(owner.combat.cardCache.transform.lossyScale).SetEase(Ease.OutQuad).OnComplete(OnDisplay);
-            transform.Find("BackImage").GetComponent<Image>().DOFade(0, duration).SetEase(Ease.InQuart);
+            var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.position).SetEase(Ease.InOutCubic).SetDelay(offsetIndex * 0.075f);
+            transform.DOScale(2.2f, duration).From(owner.combat.cardCache.transform.lossyScale).SetEase(Ease.InQuad).OnComplete(OnDisplay);
+            float delay = 0.4f;
+            transform.Find("BackImage").GetComponent<Image>().DOFade(0, duration - delay).From(1).SetDelay(delay).SetEase(Ease.InQuad);
             return tweener;
-            // transform.DOLocalRotate(Vector3.zero, duration).From(new Vector3(0, -90f, 0)).SetEase(Ease.InQuart);
         }
 
         public void Apply()

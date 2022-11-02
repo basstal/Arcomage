@@ -1,7 +1,7 @@
-using GamePlay.Scripts;
 using Sirenix.OdinInspector.Editor;
 using System;
 using System.Linq;
+using GameScripts;
 using UnityEditor;
 
 namespace GameEditorScripts

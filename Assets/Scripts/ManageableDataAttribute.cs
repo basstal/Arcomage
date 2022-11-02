@@ -1,6 +1,6 @@
 using System;
 
-namespace GamePlay.Scripts
+namespace GameScripts
 {
     /**
      * <summary>

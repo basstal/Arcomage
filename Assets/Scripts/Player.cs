@@ -35,16 +35,6 @@ namespace GameScripts
         public GameObject wallRoof;
         public Image towerBodyImage;
         public Image wallBodyImage;
-        public ParticleSystem bricksAddEffect;
-        public ParticleSystem bricksDropEffect;
-        public ParticleSystem gemsAddEffect;
-        public ParticleSystem gemsDropEffect;
-        public ParticleSystem recruitsAddEffect;
-        public ParticleSystem recruitsDropEffect;
-        public ParticleSystem towerAddEffect;
-        public ParticleSystem towerDropEffect;
-        public ParticleSystem wallAddEffect;
-        public ParticleSystem wallDropEffect;
         public int[] debugInitCardIds;
 
         #endregion
@@ -66,12 +56,13 @@ namespace GameScripts
 
         private int m_gem;
         private int m_recruit;
+        private int m_tower;
+        private int m_wall;
         private List<Card> m_handCards;
-        [NonSerialized] public int brickIncRate = 1;
-        [NonSerialized] public int gemIncRate = 1;
-        [NonSerialized] public int recruitIncRate = 1;
-        [NonSerialized] public int tower;
-        [NonSerialized] public int wall;
+        private int m_brickIncRate;
+        private int m_gemIncRate;
+        private int m_recruitIncRate;
+
         [NonSerialized] public Combat combat;
         [NonSerialized] public Card usingCard;
         [NonSerialized] private ArcomagePlayer snapshot;
@@ -92,6 +83,16 @@ namespace GameScripts
             }
         }
 
+        public int brickIncRate
+        {
+            get => m_brickIncRate;
+            set
+            {
+                OnIncRateChanged(bricksIncRateTMP, m_brickIncRate, value);
+                m_brickIncRate = value;
+            }
+        }
+
         public int gem
         {
             get => m_gem;
@@ -102,6 +103,16 @@ namespace GameScripts
             }
         }
 
+        public int gemIncRate
+        {
+            get => m_gemIncRate;
+            set
+            {
+                OnIncRateChanged(gemsIncRateTMP, m_gemIncRate, value);
+                m_gemIncRate = value;
+            }
+        }
+
         public int recruit
         {
             get => m_recruit;
@@ -109,6 +120,36 @@ namespace GameScripts
             {
                 OnNumberChanged(recruitsCountTMP, m_recruit, value);
                 m_recruit = value;
+            }
+        }
+
+        public int recruitIncRate
+        {
+            get => m_recruitIncRate;
+            set
+            {
+                OnIncRateChanged(recruitsIncRateTMP, m_recruitIncRate, value);
+                m_recruitIncRate = value;
+            }
+        }
+
+        public int tower
+        {
+            get => m_tower;
+            set
+            {
+                OnNumberChanged(towerScoreTMP, m_tower, value);
+                m_tower = value;
+            }
+        }
+
+        public int wall
+        {
+            get => m_wall;
+            set
+            {
+                OnNumberChanged(wallScoreTMP, m_wall, value);
+                m_wall = value;
             }
         }
 
@@ -266,16 +307,7 @@ namespace GameScripts
 
         public void OnRefresh()
         {
-            // bricksCountTMP.text = $"{brick} <size=80%>bricks</size>";
-            // gemsCountTMP.text = $"{gem} <size=80%>gem</size>";
-            // recruitsCountTMP.text = $"{recruit} <size=80%>recruit</size>";
-            towerScoreTMP.text = $"{tower}";
-            wallScoreTMP.text = $"{wall}";
-            bricksIncRateTMP.text = $"+ {brickIncRate}";
-            gemsIncRateTMP.text = $"+ {gemIncRate}";
-            recruitsIncRateTMP.text = $"+ {recruitIncRate}";
             playerNameTMP.text = playerName;
-
             towerRoof.SetActive(tower > 0);
             if (tower > 0)
             {
@@ -415,6 +447,21 @@ namespace GameScripts
             }
         }
 
+
+        void OnIncRateChanged(TextMeshProUGUI target, int oldNum, int num)
+        {
+            if (trainingMode)
+            {
+                target.text = $"{num}";
+                return;
+            }
+
+            if (num != oldNum)
+            {
+                DOTween.To(() => oldNum, (_) => { target.text = $"{oldNum}->{num}"; }, num, 1f).OnComplete(() => { target.text = num.ToString(); });
+            }
+        }
+
         void OnNumberChanged(TextMeshProUGUI target, int oldNum, int num)
         {
             if (trainingMode)
@@ -423,8 +470,20 @@ namespace GameScripts
                 return;
             }
 
-            DOTween.To(() => oldNum, (lerpNum) => { target.text = lerpNum.ToString(); }, num, 1f);
-            target.transform.DOShakePosition(1.2f);
+            if (num != oldNum)
+            {
+                DOTween.To(() => oldNum, (lerpNum) => { target.text = lerpNum.ToString(); }, num, 1f);
+                Color tweenColor = num > oldNum ? Color.red : Color.green;
+                target.DOColor(tweenColor, 0.25f).SetLoops(8, LoopType.Yoyo).From(Color.white).SetEase(Ease.InOutElastic);
+                if (!trainingMode && combat != null && combat.effectCache != null)
+                {
+                    EffectInstance effectInstance = combat.effectCache.CreateEffect(num > oldNum ? "IncNumber" : "DecNumber");
+                    var textMeshProUGUI = effectInstance.GetComponent<TextMeshProUGUI>();
+                    textMeshProUGUI.text = num > oldNum ? $"+{num - oldNum}" : $"-{oldNum - num}";
+                    textMeshProUGUI.alpha = 1;
+                    effectInstance.Play(target.transform.position + new Vector3(50f, 0, 0));
+                }
+            }
         }
     }
 }
