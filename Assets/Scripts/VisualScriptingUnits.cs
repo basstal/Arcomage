@@ -218,9 +218,16 @@ namespace GameScripts
                     towerDamage = 0;
                 }
 
-                if (Combat.Database.learningGoal == MLAgentLearningGoal.DamageTower)
+                try
                 {
-                    player.AddReward(Mathf.Min(1.0f, (float)towerDamage / towerOld));
+                    if (Combat.Database.learningGoal == MLAgentLearningGoal.DamageTower)
+                    {
+                        player.AddReward(Mathf.Min(1.0f, (float)towerDamage / towerOld));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"AddReward failed : {e.Message}\ntowerDamage : {towerDamage}, towerOld : {towerOld} ");
                 }
 
                 resultValue = $"Player{player.playerID}/Refresh";

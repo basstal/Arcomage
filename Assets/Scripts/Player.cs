@@ -197,8 +197,7 @@ namespace GameScripts
         /// <summary>
         /// 接收到来自用户或 AI 的输入
         ///
-        /// 这里先将输入记为手牌数组的下标序
-        /// DiscreteActions[0] -- 当前打出的手牌的下标序
+        /// DiscreteActions[0] -- 当前需打出的手牌的id，没在手牌中的id应该已被mask屏蔽，id为0表示不出牌（跳过回合）
         /// </summary>
         /// <param name="actions"></param>
         public override void OnActionReceived(ActionBuffers actions)
