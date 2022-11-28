@@ -62,13 +62,14 @@
       "url": "https://k8s-npm.91act.com"
     },
     "com.91act.noah.unity.logs.viewer": {
-      "version": "file:com.91act.noah.unity.logs.viewer",
+      "version": "0.1.5",
       "depth": 0,
-      "source": "embedded",
+      "source": "registry",
       "dependencies": {
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0"
-      }
+      },
+      "url": "https://k8s-npm.91act.com"
     },
     "com.coffee.ui-particle": {
       "version": "https://github.com/mob-sakai/ParticleEffectForUGUI.git#4.1.7",
@@ -175,14 +176,13 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.20.50",
+      "version": "file:ScriptableBuildPipeline",
       "depth": 0,
-      "source": "registry",
+      "source": "embedded",
       "dependencies": {
         "com.unity.test-framework": "1.1.30",
         "com.91act.noah.google.protobuf": "0.2.1"
-      },
-      "url": "https://k8s-npm.91act.com"
+      }
     },
     "com.unity.searcher": {
       "version": "4.9.1",
@@ -275,6 +275,12 @@
     "com.unity.modules.physics": {
       "version": "1.0.0",
       "depth": 2,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.physics2d": {
+      "version": "1.0.0",
+      "depth": 0,
       "source": "builtin",
       "dependencies": {}
     },

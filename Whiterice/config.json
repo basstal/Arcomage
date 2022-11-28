@@ -1,11 +1,11 @@
 {
     "required": {
         "target_platform": "Android",
-        "android_platform_bin": {
-            "gradle": "D:/Program Files/gradle-7.3/bin/gradle",
+        "android_platform_tools": {
+            "gradle": "D:/Program Files/gradle-7.3",
             "jdk": "C:/Program Files/Unity/Hub/Editor/2019.4.29f1c106/Editor/Data/PlaybackEngines/AndroidPlayer/OpenJDK",
-            "ndk": "E:/android-sdk-windows/ndk",
-            "sdk": "E:/android-sdk-windows"
+            "ndk": "C:\\Users\\basstal\\AppData\\Local\\Android\\Sdk\\ndk",
+            "sdk": "E:\\android-sdk-windows\\"
         },
         "unity_exec": "C:/Program Files/Unity/Hub/Editor/2021.3.6f1/Editor/Unity.exe",
         "unity_project": "D:/UnityProject/Arcomage",
@@ -19,7 +19,7 @@
         "verbose": true,
         "binarize_soundbank": false,
         "gather_resource": false,
-        "unity_build_code": true,
+        "unity_build_player": true,
         "unity_build_asset_bundle": true,
         "upload": {
             "enabled": true
