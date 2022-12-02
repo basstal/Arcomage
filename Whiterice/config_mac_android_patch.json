@@ -25,17 +25,17 @@
         "jdk": "/Applications/Unity/Hub/Editor/2021.3.6f1/PlaybackEngines/AndroidPlayer/OpenJDK",
         "ndk": "/Users/91act/Library/Android/sdk/ndk",
         "sdk": "/Users/91act/Library/Android/sdk",
-        "skip_gradle": false,
-        "skip_il2cpp": false
+        "skip_gradle": true,
+        "skip_il2cpp": true
     },
     "optional": {
         "verbose": false,
         "gather_resource": false,
-        "unity_build_player": true,
+        "unity_build_player": false,
         "unity_build_asset_bundle": true,
-        "archive_upload": true,
+        "archive_upload": false,
         "native_template": {
-            "enabled": true,
+            "enabled": false,
             "location": "/Users/91act/Documents/NativeTemplate"
         },
         "build_setting_external": {
@@ -45,7 +45,7 @@
             "build_setting_message": "BuildSetting"
         },
         "patch": {
-            "enabled": false,
+            "enabled": true,
             "exclude_filenames": [],
             "force_filenames": [],
             "patch_upload": true,
