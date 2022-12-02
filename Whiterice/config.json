@@ -7,22 +7,32 @@
     "unity_build_output": "D:/UnityProject/Arcomage/Whiterice/Output",
     "unity_builtin": {
       "scripting_implementation": 2
+    },
+    "app_info": {
+      "job_name": "Test",
+      "svn_revision": "30001",
+      "build_number": "1",
+      "game_id": "1999",
+      "channel_id": "1",
+      "app_version": "1.0.0",
+      "app_revision": "0",
+      "app_patch": "0"
     }
   },
   "android_platform_specific": {
     "gradle": "D:/Program Files/gradle-7.3",
     "jdk": "C:/Program Files/Unity/Hub/Editor/2019.4.29f1c106/Editor/Data/PlaybackEngines/AndroidPlayer/OpenJDK",
     "ndk": "C:\\Users\\basstal\\AppData\\Local\\Android\\Sdk\\ndk",
-    "sdk": "E:\\android-sdk-windows\\"
+    "sdk": "E:\\android-sdk-windows\\",
+    "skip_gradle": true,
+    "skip_il2cpp": true
   },
   "optional": {
     "verbose": true,
     "gather_resource": false,
-    "unity_build_player": true,
-    "unity_build_asset_bundle": true,
-    "upload": {
-      "enabled": true
-    },
+    "unity_build_player": false,
+    "unity_build_asset_bundle": false,
+    "archive_upload": true,
     "native_template": {
       "enabled": true,
       "location": "E:/Documents/git-repository/NativeTemplate"
