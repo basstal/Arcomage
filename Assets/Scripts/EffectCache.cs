@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using Whiterice;
 
 namespace GameScripts
 {
@@ -38,7 +39,8 @@ namespace GameScripts
                 effectRoot = GetOrCreateEffectRoot(inName);
             }
 
-            GameObject targetEffectObject = Addressables.InstantiateAsync($"Effects/{inName}.prefab", effectRoot).WaitForCompletion();
+
+            GameObject targetEffectObject = AssetManager.Instance.InstantiatePrefabSync($"Effects/{inName}.prefab", effectRoot, parent: effectRoot);
             var result = targetEffectObject.GetComponent<EffectInstance>();
             result.name = inName;
             result.cacheInstance = this;

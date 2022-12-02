@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214e458d3cd240299dedf44f6b40b318, type: 3}
   m_Name: WinningCond
   m_EditorClassIdentifier: 
-  brick: 100
-  gem: 100
-  recruit: 100
+  brick: 50
+  gem: 50
+  recruit: 50
   brickIncRate: 0
   gemIncRate: 0
   recruitIncRate: 0

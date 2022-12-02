@@ -71,6 +71,16 @@
       },
       "url": "https://k8s-npm.91act.com"
     },
+    "com.91act.noah.whiterice": {
+      "version": "file:Whiterice",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.scriptablebuildpipeline": "1.20.2",
+        "com.91act.noah.google.protobuf": "0.2.1",
+        "com.unity.addressables": "1.21.1"
+      }
+    },
     "com.coffee.ui-particle": {
       "version": "https://github.com/mob-sakai/ParticleEffectForUGUI.git#4.1.7",
       "depth": 0,
@@ -79,11 +89,11 @@
       "hash": "a499f0c04670e6e52893799f02a30aa7b5b4db05"
     },
     "com.unity.addressables": {
-      "version": "1.20.5",
-      "depth": 0,
+      "version": "1.21.1",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.20.2",
+        "com.unity.scriptablebuildpipeline": "1.21.0",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -177,13 +187,11 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "file:ScriptableBuildPipeline",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.test-framework": "1.1.30",
-        "com.91act.noah.google.protobuf": "0.2.1"
-      }
+      "version": "1.21.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://k8s-npm.91act.com"
     },
     "com.unity.searcher": {
       "version": "4.9.1",

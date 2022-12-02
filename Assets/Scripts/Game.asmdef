@@ -13,7 +13,8 @@
     "Unity.ML-Agents",
     "UnityEngine.UI",
     "UnityEngine.AudioModule",
-    "Coffee.UIParticle"
+    "Coffee.UIParticle",
+    "WhitericeRuntime"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

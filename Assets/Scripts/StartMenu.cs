@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Whiterice;
 
 namespace GameScripts
 {
@@ -45,6 +46,7 @@ namespace GameScripts
                 DestroyImmediate(m_runningCombat);
             }
 
+            AssetManager.Instance.CollectAssets();
             var startMenu = m_root.Q<VisualElement>("StartMenu");
             ShowVisualElement(startMenu, true);
             var gameEnd = m_root.Q<VisualElement>("GameEnd");

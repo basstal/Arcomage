@@ -5,6 +5,7 @@ using GameScripts.Utils;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
+using Whiterice;
 
 namespace GameScripts
 {

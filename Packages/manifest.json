@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.unity.scriptablebuildpipeline": "1.20.50",
     "com.unity.barracuda": "3.0.50",
     "com.91act.noah.unity.logs.viewer": "0.1.5",
     "com.91act.noah.dotween": "1.2.16",

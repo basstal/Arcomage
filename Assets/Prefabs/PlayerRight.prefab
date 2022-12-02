@@ -22,6 +22,11 @@ PrefabInstance:
       propertyPath: playerName
       value: enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 380772696799261141, guid: cdf7ecf7cd777494da4775690418b727,
+        type: 3}
+      propertyPath: isAIControlling
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 418220082737214786, guid: cdf7ecf7cd777494da4775690418b727,
         type: 3}
       propertyPath: m_RootOrder
