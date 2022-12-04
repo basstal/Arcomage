@@ -1,7 +1,6 @@
 using System.Reflection;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Whiterice;
@@ -110,10 +109,10 @@ namespace GameScripts
 #if UNITY_EDITOR
         static void ClearLog()
         {
-            var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-            var type = assembly.GetType("UnityEditor.LogEntries");
-            var method = type.GetMethod("Clear");
-            method?.Invoke(new object(), null);
+            // var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
+            // var type = assembly.GetType("UnityEditor.LogEntries");
+            // var method = type.GetMethod("Clear");
+            // method?.Invoke(new object(), null);
         }
 #endif
     }

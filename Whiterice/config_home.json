@@ -1,0 +1,60 @@
+{
+    "required": {
+        "target_platform": "Android",
+        "unity_exec": "C:/Program Files/Unity/Hub/Editor/2021.3.6f1/Editor/Unity.exe",
+        "unity_project": "D:/Documents/UnityProject/Arcomage",
+        "workspace": "D:/Documents/UnityProject/Arcomage/Whiterice",
+        "unity_build_output": "D:/Documents/UnityProject/Arcomage/Whiterice/Output",
+        "unity_builtin": {
+            "scripting_implementation": 2
+        },
+        "app_info": {
+            "job_name": "Test",
+            "svn_revision": "30001",
+            "build_number": "1",
+            "game_id": "1999",
+            "channel_id": "1",
+            "app_version": "1.0.0",
+            "app_revision": "0",
+            "app_patch": "0"
+        }
+    },
+    "android_platform_specific": {
+        "gradle": "D:/Downloads/gradle-7.5.1-bin/gradle-7.5.1",
+        "jdk": "C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Data/PlaybackEngines/AndroidPlayer/OpenJDK",
+        "ndk": "C:/Users/basstal/AppData/Local/Android/Sdk/ndk",
+        "sdk": "C:/Users/basstal/AppData/Local/Android/Sdk",
+        "skip_gradle": false,
+        "skip_il2cpp": false,
+        "adb_install": {
+            "enabled": true,
+            "adb_exec": "C:/Microsoft/AndroidSDK/25/platform-tools/adb.exe"
+        }
+    },
+    "http_proxy": "http://127.0.0.1:21882",
+    "https_proxy": "http://127.0.0.1:21882",
+    "optional": {
+        "verbose": false,
+        "gather_resource": false,
+        "unity_build_player": true,
+        "unity_build_asset_bundle": true,
+        "archive_upload": false,
+        "native_template": {
+            "enabled": true,
+            "location": "D:/Documents/UnityProject/Arcomage/NativeTemplate"
+        },
+        "build_setting": {
+            "enabled": false,
+            "proto_location": "D:/UnityProject/ace_main_branch_1/UnityProject/Assets/NOAH/Modules/Proto/Editor/Proto/config.proto",
+            "xl_location": "E:/Documents/git-repository/whiterice/tests/data/BuildSettingPresets.xlsx",
+            "build_setting_message": "BuildSetting"
+        },
+        "patch": {
+            "enabled": false,
+            "exclude_filenames": [],
+            "force_filenames": [],
+            "patch_upload": true,
+            "next_patch": 1
+        }
+    }
+}

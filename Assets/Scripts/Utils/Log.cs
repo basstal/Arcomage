@@ -1,8 +1,4 @@
-using System;
-using System.IO;
 using UnityEngine;
-using System.Text.RegularExpressions;
-using System.Linq;
 using Object = UnityEngine.Object;
 
 public enum LogLevel

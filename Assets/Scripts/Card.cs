@@ -4,7 +4,6 @@ using GameScripts.Utils;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 using Whiterice;

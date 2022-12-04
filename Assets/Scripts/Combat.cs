@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DG.Tweening;
 using GameScripts.Utils;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
 using Whiterice;
 
