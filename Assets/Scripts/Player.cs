@@ -10,6 +10,7 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using Whiterice;
 
 namespace GameScripts
 {
@@ -250,7 +251,8 @@ namespace GameScripts
             var isPauseAction = PauseAction();
             // 0 means do nothing
             actionMask.SetActionEnabled(0, 0, true);
-            for (int i = 1; i < Combat.Database.cardsAssetRef.Count + 1; ++i)
+            List<ArcomageCard> allCards = AssetManager.Instance.LoadAssets<ArcomageCard>(new List<string> { "Cards" }, this);
+            for (int i = 1; i < allCards.Count + 1; ++i)
             {
                 // only 1 branch, which is set to all discrete actions
                 var findCard = handCards.Find(card => card.id == i && !card.isDisabled);
@@ -312,7 +314,8 @@ namespace GameScripts
             usingCard = null;
             lastRemovedIndex = -1;
             // ** 按难度重置基本数据
-            ArcomagePlayer arcomagePlayer = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Combat.Database.difficultyAssetRef[(int)difficulty]);
+            List<ArcomagePlayer> difficulties = AssetManager.Instance.LoadAssets<ArcomagePlayer>(new List<string> { "Difficulty" }, this);
+            ArcomagePlayer arcomagePlayer = difficulties[(int)difficulty];
             brick = arcomagePlayer.brick;
             gem = arcomagePlayer.gem;
             recruit = arcomagePlayer.recruit;
@@ -451,7 +454,7 @@ namespace GameScripts
         /// </summary>
         public void CalculateReward()
         {
-            if (Combat.Database.learningGoal == MLAgentLearningGoal.BuildTower)
+            if (combat.Database.learningGoal == MLAgentLearningGoal.BuildTower)
             {
                 if (snapshot == null)
                 {
@@ -464,7 +467,7 @@ namespace GameScripts
                 snapshot.TakeSnapshot(this);
             }
 
-            if (Combat.Database.learningGoal == MLAgentLearningGoal.WinCombat)
+            if (combat.Database.learningGoal == MLAgentLearningGoal.WinCombat)
             {
                 // winner will set reward to 1.0
                 SetReward(1.0f);

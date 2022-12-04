@@ -220,7 +220,7 @@ namespace GameScripts
 
                 try
                 {
-                    if (Combat.Database.learningGoal == MLAgentLearningGoal.DamageTower)
+                    if (player.combat.Database.learningGoal == MLAgentLearningGoal.DamageTower)
                     {
                         player.AddReward(Mathf.Min(1.0f, (float)towerDamage / towerOld));
                     }

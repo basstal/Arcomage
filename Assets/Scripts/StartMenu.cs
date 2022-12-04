@@ -11,10 +11,10 @@ namespace GameScripts
     [RequireComponent(typeof(UIDocument))]
     public class StartMenu : MonoBehaviour
     {
-        public AssetReference combat;
+        // public AssetReference combat;
         VisualElement m_root;
         UIDocument m_mainMenuDocument;
-        private GameObject m_runningCombat;
+        private GameObject m_runningCombatRoot;
         public UIDocument mainMenuDocument => m_mainMenuDocument;
 
         private void Awake()
@@ -41,9 +41,10 @@ namespace GameScripts
 
         public void ShowStartMenu(ClickEvent evt)
         {
-            if (m_runningCombat != null)
+            if (m_runningCombatRoot != null)
             {
-                DestroyImmediate(m_runningCombat);
+                DestroyImmediate(m_runningCombatRoot);
+                m_runningCombatRoot = null;
             }
 
             AssetManager.Instance.CollectAssets();
@@ -74,7 +75,13 @@ namespace GameScripts
 
         public void StartCombat(ClickEvent evt)
         {
-            m_runningCombat = combat.InstantiateAsync().WaitForCompletion();
+            if (m_runningCombatRoot == null)
+            {
+                m_runningCombatRoot = new GameObject("m_runningCombatRoot");
+            }
+
+            AssetManager.Instance.InstantiatePrefabSync("Assets/Prefabs/Combat.prefab", m_runningCombatRoot, parent: m_runningCombatRoot.transform);
+            // m_runningCombat = combat.InstantiateAsync().WaitForCompletion();
             var startMenu = m_root.Q<VisualElement>("StartMenu");
             ShowVisualElement(startMenu, false);
         }

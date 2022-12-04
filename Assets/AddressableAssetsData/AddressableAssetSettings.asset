@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 7f187839e0a625d46b43b72a4f118bd2
   m_CachedHash:
     serializedVersion: 2
-    Hash: 80394c27edbd837f8a16ce4c9a8e8d89
+    Hash: cf458dcfa2936d95a58b4df0a250e44e
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -93,6 +93,8 @@ MonoBehaviour:
     - Texture
     - Effects
     - AI
+    - Cards
+    - Difficulty
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: e51b6740e7322b54cb41d52ff6b164ca, type: 2}

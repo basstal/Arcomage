@@ -11,10 +11,11 @@ namespace GameScripts
 {
     public class Combat : MonoBehaviour
     {
-        public static ArcomageDatabase Database;
+        public ArcomageDatabase Database;
 
         public const int MAX_HAND_CARDS = 5;
-        public AssetReference databaseRef;
+
+        // public AssetReference databaseRef;
         public int firstPlayer = 1;
         public Player m_player1;
         public Player m_player2;
@@ -39,7 +40,8 @@ namespace GameScripts
 
         private void Awake()
         {
-            Combat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
+            // Combat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
+            Database = AssetManager.Instance.LoadAsset<ArcomageDatabase>("Assets/Data/ArcomageDatabase.asset", this);
             Assert.IsNotNull(Database);
             cardCache = GetComponentInChildren<CardCache>(true);
             effectCache = GetComponentInChildren<EffectCache>(true);
@@ -229,7 +231,8 @@ namespace GameScripts
                 currentPlayer.CalculateReward();
             }
 
-            ArcomagePlayer winningCond = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Database.winningAssetRef);
+            ArcomagePlayer winningCond = AssetManager.Instance.LoadAsset<ArcomagePlayer>("Assets/Data/WinningCond.asset", this);
+            // ArcomagePlayer winningCond = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Database.winningAssetRef);
             var enemyPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
             var gameEnd = false;
             if (winningCond.IsPlayerWin(currentPlayer) || winningCond.IsPlayerLose(enemyPlayer))

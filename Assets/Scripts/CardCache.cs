@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using GameScripts.Utils;
+using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
+using Whiterice;
 
 namespace GameScripts
 {
@@ -26,7 +29,8 @@ namespace GameScripts
             }
             else
             {
-                var cardGameObject = Combat.Database.cardPrefabAssetRef.InstantiateAsync(inOwner.combat.transform).WaitForCompletion();
+                // var cardGameObject = Combat.Database.cardPrefabAssetRef.InstantiateAsync(inOwner.combat.transform).WaitForCompletion();
+                var cardGameObject = AssetManager.Instance.InstantiatePrefabSync("Assets/Prefabs/Card.prefab", this, parent: inOwner.combat.transform);
                 card = cardGameObject.GetComponent<Card>();
             }
 
@@ -51,15 +55,15 @@ namespace GameScripts
         /// <returns>生成的牌堆</returns>
         public List<ArcomageCard> GenCardBank()
         {
-            List<ArcomageCard> result = new List<ArcomageCard>();
-            for (int i = 0; i < Combat.Database.cardsAssetRef.Count; ++i)
-            {
-                var cardAssetRef = Combat.Database.cardsAssetRef[i];
-                Assert.IsNotNull(cardAssetRef);
-                ArcomageCard template = ArcomageDatabase.RetrieveObject<ArcomageCard>(cardAssetRef);
-                Assert.IsNotNull(template);
-                result.Add(template);
-            }
+            List<ArcomageCard> result = AssetManager.Instance.LoadAssets<ArcomageCard>(new List<string> { "Cards" }, this);
+            // for (int i = 0; i < Combat.Database.cardsAssetRef.Count; ++i)
+            // {
+            //     var cardAssetRef = Combat.Database.cardsAssetRef[i];
+            //     Assert.IsNotNull(cardAssetRef);
+            //     ArcomageCard template = ArcomageDatabase.RetrieveObject<ArcomageCard>(cardAssetRef);
+            //     Assert.IsNotNull(template);
+            //     result.Add(template);
+            // }
 
             result.Shuffle();
             return result;

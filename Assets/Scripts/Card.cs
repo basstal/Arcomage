@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using Whiterice;
 
 namespace GameScripts
 {
@@ -47,22 +48,14 @@ namespace GameScripts
             Assert.IsNotNull(m_data.sprite);
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
-            AssetReferenceSprite spriteRef = m_data.costType == CostType.Brick
-                ? Combat.Database.brickAssetRef
-                : (m_data.costType == CostType.Gem ? Combat.Database.gemAssetRef : Combat.Database.recruitAssetRef);
-            if (spriteRef.IsValid())
-            {
-                costTypeImage.sprite = (Sprite)spriteRef.OperationHandle.Result;
-            }
-            else
-            {
-                costTypeImage.sprite = spriteRef.LoadAssetAsync<Sprite>().WaitForCompletion();
-            }
+            costTypeImage.sprite = m_data.costType == CostType.Brick
+                ? AssetManager.Instance.LoadAsset<Sprite>("Assets/Textures/others.png[brick]", this)
+                : (m_data.costType == CostType.Gem
+                    ? AssetManager.Instance.LoadAsset<Sprite>("Assets/Textures/others.png[gem]", this)
+                    : AssetManager.Instance.LoadAsset<Sprite>("Assets/Textures/others.png[recruit]", this));
 
             Assert.IsNotNull(costTypeImage.sprite);
-            var localization = Combat.Database.localization;
-            cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
-            cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
+
             cardCostText.text = m_data.cost.ToString();
             var scriptMachine = GetComponent<ScriptMachine>();
             scriptMachine.nest.SwitchToMacro(m_data.logic);
@@ -79,6 +72,9 @@ namespace GameScripts
             Assert.IsNotNull(inOwner);
             owner = inOwner;
             cardDroppingNode.SetActive(false);
+            var localization = owner.combat.Database.localization;
+            cardNameText.text = localization == Localization.CN ? m_data.cardName_cn : m_data.cardName;
+            cardDescribeText.text = localization == Localization.CN ? m_data.describe_cn : m_data.describe_en;
         }
 
         public void OnDisplay()
