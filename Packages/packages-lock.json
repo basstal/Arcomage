@@ -89,18 +89,17 @@
       "hash": "a499f0c04670e6e52893799f02a30aa7b5b4db05"
     },
     "com.unity.addressables": {
-      "version": "1.21.1",
-      "depth": 1,
-      "source": "registry",
+      "version": "file:Addressables",
+      "depth": 0,
+      "source": "embedded",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.21.0",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
+        "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
+        "com.unity.scriptablebuildpipeline": "1.21.0"
+      }
     },
     "com.unity.barracuda": {
       "version": "3.0.50",
@@ -188,10 +187,10 @@
     },
     "com.unity.scriptablebuildpipeline": {
       "version": "1.21.0",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
-      "url": "https://k8s-npm.91act.com"
+      "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
       "version": "4.9.1",

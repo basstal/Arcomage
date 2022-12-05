@@ -47,6 +47,21 @@ MonoBehaviour:
     m_SerializedLabels:
     - Texture
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63652b1741b86f54dace160163a8cf93
+    m_Address: Assets/Prefabs/Combat.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cdf7ecf7cd777494da4775690418b727
+    m_Address: Assets/Prefabs/Player.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc5e53b685369c34799a53c9dac2992b
+    m_Address: Assets/Prefabs/ResourceCell.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5f7785964b4347244b983c2818026cc7, type: 2}
   m_SchemaSet:

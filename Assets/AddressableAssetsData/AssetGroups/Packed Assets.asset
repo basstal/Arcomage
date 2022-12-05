@@ -22,11 +22,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a5ad56d687dd12d4794ffe6c0c15b9d2
-    m_Address: Assets/Prefabs
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 738839090dfd40549a1e59f96a8cd9a2
     m_Address: Effects
     m_ReadOnly: 0

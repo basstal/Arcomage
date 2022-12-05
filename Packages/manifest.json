@@ -27,7 +27,6 @@
       "scopes": [
         "com.91act.noah",
         "com.unity.ml-agents",
-        "com.unity.scriptablebuildpipeline",
         "com.unity.barracuda"
       ]
     }

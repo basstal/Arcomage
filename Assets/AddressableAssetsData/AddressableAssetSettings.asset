@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: 7f187839e0a625d46b43b72a4f118bd2
   m_CachedHash:
     serializedVersion: 2
-    Hash: cf458dcfa2936d95a58b4df0a250e44e
+    Hash: 51a77da5cb9cc6c9c19eef635608debd
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -35,9 +35,9 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 4655e34f80641994594a5ffbd03b026c
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: 0755291da57d5454585b2024fddceee1
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
@@ -67,7 +67,9 @@ MonoBehaviour:
       - m_Id: 4655e34f80641994594a5ffbd03b026c
         m_Value: ServerData/[BuildTarget]
       - m_Id: 923551b22f5234f41bc804e447eb36c3
-        m_Value: http://localhost/[BuildTarget]
+        m_Value: http://10.10.5.127:8000/[BuildTarget]
+      - m_Id: 0755291da57d5454585b2024fddceee1
+        m_Value: http://10.10.5.127:8000/Android
     m_ProfileEntryNames:
     - m_Id: fb539ff654b768e47afb22af177b60bf
       m_Name: BuildTarget
@@ -83,6 +85,9 @@ MonoBehaviour:
       m_InlineUsage: 0
     - m_Id: 923551b22f5234f41bc804e447eb36c3
       m_Name: RemoteLoadPath
+      m_InlineUsage: 0
+    - m_Id: 0755291da57d5454585b2024fddceee1
+      m_Name: CustomRemoteLoadPath
       m_InlineUsage: 0
     m_ProfileVersion: 1
   m_LabelTable:

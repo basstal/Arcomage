@@ -6,7 +6,10 @@
     "workspace": "D:/UnityProject/Arcomage/Whiterice",
     "unity_build_output": "D:/UnityProject/Arcomage/Whiterice/Output",
     "unity_builtin": {
-      "scripting_implementation": 2
+      "scripting_implementation": 2,
+      "addressable_settings": {
+        "remote_load_path": "http://10.10.5.127:8000"
+      }
     },
     "app_info": {
       "job_name": "Test",
@@ -24,20 +27,26 @@
     "jdk": "C:/Program Files/Unity/Hub/Editor/2019.4.29f1c106/Editor/Data/PlaybackEngines/AndroidPlayer/OpenJDK",
     "ndk": "C:\\Users\\basstal\\AppData\\Local\\Android\\Sdk\\ndk",
     "sdk": "E:\\android-sdk-windows\\",
-    "skip_gradle": true,
-    "skip_il2cpp": true
+    "skip_gradle": false,
+    "skip_il2cpp": false,
+    "adb_install": {
+      "enabled": true,
+      "adb_exec": "C:/Microsoft/AndroidSDK/25/platform-tools/adb.exe"
+    }
   },
+  "http_proxy": "http://proxy.91act.com:10086",
+  "https_proxy": "http://proxy.91act.com:10086",
   "optional": {
     "verbose": true,
     "gather_resource": false,
-    "unity_build_player": false,
-    "unity_build_asset_bundle": false,
-    "archive_upload": true,
+    "unity_build_player": true,
+    "unity_build_asset_bundle": true,
+    "archive_upload": false,
     "native_template": {
       "enabled": true,
       "location": "E:/Documents/git-repository/NativeTemplate"
     },
-    "build_setting_external": {
+    "build_setting": {
       "enabled": false,
       "proto_location": "D:/UnityProject/ace_main_branch_1/UnityProject/Assets/NOAH/Modules/Proto/Editor/Proto/config.proto",
       "xl_location": "E:/Documents/git-repository/whiterice/tests/data/BuildSettingPresets.xlsx",

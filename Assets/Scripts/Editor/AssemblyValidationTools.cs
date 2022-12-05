@@ -16,7 +16,7 @@ namespace GameEditorScripts
         /// to our runtime assemblies. If these types are ever moved to a different assembly, we will get
         /// misleading results
         /// </summary>
-        [MenuItem("AssemblyTools/Check runtime assemblies for editor dependencies")]
+        [MenuItem("Tools/Assembly/Check runtime assemblies for editor dependencies")]
         private static void CheckSelectedAssembly()
         {
             CheckAssembly(typeof(Player).Assembly);

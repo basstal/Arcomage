@@ -1,6 +1,10 @@
+using System.Collections.Generic;
 using System.Reflection;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Whiterice;
@@ -15,6 +19,8 @@ namespace GameScripts
         UIDocument m_mainMenuDocument;
         private GameObject m_runningCombatRoot;
         public UIDocument mainMenuDocument => m_mainMenuDocument;
+        private float checkUpdateTick;
+        private AsyncOperationHandle<List<string>> checkUpdate;
 
         private void Awake()
         {
@@ -36,6 +42,7 @@ namespace GameScripts
         {
             m_root.Q("StartGame").RegisterCallback<ClickEvent>(StartCombat);
             m_root.Q("Quit").RegisterCallback<ClickEvent>(Quit);
+            m_root.Q<VisualElement>("NewPatch").RegisterCallback<ClickEvent>(ShowStartMenu);
         }
 
         public void ShowStartMenu(ClickEvent evt)
@@ -51,6 +58,8 @@ namespace GameScripts
             ShowVisualElement(startMenu, true);
             var gameEnd = m_root.Q<VisualElement>("GameEnd");
             ShowVisualElement(gameEnd, false);
+            var newPatch = m_root.Q<VisualElement>("NewPatch");
+            ShowVisualElement(newPatch, false);
         }
 
         public void ShowGameEnd(string inText, Color inColor)
@@ -91,6 +100,30 @@ namespace GameScripts
             {
                 OnReload();
             }
+
+            checkUpdateTick -= Time.unscaledDeltaTime;
+            if (checkUpdateTick <= 0 && !checkUpdate.IsValid())
+            {
+                Debug.LogWarning($" check");
+                checkUpdateTick = 10;
+                if (checkUpdate.IsValid())
+                {
+                    Addressables.Release(checkUpdate);
+                }
+
+                checkUpdate = Addressables.CheckForCatalogUpdates(false);
+                checkUpdate.Completed += handle =>
+                {
+                    Debug.LogWarning($"checkUpdate completed.");
+                    if (handle.Result != null && handle.Result.Count > 0)
+                    {
+                        var newPatch = m_root.Q<VisualElement>("NewPatch");
+                        ShowVisualElement(newPatch, true);
+                    }
+
+                    Addressables.Release(checkUpdate);
+                };
+            }
         }
 
         public void Quit(ClickEvent evt)
@@ -109,10 +142,10 @@ namespace GameScripts
 #if UNITY_EDITOR
         static void ClearLog()
         {
-            // var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
-            // var type = assembly.GetType("UnityEditor.LogEntries");
-            // var method = type.GetMethod("Clear");
-            // method?.Invoke(new object(), null);
+            var assembly = Assembly.GetAssembly(typeof(UnityEditor.ActiveEditorTracker));
+            var type = assembly.GetType("UnityEditor.LogEntries");
+            var method = type.GetMethod("Clear");
+            method?.Invoke(new object(), null);
         }
 #endif
     }

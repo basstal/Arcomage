@@ -441,11 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bf47846fe4e48e4f85b3f9332cefdc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  databaseRef:
-    m_AssetGUID: f32974fde88cd9b4e8fe25d253e267ea
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  Database: {fileID: 0}
   firstPlayer: 1
   m_player1: {fileID: 4393161025956058252}
   m_player2: {fileID: 6637402013328713778}
@@ -1306,6 +1302,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5022602860645237092, guid: bb2e847fb4d67bf4dbc5d5644b9a351c,
         type: 3}
+    - target: {fileID: 463814422039739215, guid: 4fa5d3334302681489d0f699671f2d81,
+        type: 3}
+      propertyPath: playerName
+      value: enemy1
+      objectReference: {fileID: 0}
+    - target: {fileID: 463814422039739215, guid: 4fa5d3334302681489d0f699671f2d81,
+        type: 3}
+      propertyPath: isAIControlling
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 797977010989422702, guid: 4fa5d3334302681489d0f699671f2d81,
         type: 3}
       propertyPath: m_LocalScale.x

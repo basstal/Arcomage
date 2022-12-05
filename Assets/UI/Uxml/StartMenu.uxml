@@ -9,4 +9,8 @@
         <ui:Label display-tooltip-when-elided="true" name="GameEndLabel" binding-path="GameEndLabel" text="GameEndLabel" style="-unity-font: resource(&apos;Fonts &amp; Materials/SOURCEHANSANSSC-REGULAR&apos;); font-size: 52px; margin-bottom: 30px;" />
         <ui:Button text="Continue" display-tooltip-when-elided="true" name="Continue" class="BasicButton" />
     </ui:VisualElement>
+    <ui:VisualElement name="NewPatch" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; align-items: center; justify-content: center; display: flex;">
+        <ui:Label display-tooltip-when-elided="true" name="NewPatchLabel" text="There is a new patch should be download" style="-unity-font: resource(&apos;Fonts &amp; Materials/SOURCEHANSANSSC-REGULAR&apos;); font-size: 52px; margin-bottom: 30px;" />
+        <ui:Button text="Restart" display-tooltip-when-elided="true" name="Restart" class="BasicButton" />
+    </ui:VisualElement>
 </ui:UXML>
