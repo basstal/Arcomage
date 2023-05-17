@@ -251,7 +251,7 @@ namespace GameScripts
             var isPauseAction = PauseAction();
             // 0 means do nothing
             actionMask.SetActionEnabled(0, 0, true);
-            List<ArcomageCard> allCards = AssetManager.Instance.LoadAssets<ArcomageCard>(new List<string> { "Cards" }, this);
+            List<ArcomageCard> allCards = AssetManager.Instance.LoadAssets<ArcomageCard>(new [] { "Cards" }, this);
             for (int i = 1; i < allCards.Count + 1; ++i)
             {
                 // only 1 branch, which is set to all discrete actions
@@ -314,7 +314,7 @@ namespace GameScripts
             usingCard = null;
             lastRemovedIndex = -1;
             // ** 按难度重置基本数据
-            List<ArcomagePlayer> difficulties = AssetManager.Instance.LoadAssets<ArcomagePlayer>(new List<string> { "Difficulty" }, this);
+            List<ArcomagePlayer> difficulties = AssetManager.Instance.LoadAssets<ArcomagePlayer>(new []{ "Difficulty" }, this);
             ArcomagePlayer arcomagePlayer = difficulties[(int)difficulty];
             brick = arcomagePlayer.brick;
             gem = arcomagePlayer.gem;
@@ -432,14 +432,22 @@ namespace GameScripts
                     debugInitCardIds = null;
                 }
 #endif
-                var template = combat.cardBank[combat.cardBank.Count - 1];
-                Assert.IsTrue(handCards.Find(card => card.id == template.id) == null);
-                tweener = AddOneCardToHand(template);
-                combat.cardBank.RemoveAt(combat.cardBank.Count - 1);
-                needGenCardAmount--;
-                if (!trainingMode && needGenCardAmount == 0)
+                if (combat.cardBank.Count > 0)
                 {
-                    tweener.OnComplete(callback);
+                    var template = combat.cardBank[combat.cardBank.Count - 1];
+                    Assert.IsTrue(handCards.Find(card => card.id == template.id) == null);
+                    tweener = AddOneCardToHand(template);
+                    combat.cardBank.RemoveAt(combat.cardBank.Count - 1);
+                    needGenCardAmount--;
+                    if (!trainingMode && needGenCardAmount == 0)
+                    {
+                        tweener.OnComplete(callback);
+                    }
+                }
+                else
+                {
+                    Debug.LogError("combat.cardBank.Count == 0??\nCheck if GenCardBank failed!");
+                    break;
                 }
             }
 

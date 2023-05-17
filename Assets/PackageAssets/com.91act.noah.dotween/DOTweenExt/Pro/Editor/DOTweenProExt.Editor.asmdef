@@ -1,0 +1,51 @@
+{
+    "name": "DOTweenProExt.Editor",
+    "references": [
+        "Unity.TextMeshPro",
+        "DOTweenExt",
+        "DOTween",
+        "DOTweenEditor",
+        "DemiEditor",
+        "DemiLib"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "DOTweenPro.dll",
+        "DOTweenProEditor.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.modules.audio",
+            "expression": "1.0.0",
+            "define": "UNITY_MODULES_AUDIO"
+        },
+        {
+            "name": "com.unity.modules.physics",
+            "expression": "1.0.0",
+            "define": "UNITY_MODULES_PHYSICS"
+        },
+        {
+            "name": "com.unity.modules.physics2d",
+            "expression": "1.0.0",
+            "define": "UNITY_MODULES_PHYSICS2D"
+        },
+        {
+            "name": "com.91act.noah.text.mesh.pro",
+            "expression": "2.1.7",
+            "define": "TEXTMESHPRO_ENABLED"
+        },
+        {
+            "name": "com.unity.ugui",
+            "expression": "1.0.0",
+            "define": "UNITY_MODULES_UGUI"
+        }
+    ],
+    "noEngineReferences": false
+}

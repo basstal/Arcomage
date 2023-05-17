@@ -39,7 +39,7 @@ namespace GameScripts
             }
 
 
-            GameObject targetEffectObject = AssetManager.Instance.InstantiatePrefabSync($"Effects/{inName}.prefab", effectRoot, parent: effectRoot);
+            GameObject targetEffectObject = AssetManager.Instance.InstantiatePrefab(inName, effectRoot, parent: effectRoot);
             var result = targetEffectObject.GetComponent<EffectInstance>();
             result.name = inName;
             result.cacheInstance = this;

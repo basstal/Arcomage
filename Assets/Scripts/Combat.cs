@@ -40,7 +40,7 @@ namespace GameScripts
         private void Awake()
         {
             // Combat.Database = databaseRef.LoadAssetAsync<ArcomageDatabase>().WaitForCompletion();
-            Database = AssetManager.Instance.LoadAsset<ArcomageDatabase>("Assets/Data/ArcomageDatabase.asset", this);
+            Database = AssetManager.Instance.LoadAsset<ArcomageDatabase>("ArcomageDatabase", this);
             Assert.IsNotNull(Database);
             cardCache = GetComponentInChildren<CardCache>(true);
             effectCache = GetComponentInChildren<EffectCache>(true);
@@ -230,8 +230,7 @@ namespace GameScripts
                 currentPlayer.CalculateReward();
             }
 
-            ArcomagePlayer winningCond = AssetManager.Instance.LoadAsset<ArcomagePlayer>("Assets/Data/WinningCond.asset", this);
-            // ArcomagePlayer winningCond = ArcomageDatabase.RetrieveObject<ArcomagePlayer>(Database.winningAssetRef);
+            ArcomagePlayer winningCond = AssetManager.Instance.LoadAsset<ArcomagePlayer>("WinningCond", this);
             var enemyPlayer = currentPlayer == m_player1 ? m_player2 : m_player1;
             var gameEnd = false;
             if (winningCond.IsPlayerWin(currentPlayer) || winningCond.IsPlayerLose(enemyPlayer))

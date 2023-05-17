@@ -1,10 +1,8 @@
-using System.Collections.Generic;
+using System;
+using System.Collections;
 using System.Reflection;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Whiterice;
@@ -19,21 +17,23 @@ namespace GameScripts
         UIDocument m_mainMenuDocument;
         private GameObject m_runningCombatRoot;
         public UIDocument mainMenuDocument => m_mainMenuDocument;
-        private float checkUpdateTick;
-        private AsyncOperationHandle<List<string>> checkUpdate;
 
-        private void Awake()
+        private float checkUpdateTick;
+        // private AsyncOperationHandle<List<string>> checkUpdate;
+
+        private IEnumerator Start()
         {
             m_mainMenuDocument = GetComponent<UIDocument>();
             if (m_mainMenuDocument == null)
             {
                 Debug.LogWarning("MenuScreen StartMenu: missing UIDocument. Check Script Execution Order.");
-                return;
+                yield break;
             }
 
             // get a reference to the root VisualElement 
             if (m_mainMenuDocument != null)
                 m_root = m_mainMenuDocument.rootVisualElement;
+            yield return AssetManager.Initialize();
             ShowStartMenu(null);
             RegisterButtonCallbacks();
         }
@@ -88,7 +88,7 @@ namespace GameScripts
                 m_runningCombatRoot = new GameObject("m_runningCombatRoot");
             }
 
-            AssetManager.Instance.InstantiatePrefabSync("Assets/Prefabs/Combat.prefab", m_runningCombatRoot, parent: m_runningCombatRoot.transform);
+            AssetManager.Instance.InstantiatePrefab("Combat", m_runningCombatRoot, parent: m_runningCombatRoot.transform);
             // m_runningCombat = combat.InstantiateAsync().WaitForCompletion();
             var startMenu = m_root.Q<VisualElement>("StartMenu");
             ShowVisualElement(startMenu, false);
@@ -96,34 +96,34 @@ namespace GameScripts
 
         private void Update()
         {
-            if (Input.GetKey(KeyCode.R))
-            {
-                OnReload();
-            }
-
-            checkUpdateTick -= Time.unscaledDeltaTime;
-            if (checkUpdateTick <= 0 && !checkUpdate.IsValid())
-            {
-                Debug.LogWarning($" check");
-                checkUpdateTick = 10;
-                if (checkUpdate.IsValid())
-                {
-                    Addressables.Release(checkUpdate);
-                }
-
-                checkUpdate = Addressables.CheckForCatalogUpdates(false);
-                checkUpdate.Completed += handle =>
-                {
-                    Debug.LogWarning($"checkUpdate completed.");
-                    if (handle.Result != null && handle.Result.Count > 0)
-                    {
-                        var newPatch = m_root.Q<VisualElement>("NewPatch");
-                        ShowVisualElement(newPatch, true);
-                    }
-
-                    Addressables.Release(checkUpdate);
-                };
-            }
+            // if (Input.GetKey(KeyCode.R))
+            // {
+            //     OnReload();
+            // }
+            //
+            // checkUpdateTick -= Time.unscaledDeltaTime;
+            // if (checkUpdateTick <= 0 && !checkUpdate.IsValid())
+            // {
+            //     Debug.LogWarning($" check");
+            //     checkUpdateTick = 10;
+            //     if (checkUpdate.IsValid())
+            //     {
+            //         Addressables.Release(checkUpdate);
+            //     }
+            //
+            //     checkUpdate = Addressables.CheckForCatalogUpdates(false);
+            //     checkUpdate.Completed += handle =>
+            //     {
+            //         Debug.LogWarning($"checkUpdate completed.");
+            //         if (handle.Result != null && handle.Result.Count > 0)
+            //         {
+            //             var newPatch = m_root.Q<VisualElement>("NewPatch");
+            //             ShowVisualElement(newPatch, true);
+            //         }
+            //
+            //         Addressables.Release(checkUpdate);
+            //     };
+            // }
         }
 
         public void Quit(ClickEvent evt)

@@ -48,10 +48,10 @@ namespace GameScripts
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
             costTypeImage.sprite = m_data.costType == CostType.Brick
-                ? AssetManager.Instance.LoadAsset<Sprite>("Assets/Textures/others.png[brick]", this)
+                ? AssetManager.Instance.LoadAsset<Sprite>("others[brick]", this)
                 : (m_data.costType == CostType.Gem
-                    ? AssetManager.Instance.LoadAsset<Sprite>("Assets/Textures/others.png[gem]", this)
-                    : AssetManager.Instance.LoadAsset<Sprite>("Assets/Textures/others.png[recruit]", this));
+                    ? AssetManager.Instance.LoadAsset<Sprite>("others[gem]", this)
+                    : AssetManager.Instance.LoadAsset<Sprite>("others[recruit]", this));
 
             Assert.IsNotNull(costTypeImage.sprite);
 

@@ -27,7 +27,7 @@ namespace GameScripts
             else
             {
                 // var cardGameObject = Combat.Database.cardPrefabAssetRef.InstantiateAsync(inOwner.combat.transform).WaitForCompletion();
-                var cardGameObject = AssetManager.Instance.InstantiatePrefabSync("Assets/Prefabs/Card.prefab", this, parent: inOwner.combat.transform);
+                var cardGameObject = AssetManager.Instance.InstantiatePrefab("Card", this, parent: inOwner.combat.transform);
                 card = cardGameObject.GetComponent<Card>();
             }
 
@@ -52,7 +52,7 @@ namespace GameScripts
         /// <returns>生成的牌堆</returns>
         public List<ArcomageCard> GenCardBank()
         {
-            List<ArcomageCard> result = AssetManager.Instance.LoadAssets<ArcomageCard>(new List<string> { "Cards" }, this);
+            List<ArcomageCard> result = AssetManager.Instance.LoadAssets<ArcomageCard>(new [] { "Cards" }, this);
             // for (int i = 0; i < Combat.Database.cardsAssetRef.Count; ++i)
             // {
             //     var cardAssetRef = Combat.Database.cardsAssetRef[i];
@@ -63,6 +63,10 @@ namespace GameScripts
             // }
 
             result.Shuffle();
+            if (result.Count == 0)
+            {
+                Debug.LogError($"GenCardBank with no card found!!");
+            }
             return result;
         }
     }
