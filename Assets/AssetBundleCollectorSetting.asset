@@ -25,7 +25,7 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Data/Cards
+      - CollectPath: Assets/Bundles/Cards
         CollectorGUID: 8d7fe1ecccb745e2b7b03dea491f81d1
         CollectorType: 0
         AddressRuleName: AddressByFolderAndFileName
@@ -33,15 +33,15 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: Cards
         UserData: 
-      - CollectPath: Assets/Prefabs
-        CollectorGUID: a5ad56d687dd12d4794ffe6c0c15b9d2
+      - CollectPath: Assets/Bundles/Components
+        CollectorGUID: 0d8cdb416791265449b06df105185907
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Data/GameSettings
+      - CollectPath: Assets/Bundles/GameSettings
         CollectorGUID: c3dfcc180ae294c4891abe935482d36c
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -49,7 +49,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: Difficulty
         UserData: 
-      - CollectPath: Assets/Data/Music
+      - CollectPath: Assets/Bundles/Music
         CollectorGUID: c6c2be193212f2a44ade6ad169408039
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -57,7 +57,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Data/VisualScripts
+      - CollectPath: Assets/Bundles/CardLogics
         CollectorGUID: c4d55683472daa64693e10979dffc734
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -65,8 +65,16 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Textures
+      - CollectPath: Assets/Render/UI
         CollectorGUID: b5f832ffae85971409feb007110df2c7
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Bundles/VFX
+        CollectorGUID: 738839090dfd40549a1e59f96a8cd9a2
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
