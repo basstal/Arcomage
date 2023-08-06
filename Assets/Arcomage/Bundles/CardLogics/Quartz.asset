@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: Quartz
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":756.0,"y":201.5},"zoom":1.0,"elements":[{"argumentCount":1,"coroutine":false,"defaultValues":{"target":null,"name":{"$content":"Apply","$type":"System.String"}},"position":{"x":0.0,"y":100.0},"guid":"1c469210-4d73-436d-800d-09f41127eaaa","$version":"A","$type":"Unity.VisualScripting.CustomEvent","$id":"9"},{"defaultValues":{"player":null,"building":{"$content":"Tower","$type":"Arcomage.GameScripts.BuildingType"},"changeAmount":{"$content":1,"$type":"System.Int32"}},"position":{"x":350.0,"y":100.0},"guid":"b421138d-ac93-492f-959a-ec2a30ec7ad7","$version":"A","$type":"Arcomage.GameScripts.BuildingChange","$id":"11"},{"chainable":false,"member":{"name":"isPlayAgain","parameterTypes":null,"targetType":"Arcomage.GameScripts.Player","targetTypeName":"Arcomage.GameScripts.Player","$version":"A"},"defaultValues":{"target":null,"input":{"$content":true,"$type":"System.Boolean"}},"position":{"x":735.0,"y":97.0},"guid":"24507a18-a985-4f40-ad06-bd6f1c7ff845","$version":"A","$type":"Unity.VisualScripting.SetMember","$id":"13"},{"sourceUnit":{"$ref":"9"},"sourceKey":"trigger","destinationUnit":{"$ref":"11"},"destinationKey":"inputTrigger","guid":"7c284a85-25f6-4e93-b5fb-8e5cadea5c2a","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"11"},"sourceKey":"outputTrigger","destinationUnit":{"$ref":"13"},"destinationKey":"assign","guid":"5055fc5d-ab93-4d34-b63f-aa8771d375cd","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"11"},"destinationKey":"player","guid":"e11061b3-0e44-444c-9d83-bd7c3eedee18","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"13"},"destinationKey":"target","guid":"f2def4aa-3af7-48cf-9158-bbc789bfa5ea","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []

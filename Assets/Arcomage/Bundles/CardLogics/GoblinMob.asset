@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: GoblinMob
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":649.5,"y":170.5},"zoom":1.0,"elements":[{"argumentCount":1,"coroutine":false,"defaultValues":{"target":null,"name":{"$content":"Apply","$type":"System.String"}},"position":{"x":0.0,"y":100.0},"guid":"0a491c4f-3af4-4c34-b48f-34cf1132431e","$version":"A","$type":"Unity.VisualScripting.CustomEvent","$id":"9"},{"defaultValues":{"player":null,"damage":{"$content":6,"$type":"System.Int32"},"direct":{"$content":false,"$type":"System.Boolean"}},"position":{"x":350.0,"y":100.0},"guid":"cacd0f77-f91a-427b-98f6-5d3219fa8db2","$version":"A","$type":"Arcomage.GameScripts.CauseDamage","$id":"11"},{"defaultValues":{"player":null},"position":{"x":700.0,"y":100.0},"guid":"b3b5f07f-d6af-46f6-9488-0c0f73314398","$version":"A","$type":"Arcomage.GameScripts.GetEnemyPlayer","$id":"13"},{"defaultValues":{"player":null,"damage":{"$content":3,"$type":"System.Int32"},"direct":{"$content":false,"$type":"System.Boolean"}},"position":{"x":1050.0,"y":100.0},"guid":"8934c0d2-cdda-41ba-a04d-a7fc768e4f18","$version":"A","$type":"Arcomage.GameScripts.CauseDamage","$id":"15"},{"sourceUnit":{"$ref":"11"},"sourceKey":"outputTrigger","destinationUnit":{"$ref":"13"},"destinationKey":"inputTrigger","guid":"594c0ad9-1ebb-41f8-829e-0b8250c273cd","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"13"},"sourceKey":"outputTrigger","destinationUnit":{"$ref":"15"},"destinationKey":"inputTrigger","guid":"572951f5-84b4-4aaa-a9fb-0f0a7cde212e","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"trigger","destinationUnit":{"$ref":"11"},"destinationKey":"inputTrigger","guid":"d24495bf-a0ad-4b27-a2c1-b5d5180eb428","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"11"},"destinationKey":"player","guid":"7cc98f91-2f7d-42e8-addd-096d02b42155","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"13"},"destinationKey":"player","guid":"8086fc8f-58bf-4149-b299-9e0944e8f4f3","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"13"},"sourceKey":"result","destinationUnit":{"$ref":"15"},"destinationKey":"player","guid":"9c91aed3-c2c5-4af2-a2af-b67d27d6c17f","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []

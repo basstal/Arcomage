@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: WorkOvertime
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":602.0,"y":218.0},"zoom":1.0,"elements":[{"argumentCount":1,"coroutine":false,"defaultValues":{"target":null,"name":{"$content":"Apply","$type":"System.String"}},"position":{"x":0.0,"y":100.0},"guid":"889da703-bfd6-4773-9e2d-b50ca826ce41","$version":"A","$type":"Unity.VisualScripting.CustomEvent","$id":"9"},{"defaultValues":{"player":null,"building":{"$content":"Wall","$type":"Arcomage.GameScripts.BuildingType"},"changeAmount":{"$content":5,"$type":"System.Int32"}},"position":{"x":350.0,"y":100.0},"guid":"153c7e72-63f1-45d6-ab4c-be2ae958b4e0","$version":"A","$type":"Arcomage.GameScripts.BuildingChange","$id":"11"},{"defaultValues":{"player":null,"costType":{"$content":"Gem","$type":"Arcomage.GameScripts.CostType"},"costAmount":{"$content":-6,"$type":"System.Int32"}},"position":{"x":700.0,"y":100.0},"guid":"6c7fff4e-3d91-4eb7-82e4-fae7deaf55ff","$version":"A","$type":"Arcomage.GameScripts.ResChange","$id":"13"},{"sourceUnit":{"$ref":"11"},"sourceKey":"outputTrigger","destinationUnit":{"$ref":"13"},"destinationKey":"inputTrigger","guid":"ce004337-c66d-4785-b1d1-75c09e28cb5e","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"trigger","destinationUnit":{"$ref":"11"},"destinationKey":"inputTrigger","guid":"8858d7af-f7b7-4757-8be1-602b606b77b4","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"11"},"destinationKey":"player","guid":"13c808c9-603c-4e45-8d26-654a99461fdd","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"13"},"destinationKey":"player","guid":"42a0148a-b581-4385-8aaf-aa7e2e4c4c94","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []

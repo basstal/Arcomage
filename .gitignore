@@ -101,9 +101,13 @@ Packages/com.unity.ml-agents/
 Packages/com.91act.noah.unity.logs.viewer/
 Assets/Samples/
 Assets/Samples.meta
+Assets/ML-Agents/
+Assets/ML-Agents.meta
 
 Whiterice/Output/
 .DS_Store
 NativeTemplate/
 ServerData/
 /Bundles
+
+Packages/packages-lock.json

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: Sanctuary
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[],"title":null,"summary":null,"pan":{"x":657.5,"y":170.5},"zoom":1.0,"elements":[{"argumentCount":1,"coroutine":false,"defaultValues":{"target":null,"name":{"$content":"Apply","$type":"System.String"}},"position":{"x":0.0,"y":100.0},"guid":"716ba8c4-5692-47b4-8151-5a0bde287c49","$version":"A","$type":"Unity.VisualScripting.CustomEvent","$id":"9"},{"defaultValues":{"player":null,"building":{"$content":"Tower","$type":"Arcomage.GameScripts.BuildingType"},"changeAmount":{"$content":10,"$type":"System.Int32"}},"position":{"x":350.0,"y":100.0},"guid":"a557ac0d-afa2-4368-9940-f20ab5c43b0b","$version":"A","$type":"Arcomage.GameScripts.BuildingChange","$id":"11"},{"defaultValues":{"player":null,"building":{"$content":"Wall","$type":"Arcomage.GameScripts.BuildingType"},"changeAmount":{"$content":10,"$type":"System.Int32"}},"position":{"x":700.0,"y":100.0},"guid":"2f153e62-6659-400b-968b-8c8b75ecb6a8","$version":"A","$type":"Arcomage.GameScripts.BuildingChange","$id":"13"},{"defaultValues":{"player":null,"costType":{"$content":"Recruit","$type":"Arcomage.GameScripts.CostType"},"costAmount":{"$content":5,"$type":"System.Int32"}},"position":{"x":1050.0,"y":100.0},"guid":"21a4006e-cb0a-4904-8d0d-dc104ba5cf40","$version":"A","$type":"Arcomage.GameScripts.ResChange","$id":"15"},{"sourceUnit":{"$ref":"11"},"sourceKey":"outputTrigger","destinationUnit":{"$ref":"13"},"destinationKey":"inputTrigger","guid":"45742dbc-bff5-4024-8ce9-5371678fa76d","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"13"},"sourceKey":"outputTrigger","destinationUnit":{"$ref":"15"},"destinationKey":"inputTrigger","guid":"81afc89a-08a7-4502-949f-19a38a1f5341","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"trigger","destinationUnit":{"$ref":"11"},"destinationKey":"inputTrigger","guid":"c35f17c3-29b6-469e-9a35-ee56397b860f","$type":"Unity.VisualScripting.ControlConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"11"},"destinationKey":"player","guid":"d04c5f29-bb99-44ab-9d72-5da46f8398e5","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"13"},"destinationKey":"player","guid":"c8729bfd-e6fa-4d15-b00d-66b4f0f3da39","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"9"},"sourceKey":"argument_0","destinationUnit":{"$ref":"15"},"destinationKey":"player","guid":"de706697-96fb-4ce6-a5c1-891c1314f7e0","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []

@@ -1,0 +1,23 @@
+{
+    "name": "Arcomage.GameScripts",
+    "rootNamespace": "",
+    "references": [
+        "Whiterice",
+        "Unity.TextMeshPro",
+        "Unity.ML-Agents",
+        "Coffee.UIParticle",
+        "Unity.VisualScripting.Core",
+        "DOTween",
+        "Unity.VisualScripting.Flow",
+        "DOTweenExt"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
