@@ -345,7 +345,7 @@ MonoBehaviour:
   m_text: Reinforced Wall
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e795b2dc089a1a7499d8e3edc911a5c4, type: 2}
-  m_sharedMaterial: {fileID: 4701667011316252948, guid: e795b2dc089a1a7499d8e3edc911a5c4,
+  m_sharedMaterial: {fileID: 6382269074712902560, guid: e795b2dc089a1a7499d8e3edc911a5c4,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -762,7 +762,7 @@ MonoBehaviour:
     lose 8 bricks'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e795b2dc089a1a7499d8e3edc911a5c4, type: 2}
-  m_sharedMaterial: {fileID: 4701667011316252948, guid: e795b2dc089a1a7499d8e3edc911a5c4,
+  m_sharedMaterial: {fileID: 6382269074712902560, guid: e795b2dc089a1a7499d8e3edc911a5c4,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
