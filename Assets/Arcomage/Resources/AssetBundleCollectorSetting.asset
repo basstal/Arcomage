@@ -25,15 +25,7 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Arcomage/Bundles/Cards
-        CollectorGUID: 8d7fe1ecccb745e2b7b03dea491f81d1
-        CollectorType: 0
-        AddressRuleName: AddressByFolderAndFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: Cards
-        UserData: 
-      - CollectPath: Assets/Arcomage/Bundles/Components
+      - CollectPath: Assets/Arcomage/Prefabs
         CollectorGUID: 0d8cdb416791265449b06df105185907
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -41,7 +33,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Arcomage/Bundles/GameSettings
+      - CollectPath: Assets/Arcomage/Data
         CollectorGUID: c3dfcc180ae294c4891abe935482d36c
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -49,7 +41,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: Difficulty
         UserData: 
-      - CollectPath: Assets/Arcomage/Bundles/Music
+      - CollectPath: Assets/Arcomage/SFX
         CollectorGUID: c6c2be193212f2a44ade6ad169408039
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -57,24 +49,8 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Arcomage/Bundles/CardLogics
-        CollectorGUID: c4d55683472daa64693e10979dffc734
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Arcomage/Bundles/UI
-        CollectorGUID: b5f832ffae85971409feb007110df2c7
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Arcomage/Bundles/VFX
-        CollectorGUID: 738839090dfd40549a1e59f96a8cd9a2
+      - CollectPath: Assets/Arcomage/Textures
+        CollectorGUID: 80b9977405caed24c987045fddd9007e
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

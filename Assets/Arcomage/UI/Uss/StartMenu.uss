@@ -1,7 +1,0 @@
-.BasicButton {
-    font-size: 36px;
-    margin-bottom: 10px;
-    -unity-font: resource('Fonts & Materials/SOURCEHANSANSSC-REGULAR');
-    -unity-text-align: upper-center;
-    min-width: 50%;
-}

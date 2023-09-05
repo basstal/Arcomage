@@ -264,12 +264,12 @@ namespace Arcomage.GameScripts
                     enemyPlayer.EndEpisode();
                 }
 
-                StartMenu startMenu = GameObject.Find("StartMenu")?.GetComponent<StartMenu>();
-                if (startMenu != null)
-                {
-                    var winner = currentPlayer == m_player1 ? "Player" : "Enemy";
-                    startMenu.ShowGameEnd($"{winner} Win!!", winner == "Player" ? Color.red : Color.green);
-                }
+                // StartMenu startMenu = GameObject.Find("StartMenu")?.GetComponent<StartMenu>();
+                // if (startMenu != null)
+                // {
+                //     var winner = currentPlayer == m_player1 ? "Player" : "Enemy";
+                //     startMenu.ShowGameEnd($"{winner} Win!!", winner == "Player" ? Color.red : Color.green);
+                // }
 
                 return true;
             }

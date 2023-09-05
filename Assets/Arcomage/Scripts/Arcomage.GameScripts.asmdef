@@ -2,14 +2,16 @@
     "name": "Arcomage.GameScripts",
     "rootNamespace": "",
     "references": [
-        "Whiterice",
         "Unity.TextMeshPro",
-        "Unity.ML-Agents",
-        "Coffee.UIParticle",
         "Unity.VisualScripting.Core",
-        "DOTween",
         "Unity.VisualScripting.Flow",
-        "DOTweenExt"
+        "Unity.ML-Agents",
+        "Whiterice",
+        "Coffee.UIParticle",
+        "DOTween",
+        "DOTweenExt",
+        "Google.Protobuf",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,8 +1,8 @@
-# com.91act.noah.text.mesh.pro@3.0.64
+# com.91act.noah.text.mesh.pro@3.0.610
 
 本文件夹下内容为 package 导出的资源文件。
 
-目前该 package 的更新策略为 ： None。
+目前该 package 的更新策略为 ： Force。
 
 如果更新策略为 **Delete** ，**请不要直接修改本目录下任意文件**，因为这会面临着 package 更新导致修改内容丢失的问题。
 

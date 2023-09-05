@@ -145,6 +145,26 @@ namespace Arcomage.GameScripts.Utils
             if (t == null) t = go.AddComponent<T>();
             return t;
         }
+        
+        public static T GetFirstComponentInParent<T>(this GameObject t) where T : Component
+        {
+            T result = null;
+
+            Transform parent = t.transform.parent;
+
+            while (parent != null)
+            {
+                result = parent.GetComponent<T>();
+                if (result != null)
+                {
+                    break;
+                }
+
+                parent = parent.parent;
+            }
+
+            return result;
+        }
 
         #endregion
 
