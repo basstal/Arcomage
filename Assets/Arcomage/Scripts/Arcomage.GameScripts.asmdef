@@ -11,7 +11,9 @@
         "DOTween",
         "DOTweenExt",
         "Google.Protobuf",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Localization",
+        "UI.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

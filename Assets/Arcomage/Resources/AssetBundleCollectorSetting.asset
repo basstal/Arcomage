@@ -28,7 +28,7 @@ MonoBehaviour:
       - CollectPath: Assets/Arcomage/Prefabs
         CollectorGUID: 0d8cdb416791265449b06df105185907
         CollectorType: 0
-        AddressRuleName: AddressByFileName
+        AddressRuleName: AddressByFolderAndFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
@@ -36,21 +36,37 @@ MonoBehaviour:
       - CollectPath: Assets/Arcomage/Data
         CollectorGUID: c3dfcc180ae294c4891abe935482d36c
         CollectorType: 0
-        AddressRuleName: AddressByFileName
+        AddressRuleName: AddressByFolderAndFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
-        AssetTags: Difficulty
+        AssetTags: Difficulty;Cards
         UserData: 
       - CollectPath: Assets/Arcomage/SFX
         CollectorGUID: c6c2be193212f2a44ade6ad169408039
         CollectorType: 0
-        AddressRuleName: AddressByFileName
+        AddressRuleName: AddressByFolderAndFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
       - CollectPath: Assets/Arcomage/Textures
         CollectorGUID: 80b9977405caed24c987045fddd9007e
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Arcomage/Scenes/StartMenu.unity
+        CollectorGUID: b59ae882a4590f64db34fe29aed3f3bf
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Arcomage/Scenes/GamePlay.unity
+        CollectorGUID: 9dad7c10260ae4d4aa7bfdd2e23c356a
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

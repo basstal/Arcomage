@@ -31,6 +31,7 @@ namespace Arcomage.GameScripts
         public Image cardExtentImage;
         public GameObject cardDroppingNode;
         private Transform m_debug;
+        public DOTweenAnimation acquireCardAnim;
 
         private void Awake()
         {
@@ -48,10 +49,10 @@ namespace Arcomage.GameScripts
             cardImage.sprite = m_data.sprite;
             cardImage.SetNativeSize();
             costTypeImage.sprite = m_data.costType == CostType.Brick
-                ? AssetManager.Instance.LoadAsset<Sprite>("others[brick]", this)
+                ? AssetManager.Instance.LoadAsset<Sprite>("UI_others[brick]", this)
                 : (m_data.costType == CostType.Gem
-                    ? AssetManager.Instance.LoadAsset<Sprite>("others[gem]", this)
-                    : AssetManager.Instance.LoadAsset<Sprite>("others[recruit]", this));
+                    ? AssetManager.Instance.LoadAsset<Sprite>("UI_others[gem]", this)
+                    : AssetManager.Instance.LoadAsset<Sprite>("UI_others[recruit]", this));
 
             Assert.IsNotNull(costTypeImage.sprite);
 
@@ -110,7 +111,9 @@ namespace Arcomage.GameScripts
 
         public Tweener PlayDisplayingCardAnim(int offsetIndex)
         {
-            var handCardPos = GetHandCardAnimPos(offsetIndex);
+            // var handCardPos = GetHandCardAnimPos(offsetIndex);
+            var handCardPos = Vector3.zero;
+
             float duration = 0.45f;
             var tweener = transform.DOMove(handCardPos, duration).From(owner.handCardsLocation.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f);
             transform.DOScale(2.2f, duration).From(owner.handCardsLocation.lossyScale).SetEase(Ease.OutQuad).OnComplete(OnDisplay);
@@ -135,25 +138,33 @@ namespace Arcomage.GameScripts
             });
         }
 
-        public Vector3 GetHandCardAnimPos(int offsetIndex)
-        {
-            float offset = GetComponent<RectTransform>().rect.size.x + 150f;
-            var handCardsLayoutBegin = owner.combat.handCardLayout.position;
-            handCardsLayoutBegin.x -= Combat.MAX_HAND_CARDS / 2 * offset;
-            handCardsLayoutBegin.x += offsetIndex * offset;
-            return handCardsLayoutBegin;
-        }
+        // public Vector3 GetHandCardAnimPos(int offsetIndex)
+        // {
+        //     float offset = GetComponent<RectTransform>().rect.size.x + 150f;
+        //     var handCardsLayoutBegin = owner.combat.handCardLayout.localPosition;
+        //     handCardsLayoutBegin.x -= (int)(Combat.MAX_HAND_CARDS / 2) * offset;
+        //     handCardsLayoutBegin.x += offsetIndex * offset;
+        //     return handCardsLayoutBegin;
+        // }
 
-        public Tweener PlayAcquireAnim(int offsetIndex)
+        public Tween PlayAcquireAnim(int offsetIndex)
         {
             cardExtentImage.gameObject.SetActive(false);
-            var handCardPos = GetHandCardAnimPos(offsetIndex);
-            float duration = 0.7f;
-            var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.position).SetEase(Ease.InOutCubic).SetDelay(offsetIndex * 0.075f);
-            transform.DOScale(2.2f, duration).From(owner.combat.cardCache.transform.lossyScale).SetEase(Ease.InQuad).OnComplete(OnDisplay);
-            float delay = 0.4f;
-            transform.Find("BackImage").GetComponent<Image>().DOFade(0, duration - delay).From(1).SetDelay(delay).SetEase(Ease.InQuad);
-            return tweener;
+            acquireCardAnim.fromCurrent = false;
+            acquireCardAnim.fromValueTransform = owner.combat.cardCache.transform;
+            acquireCardAnim.endValueTransform = owner.combat.handCardLayout.GetChild(offsetIndex);
+            acquireCardAnim.delay = offsetIndex * 0.075f;
+
+
+            // var handCardPos = GetHandCardAnimPos(offsetIndex);
+            // var handCardPos = Vector3.zero;
+            // float duration = 0.7f;
+            // var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.localPosition).SetEase(Ease.InOutCubic).SetDelay(offsetIndex * 0.075f);
+            // transform.DOScale(2.2f, duration).From(owner.combat.cardCache.transform.lossyScale).SetEase(Ease.InQuad).OnComplete(OnDisplay);
+            // float delay = 0.4f;
+            // transform.Find("BackImage").GetComponent<Image>().DOFade(0, 0.3f).From(1).SetDelay(0.4f).SetEase(Ease.InQuad);
+            acquireCardAnim.RecreateTweenAndPlay();
+            return acquireCardAnim.tween;
         }
 
         public void Apply()

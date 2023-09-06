@@ -163,7 +163,7 @@ namespace Arcomage.GameScripts
             }
         }
 
-        public bool trainingMode => false;//TODO: null object -> Academy.Instance.IsCommunicatorOn;
+        public bool trainingMode => false; //TODO: null object -> Academy.Instance.IsCommunicatorOn;
         public bool allCardsDisabled => !handCards.Exists(card => !card.isDisabled);
 
         protected override void Awake()
@@ -251,7 +251,7 @@ namespace Arcomage.GameScripts
             var isPauseAction = PauseAction();
             // 0 means do nothing
             actionMask.SetActionEnabled(0, 0, true);
-            List<ArcomageCard> allCards = AssetManager.Instance.LoadAssets<ArcomageCard>(new [] { "Cards" }, this);
+            List<ArcomageCard> allCards = AssetManager.Instance.LoadAssets<ArcomageCard>(new[] { "Cards" }, this);
             for (int i = 1; i < allCards.Count + 1; ++i)
             {
                 // only 1 branch, which is set to all discrete actions
@@ -314,7 +314,8 @@ namespace Arcomage.GameScripts
             usingCard = null;
             lastRemovedIndex = -1;
             // ** 按难度重置基本数据
-            List<ArcomagePlayer> difficulties = AssetManager.Instance.LoadAssets<ArcomagePlayer>(new []{ "Difficulty" }, this);
+            List<ArcomagePlayer> difficulties = AssetManager.Instance.LoadAssets<ArcomagePlayer>(new[] { "Difficulty" }, this);
+            Assert.IsTrue(difficulties.Count > 0, "找不到难度数据？");
             ArcomagePlayer arcomagePlayer = difficulties[(int)difficulty];
             brick = arcomagePlayer.brick;
             gem = arcomagePlayer.gem;
@@ -370,7 +371,7 @@ namespace Arcomage.GameScripts
             throw new Exception($"use card not in hand?");
         }
 
-        Tweener AddOneCardToHand(ArcomageCard template)
+        Tween AddOneCardToHand(ArcomageCard template)
         {
             Card genCard = combat.cardCache.Acquire(this, template);
             if (lastRemovedIndex == -1)
@@ -382,14 +383,14 @@ namespace Arcomage.GameScripts
                 handCards.Insert(lastRemovedIndex, genCard);
             }
 
-            Tweener tweener = null;
+            Tween tween = null;
             if (!trainingMode)
             {
-                tweener = genCard.PlayAcquireAnim(lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex);
+                tween = genCard.PlayAcquireAnim(lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex);
             }
 
             lastRemovedIndex = -1;
-            return tweener;
+            return tween;
         }
 
         public void OnGenHandCards(int needGenCardAmount, TweenCallback callback)
@@ -401,7 +402,7 @@ namespace Arcomage.GameScripts
 
             while (needGenCardAmount > 0)
             {
-                Tweener tweener;
+                Tween tween;
 #if USING_GMTOOL
                 if (!trainingMode && debugInitCardIds != null)
                 {
@@ -416,11 +417,11 @@ namespace Arcomage.GameScripts
                             {
                                 // ** remove init card from cardBank
                                 combat.cardBank.RemoveAt(ci);
-                                tweener = AddOneCardToHand(card);
+                                tween = AddOneCardToHand(card);
                                 needGenCardAmount--;
                                 if (needGenCardAmount == 0)
                                 {
-                                    tweener.OnComplete(callback);
+                                    tween.OnComplete(callback);
                                 }
 
                                 break;
@@ -436,12 +437,12 @@ namespace Arcomage.GameScripts
                 {
                     var template = combat.cardBank[combat.cardBank.Count - 1];
                     Assert.IsTrue(handCards.Find(card => card.id == template.id) == null);
-                    tweener = AddOneCardToHand(template);
+                    tween = AddOneCardToHand(template);
                     combat.cardBank.RemoveAt(combat.cardBank.Count - 1);
                     needGenCardAmount--;
                     if (!trainingMode && needGenCardAmount == 0)
                     {
-                        tweener.OnComplete(callback);
+                        tween.OnComplete(callback);
                     }
                 }
                 else
@@ -512,7 +513,8 @@ namespace Arcomage.GameScripts
                 target.DOColor(tweenColor, 0.25f).SetLoops(8, LoopType.Yoyo).From(Color.white).SetEase(Ease.InOutElastic);
                 if (!trainingMode && combat != null && combat.effectCache != null)
                 {
-                    EffectInstance effectInstance = combat.effectCache.CreateEffect(num > oldNum ? "IncNumber" : "DecNumber");
+                    var effectRawName = num > oldNum ? "IncNumber" : "DecNumber";
+                    EffectInstance effectInstance = combat.effectCache.CreateEffect($"VFX_{effectRawName}");
                     var textMeshProUGUI = effectInstance.GetComponent<TextMeshProUGUI>();
                     textMeshProUGUI.text = num > oldNum ? $"+{num - oldNum}" : $"-{oldNum - num}";
                     textMeshProUGUI.alpha = 1;

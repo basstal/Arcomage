@@ -27,7 +27,7 @@ namespace Arcomage.GameScripts
             else
             {
                 // var cardGameObject = Combat.Database.cardPrefabAssetRef.InstantiateAsync(inOwner.combat.transform).WaitForCompletion();
-                var cardGameObject = AssetManager.Instance.InstantiatePrefab("Card", this, parent: inOwner.combat.transform);
+                var cardGameObject = AssetManager.Instance.InstantiatePrefab("Prefabs_Card", this, parent: inOwner.combat.transform);
                 card = cardGameObject.GetComponent<Card>();
             }
 
