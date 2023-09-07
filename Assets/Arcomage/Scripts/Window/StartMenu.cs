@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using NOAH.UI;
-using UnityEditor.VersionControl;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+﻿using NOAH.UI;
 using Whiterice;
 
 namespace Arcomage.Scripts.UI.Runtime.Window

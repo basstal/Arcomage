@@ -13,7 +13,8 @@
         "Google.Protobuf",
         "Unity.InputSystem",
         "Localization",
-        "UI.Runtime"
+        "UI.Runtime",
+        "PackageManagerExtension"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

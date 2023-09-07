@@ -2,7 +2,9 @@
     "name": "Arcomage.GameEditorScripts",
     "rootNamespace": "",
     "references": [
-        "Arcomage.GameScripts"
+        "Arcomage.GameScripts",
+        "WhitericeEditor",
+        "PackageManagerExtension"
     ],
     "includePlatforms": [
         "Editor"

@@ -100,15 +100,20 @@ Assets/Externals/xLua/Generated.meta
 /Packages/com.unity.ml-agents/
 /Packages/com.91act.noah.unity.logs.viewer/
 /Packages/packages-lock.json
-Assets/Samples/
-Assets/Samples.meta
-Assets/ML-Agents/
-Assets/ML-Agents.meta
-Assets/GUI PRO Kit - Casual Game/
-Assets/GUI PRO Kit - Casual Game.meta
+/Assets/Samples/
+/Assets/Samples.meta
+/Assets/StreamingAssets/
+/Assets/StreamingAssets.meta
+/Assets/ML-Agents/
+/Assets/ML-Agents.meta
+/Assets/GUI PRO Kit - Casual Game/
+/Assets/GUI PRO Kit - Casual Game.meta
 
 /Whiterice/Output/
-/Whiterice
+/Whiterice/env/
+/Whiterice/*.json
+/WhitericeLogs
+config_*.json
 /.DS_Store
 /NativeTemplate/
 /ServerData/
