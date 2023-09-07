@@ -10,6 +10,7 @@ def main():
     config.required.unity_build_output = os.path.join(config.required.unity_project, 'Output')
     config.optional.yoo_asset.enabled = True
     config.optional.yoo_asset.default_package = 'DefaultPackage'
+    config.optional.yoo_asset.incremental_build = True
     
     with open(output_filename, 'w') as f:
         f.write(MessageToJson(config))

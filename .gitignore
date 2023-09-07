@@ -118,3 +118,4 @@ config_*.json
 /NativeTemplate/
 /ServerData/
 /Bundles
+/Output
