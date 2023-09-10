@@ -35,7 +35,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -84,9 +83,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: +80
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8a449af15ada169419d4d4443dbf2e7b, type: 2}
-  m_sharedMaterial: {fileID: 6995025655321820519, guid: 8a449af15ada169419d4d4443dbf2e7b,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -108,8 +106,19 @@ MonoBehaviour:
   m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor: {r: 1, g: 1, b: 1, a: 1}
+  m_instanceMaterial: 0
+  m_underlayEnable: 0
+  m_underlayColor: {r: 1, g: 1, b: 1, a: 1}
+  m_underlayDilate: 0
+  m_underlaySoftness: 0
+  m_typeWriterEnable: 0
   m_typeWriterPosition: 0
   m_typeWriterRange: 0
+  m_outlineEnable: 0
+  m_outlineEctadEnable: 0
+  m_outlineEntadEnable: 0
+  m_outlineColor: {r: 0, g: 0, b: 0, a: 1}
+  m_outlineWidth: 0
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400

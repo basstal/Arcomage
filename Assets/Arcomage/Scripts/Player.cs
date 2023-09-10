@@ -9,6 +9,7 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Whiterice;
 
@@ -20,7 +21,6 @@ namespace Arcomage.GameScripts
 
         [Tooltip("是否被AI接管")] public bool isAIControlling;
         public string playerName = "Default";
-        public int playerID;
         public Difficulty difficulty = Difficulty.Easy;
         public TextMeshProUGUI bricksCountTMP;
         public TextMeshProUGUI gemsCountTMP;
@@ -163,12 +163,13 @@ namespace Arcomage.GameScripts
             }
         }
 
-        public bool trainingMode => false; //TODO: null object -> Academy.Instance.IsCommunicatorOn;
-        public bool allCardsDisabled => !handCards.Exists(card => !card.isDisabled);
+        public bool trainingMode => Academy.Instance.IsCommunicatorOn;
+        public bool allCardsDisabled => handCards.All(card => card.isDisabled);
 
         protected override void Awake()
         {
             base.Awake();
+            LazyInitialize();
             handCardsLocation = transform.Find("HandCardsLocation");
             handCardsLocation.gameObject.SetActive(false);
             combat = transform.GetComponentInParent<Combat>();
@@ -176,6 +177,7 @@ namespace Arcomage.GameScripts
 
         public override void Initialize()
         {
+            base.Initialize();
             if (!trainingMode)
             {
                 MaxStep = 0;
@@ -187,7 +189,11 @@ namespace Arcomage.GameScripts
         /// </summary>
         public override void OnEpisodeBegin()
         {
-            combat.GameReset();
+            base.OnEpisodeBegin();
+            if (trainingMode)
+            {
+                combat.GameReset();
+            }
         }
 
         public bool PauseAction()
@@ -268,7 +274,7 @@ namespace Arcomage.GameScripts
 
         public override void Heuristic(in ActionBuffers actionsOut)
         {
-            // ** TODO:
+            Log.LogInfo("Heuristic", "Heuristic");
             // if (Input.GetKey(KeyCode.Alpha1)) index = 0;
             // if (Input.GetKey(KeyCode.Alpha2)) index = 1;
             // if (Input.GetKey(KeyCode.Alpha3)) index = 2;
@@ -280,17 +286,6 @@ namespace Arcomage.GameScripts
         private void Start()
         {
             ResetPlayer();
-        }
-
-        public void WithdrawAnimation(TweenCallback callback)
-        {
-            var duration = 0.5f;
-            for (int i = 0; i < handCards.Count; ++i)
-            {
-                var handCard = handCards[i];
-                handCard.transform.DOMove(handCardsLocation.position, duration).SetDelay(i * 0.025f).OnComplete(i == handCards.Count - 1 ? callback : null);
-                handCard.transform.DOScale(1.0f, duration);
-            }
         }
 
         void RepositionRoof(Transform roofTrans, Image bodyImage)
@@ -334,8 +329,7 @@ namespace Arcomage.GameScripts
             towerRoof.SetActive(tower > 0);
             if (tower > 0)
             {
-                towerBodyImage.fillAmount =
-                    Math.Max(tower / TOWER_MAX_FILL_AMOUNT_SCORE, TOWER_MIN_FILL_AMOUNT);
+                towerBodyImage.fillAmount = Math.Max(tower / TOWER_MAX_FILL_AMOUNT_SCORE, TOWER_MIN_FILL_AMOUNT);
                 RepositionRoof(towerRoof.transform, towerBodyImage);
             }
             else
@@ -346,8 +340,7 @@ namespace Arcomage.GameScripts
             wallRoof.SetActive(wall > 0);
             if (wall > 0)
             {
-                wallBodyImage.fillAmount =
-                    Math.Max(wall / WALL_MAX_FILL_AMOUNT_SCORE, WALL_MIN_FILL_AMOUNT);
+                wallBodyImage.fillAmount = Math.Max(wall / WALL_MAX_FILL_AMOUNT_SCORE, WALL_MIN_FILL_AMOUNT);
                 RepositionRoof(wallRoof.transform, wallBodyImage);
             }
             else
@@ -371,7 +364,7 @@ namespace Arcomage.GameScripts
             throw new Exception($"use card not in hand?");
         }
 
-        Tween AddOneCardToHand(ArcomageCard template)
+        void AddOneCardToHand(ArcomageCard template, UnityAction onComplete)
         {
             Card genCard = combat.cardCache.Acquire(this, template);
             if (lastRemovedIndex == -1)
@@ -383,17 +376,18 @@ namespace Arcomage.GameScripts
                 handCards.Insert(lastRemovedIndex, genCard);
             }
 
-            Tween tween = null;
             if (!trainingMode)
             {
-                tween = genCard.PlayAcquireAnim(lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex);
+                genCard.CardAnimation.AssignOnCompleteCallbackById("AcquireCardAnim", onComplete);
+                genCard.CardAnimation.offsetIndex = lastRemovedIndex == -1 ? handCards.Count - 1 : lastRemovedIndex;
+                genCard.CardAnimation.Play("AcquireCard");
             }
 
+
             lastRemovedIndex = -1;
-            return tween;
         }
 
-        public void OnGenHandCards(int needGenCardAmount, TweenCallback callback)
+        public void OnGenHandCards(int needGenCardAmount, UnityAction callback)
         {
             if (!trainingMode)
             {
@@ -402,7 +396,6 @@ namespace Arcomage.GameScripts
 
             while (needGenCardAmount > 0)
             {
-                Tween tween;
 #if USING_GMTOOL
                 if (!trainingMode && debugInitCardIds != null)
                 {
@@ -417,13 +410,7 @@ namespace Arcomage.GameScripts
                             {
                                 // ** remove init card from cardBank
                                 combat.cardBank.RemoveAt(ci);
-                                tween = AddOneCardToHand(card);
-                                needGenCardAmount--;
-                                if (needGenCardAmount == 0)
-                                {
-                                    tween.OnComplete(callback);
-                                }
-
+                                AddOneCardToHand(card, --needGenCardAmount == 0 ? callback : null);
                                 break;
                             }
                         }
@@ -437,13 +424,8 @@ namespace Arcomage.GameScripts
                 {
                     var template = combat.cardBank[combat.cardBank.Count - 1];
                     Assert.IsTrue(handCards.Find(card => card.id == template.id) == null);
-                    tween = AddOneCardToHand(template);
+                    AddOneCardToHand(template, --needGenCardAmount == 0 && !trainingMode ? callback : null);
                     combat.cardBank.RemoveAt(combat.cardBank.Count - 1);
-                    needGenCardAmount--;
-                    if (!trainingMode && needGenCardAmount == 0)
-                    {
-                        tween.OnComplete(callback);
-                    }
                 }
                 else
                 {
@@ -454,7 +436,7 @@ namespace Arcomage.GameScripts
 
             if (!trainingMode)
             {
-                Log.LogInfo("玩家手牌", $"玩家：{playerID}\n总手牌：{handCards.Count}\n详情：");
+                Log.LogInfo("玩家手牌", $"玩家：{playerName}\n总手牌：{handCards.Count}\n详情：");
             }
         }
 
@@ -530,8 +512,131 @@ namespace Arcomage.GameScripts
                 return;
             }
 
-            EffectInstance effectInstance = combat.effectCache.CreateEffect("Drop");
+            EffectInstance effectInstance = combat.effectCache.CreateEffect("VFX_Drop");
             effectInstance.Play(target.transform.position + new Vector3(10f, 0, 0));
+        }
+
+        public const int MAX_HAND_CARDS = 5;
+
+        /// <summary>
+        /// 显示当前手牌
+        /// </summary>
+        public void DisplayHandCards()
+        {
+            if (trainingMode || handCards.Count == 0)
+            {
+                return;
+            }
+
+            Log.LogInfo("[DisplayHandCards]", playerName);
+            var index = 0;
+            for (int displayIndex = 0; displayIndex < MAX_HAND_CARDS; ++displayIndex)
+            {
+                if (displayIndex == lastRemovedIndex)
+                {
+                    continue;
+                }
+
+                var handCard = handCards[index++];
+                if (isPlayAgain)
+                {
+                    handCard.OnDisplay();
+                }
+                else
+                {
+                    isAIWaitAnimation = isAIControlling;
+                    handCard.CardAnimation.offsetIndex = displayIndex;
+                    handCard.CardAnimation.AssignOnCompleteCallbackById("DisplayCardAnim", index == handCards.Count - 1 ? OnDisplayingCardAnimComplete : null);
+                    handCard.CardAnimation.Play("DisplayCard");
+                }
+            }
+        }
+
+        public void OnDisplayingCardAnimComplete()
+        {
+            isAIWaitAnimation = false;
+        }
+
+
+        public bool GenHandCards()
+        {
+            isPlayAgain = isDropping;
+            if (trainingMode)
+            {
+                OnGenHandCards(MAX_HAND_CARDS - handCards.Count, null);
+            }
+
+            if (handCards.Count < MAX_HAND_CARDS)
+            {
+                OnGenHandCards(MAX_HAND_CARDS - handCards.Count, combat.ChangeStage);
+                return false;
+            }
+
+            return true;
+        }
+
+        public void WithdrawCards()
+        {
+            if (trainingMode)
+            {
+                combat.OnWithdrawComplete();
+            }
+            else
+            {
+                int start = this == combat.m_player1 ? handCards.Count - 1 : 0;
+                int step = this == combat.m_player1 ? -1 : 1;
+                foreach (var handCard in handCards)
+                {
+                    var animationController = handCard.CardAnimation;
+                    animationController.offsetIndex = start;
+                    animationController.AssignOnCompleteCallbackById("WithdrawComplete", start == handCards.Count - 1 ? combat.OnWithdrawComplete : null);
+                    start += step;
+                    animationController.Play("WithdrawCard");
+                }
+            }
+        }
+
+        public bool WaitCardUse()
+        {
+            if (trainingMode || (isAIControlling && !isAIWaitAnimation))
+            {
+                RequestDecision();
+                isAIWaitAnimation = true;
+            }
+            else if (!isAIControlling) // Inactive the block area when player use card.
+            {
+                combat.handCardBlocking.gameObject.SetActive(false);
+            }
+
+            if (usingCard != null)
+            {
+                var tempUsingCard = usingCard;
+                RemoveFromHandCard(tempUsingCard);
+                if (!isDropping)
+                {
+                    tempUsingCard.Apply();
+                }
+                else
+                {
+                    isDropping = false;
+                }
+
+                usingCard = null;
+                // ** trainingMode have no animation
+                if (trainingMode)
+                {
+                    combat.cardCache.TurnBack(tempUsingCard);
+                    return true;
+                }
+                else
+                {
+                    combat.currentStage = null;
+                    tempUsingCard.CardAnimation.AssignOnCompleteCallbackById("UsingCardComplete", () => { combat.UsingCardComplete(tempUsingCard); });
+                    tempUsingCard.CardAnimation.Play("UsingCard");
+                }
+            }
+
+            return false;
         }
     }
 }

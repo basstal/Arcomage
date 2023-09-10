@@ -43,7 +43,7 @@ namespace Arcomage.GameScripts
                 SharedLogics.ResChange(player, costType, costAmount);
 
 
-                resultValue = $"Player{player.playerID}/Refresh";
+                resultValue = $"Player{player.playerName}/Refresh";
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
@@ -96,7 +96,7 @@ namespace Arcomage.GameScripts
 
                 SharedLogics.BuildingChange(player, buildingType, changeAmount);
 
-                resultValue = $"Player{player.playerID}/Refresh";
+                resultValue = $"Player{player.playerName}/Refresh";
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
@@ -149,7 +149,7 @@ namespace Arcomage.GameScripts
 
                 SharedLogics.GrowthChange(player, costType, changeAmount);
 
-                resultValue = $"Player{player.playerID}/Refresh";
+                resultValue = $"Player{player.playerName}/Refresh";
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
@@ -195,7 +195,7 @@ namespace Arcomage.GameScripts
                 bool direct = flow.GetValue<bool>(inDirect);
                 int damage = flow.GetValue<int>(inDamage);
                 Player player = flow.GetValue<Player>(inPlayer);
-                Player enemy = player.combat.FindEnemyById(player.playerID);
+                Player enemy = player.combat.FindEnemy(player);
                 var wallOld = enemy.wall;
                 var towerOld = enemy.tower;
                 var towerDamage = damage;
@@ -230,7 +230,7 @@ namespace Arcomage.GameScripts
                     Debug.LogWarning($"AddReward failed : {e.Message}\ntowerDamage : {towerDamage}, towerOld : {towerOld} ");
                 }
 
-                resultValue = $"Player{player.playerID}/Refresh";
+                resultValue = $"Player{player.playerName}/Refresh";
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
@@ -269,7 +269,7 @@ namespace Arcomage.GameScripts
             {
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 Player player = flow.GetValue<Player>(inPlayer);
-                resultValue = player.combat.FindEnemyById(player.playerID);
+                resultValue = player.combat.FindEnemy(player);
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
@@ -355,7 +355,7 @@ namespace Arcomage.GameScripts
                 CostType costType = flow.GetValue<CostType>(inCostType);
                 Player player = flow.GetValue<Player>(inPlayer);
                 SharedLogics.PlayerResourceGrowth(player, costType);
-                resultValue = $"Player{player.playerID}/Refresh";
+                resultValue = $"Player{player.playerName}/Refresh";
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");
@@ -393,7 +393,7 @@ namespace Arcomage.GameScripts
                 //Making the resultValue equal to the input value from myValueA concatenating it with myValueB.
                 Player player = flow.GetValue<Player>(inPlayer);
                 SharedLogics.PlayerResourceGrowthAll(player);
-                resultValue = $"Player{player.playerID}/Refresh";
+                resultValue = $"Player{player.playerName}/Refresh";
                 return outputTrigger;
             });
             outputTrigger = ControlOutput("outputTrigger");

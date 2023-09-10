@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DefaultWhitericeConfig
   m_EditorClassIdentifier: 
   download: 1
-  configJsonPath: C:/Users/wjk/Documents/GitHub/Arcomage/config_StandaloneWindows64_4.json
-  buildOptionsAdded: 513
+  configJsonPath: C:/Users/wjk/Documents/GitHub/Arcomage/config_Android_0.json
+  buildOptionsAdded: 1

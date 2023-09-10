@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bd1afdce9715f84eb4cbc901922afc2, type: 3}
-  m_Name: YooAssetSettings
+  m_Script: {fileID: 11500000, guid: 71515ce028aaa4b4cb6bee13e96ef6f3, type: 3}
+  m_Name: Arcomage.mlagents.settings
   m_EditorClassIdentifier: 
-  ManifestFileName: PackageManifest
-  RemoteLoadPath: /Android/1.0.13
-  DefaultPackage: DefaultPackage
+  m_ConnectTrainer: 0
+  m_EditorPort: 5004

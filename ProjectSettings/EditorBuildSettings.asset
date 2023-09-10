@@ -11,3 +11,7 @@ EditorBuildSettings:
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d22714bd6e0de8b49b9029c8cbab3cc0,
       type: 2}
+    com.unity.input.settings: {fileID: 11400000, guid: fa015efe165377940b0abb81fc9a7ba9,
+      type: 2}
+    com.unity.ml-agents.settings: {fileID: 11400000, guid: 68434ed287002954fbcced94086fa089,
+      type: 2}

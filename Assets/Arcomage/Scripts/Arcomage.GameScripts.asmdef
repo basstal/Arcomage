@@ -14,7 +14,9 @@
         "Unity.InputSystem",
         "Localization",
         "UI.Runtime",
-        "PackageManagerExtension"
+        "PackageManagerExtension",
+        "UniTask",
+        "DOTweenProExt.Editor"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

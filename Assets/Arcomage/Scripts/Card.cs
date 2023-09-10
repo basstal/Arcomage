@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Whiterice;
 
@@ -30,12 +31,17 @@ namespace Arcomage.GameScripts
         public TextMeshProUGUI cardCostText;
         public Image cardExtentImage;
         public GameObject cardDroppingNode;
+
         private Transform m_debug;
-        public DOTweenAnimation acquireCardAnim;
+
+        // public GameObject acquireCardAnim;
+        // public GameObject displayCardAnim;
+        public CardAnimation CardAnimation;
 
         private void Awake()
         {
             useCardButton.BindButtonEvent(UseCard);
+            CardAnimation.Init();
 #if UNITY_EDITOR && USING_GMTOOL
             m_debug = transform.Find("Debug");
 #endif
@@ -109,63 +115,6 @@ namespace Arcomage.GameScripts
             }
         }
 
-        public Tweener PlayDisplayingCardAnim(int offsetIndex)
-        {
-            // var handCardPos = GetHandCardAnimPos(offsetIndex);
-            var handCardPos = Vector3.zero;
-
-            float duration = 0.45f;
-            var tweener = transform.DOMove(handCardPos, duration).From(owner.handCardsLocation.position).SetEase(Ease.InCubic).SetDelay(offsetIndex * 0.075f);
-            transform.DOScale(2.2f, duration).From(owner.handCardsLocation.lossyScale).SetEase(Ease.OutQuad).OnComplete(OnDisplay);
-            return tweener;
-        }
-
-        public void PlayUsingCardAnim(TweenCallback callback)
-        {
-            transform.DOMove(owner.combat.cardDisappearPoint.position, 0.3f).OnComplete(() =>
-            {
-                transform.DOLocalRotate(new Vector3(0, 0, -90f), 0.25f).SetDelay(1.5f)
-                    .OnStart(() => { cardExtentImage.gameObject.SetActive(false); })
-                    .OnComplete(() =>
-                    {
-                        transform.SetAsFirstSibling();
-                        var duration = 0.3f;
-                        transform.DOMove(owner.combat.cardCache.transform.parent.position, duration);
-                        transform.DOLocalRotate(Vector3.zero, duration);
-                        transform.DOScale(Vector3.one, duration);
-                        transform.Find("BackImage").GetComponent<Image>().DOFade(1, duration).SetEase(Ease.OutQuart).OnComplete(callback);
-                    });
-            });
-        }
-
-        // public Vector3 GetHandCardAnimPos(int offsetIndex)
-        // {
-        //     float offset = GetComponent<RectTransform>().rect.size.x + 150f;
-        //     var handCardsLayoutBegin = owner.combat.handCardLayout.localPosition;
-        //     handCardsLayoutBegin.x -= (int)(Combat.MAX_HAND_CARDS / 2) * offset;
-        //     handCardsLayoutBegin.x += offsetIndex * offset;
-        //     return handCardsLayoutBegin;
-        // }
-
-        public Tween PlayAcquireAnim(int offsetIndex)
-        {
-            cardExtentImage.gameObject.SetActive(false);
-            acquireCardAnim.fromCurrent = false;
-            acquireCardAnim.fromValueTransform = owner.combat.cardCache.transform;
-            acquireCardAnim.endValueTransform = owner.combat.handCardLayout.GetChild(offsetIndex);
-            acquireCardAnim.delay = offsetIndex * 0.075f;
-
-
-            // var handCardPos = GetHandCardAnimPos(offsetIndex);
-            // var handCardPos = Vector3.zero;
-            // float duration = 0.7f;
-            // var tweener = transform.DOMove(handCardPos, duration).From(owner.combat.cardCache.transform.localPosition).SetEase(Ease.InOutCubic).SetDelay(offsetIndex * 0.075f);
-            // transform.DOScale(2.2f, duration).From(owner.combat.cardCache.transform.lossyScale).SetEase(Ease.InQuad).OnComplete(OnDisplay);
-            // float delay = 0.4f;
-            // transform.Find("BackImage").GetComponent<Image>().DOFade(0, 0.3f).From(1).SetDelay(0.4f).SetEase(Ease.InQuad);
-            acquireCardAnim.RecreateTweenAndPlay();
-            return acquireCardAnim.tween;
-        }
 
         public void Apply()
         {

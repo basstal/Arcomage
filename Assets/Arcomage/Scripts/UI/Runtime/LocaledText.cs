@@ -1,3 +1,4 @@
+using System;
 using Localization;
 using TMPro;
 using UnityEngine;
@@ -7,23 +8,48 @@ namespace Arcomage.GameScripts.UI.Runtime
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class LocaledText : MonoBehaviour
     {
-        [SerializeField] private string key;
-        private string _text;
+        public string key;
+        public Func<object[]> resolveParameters;
 
-        public string text
-        {
-            get => _text;
-            set
-            {
-                _text = value;
-                var textMeshProUGUI = GetComponent<TextMeshProUGUI>();
-                textMeshProUGUI.text = _text;
-            }
-        }
+        private TextMeshProUGUI textMeshProUGUI;
 
         private void Start()
         {
-            text = LocalizationManager.Instance.GetString(key);
+            textMeshProUGUI = GetComponent<TextMeshProUGUI>();
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            if (resolveParameters != null)
+            {
+                SetTextFormat(key, resolveParameters);
+            }
+            else
+            {
+                SetText(key);
+            }
+        }
+
+
+        public void SetText(string inKey)
+        {
+            key = inKey;
+            if (key != null)
+            {
+                textMeshProUGUI.text = LocalizationManager.Instance.GetString(key);
+            }
+        }
+
+
+        public void SetTextFormat(string inKey, Func<object[]> inResolveParameters)
+        {
+            key = inKey;
+            resolveParameters = inResolveParameters;
+            if (key != null)
+            {
+                textMeshProUGUI.text = LocalizationManager.Instance.GetStringFormat(key, resolveParameters?.Invoke());
+            }
         }
     }
 }
